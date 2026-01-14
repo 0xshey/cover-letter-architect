@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Plus } from "lucide-react";
+import { Plus, Info, X } from "lucide-react";
 import { useAppStore } from "@/store/useAppStore";
 import { BlockCategory } from "@/types";
 import { Button } from "@/components/ui/button";
@@ -30,23 +30,37 @@ const CATEGORIES: BlockCategory[] = [
 	"Personal",
 ];
 
+const CATEGORY_PROMPTS: Record<BlockCategory, string> = {
+	Education:
+		"Enter your Institution, Degree/Certificate, honors, and notable academic achievements...",
+	Experience:
+		"Enter the Company, Role, key responsibilities, and specific wins or impacts...",
+	Projects:
+		"Enter the Project Name, Tech Stack, your specific role, and outcomes or links...",
+	Skills: "List your Tech Stack, soft skills, certifications, and level of expertise...",
+	Motivation:
+		"Explain why you want this specific role and company, and your personal connection...",
+	Expectations:
+		"Describe what you're looking for, salary range (optional), and potential start date...",
+	Personal:
+		"Share hobbies, volunteering, or interesting facts that show your personality...",
+};
+
 export function BlockList() {
 	const { blocks, addBlock } = useAppStore();
 	const [isAdding, setIsAdding] = useState(false);
 
 	// New Block State
 	const [newCategory, setNewCategory] = useState<BlockCategory>("Experience");
-	const [newTitle, setNewTitle] = useState("");
 	const [newContent, setNewContent] = useState("");
+	const [showPrompt, setShowPrompt] = useState(true);
 
 	const handleAdd = () => {
-		if (!newTitle || !newContent) return;
+		if (!newContent) return;
 		addBlock({
 			category: newCategory,
-			title: newTitle,
 			content: newContent,
 		});
-		setNewTitle("");
 		setNewContent("");
 		setIsAdding(false);
 	};
@@ -99,21 +113,35 @@ export function BlockList() {
 								</div>
 							</div>
 							<div className="grid gap-2">
-								<Label htmlFor="new-title">Title / Role</Label>
-								<Input
-									id="new-title"
-									placeholder="e.g. Senior Frontend Dev @ Google"
-									value={newTitle}
-									onChange={(e) =>
-										setNewTitle(e.target.value)
-									}
-								/>
-							</div>
-							<div className="grid gap-2">
-								<Label htmlFor="new-content">Content</Label>
+								<div className="flex items-center justify-between">
+									<Label htmlFor="new-content">Content</Label>
+									{!showPrompt && !!newContent && (
+										<button
+											onClick={() => setShowPrompt(true)}
+											className="p-1 hover:bg-muted rounded-full transition-colors"
+											title="Show guide"
+										>
+											<Info className="h-3.5 w-3.5 text-muted-foreground" />
+										</button>
+									)}
+								</div>
+
+								{showPrompt && !!newContent && (
+									<div className="relative bg-muted/50 rounded-md p-3 pr-8 text-xs text-muted-foreground border border-border">
+										<p>{CATEGORY_PROMPTS[newCategory]}</p>
+										<button
+											onClick={() => setShowPrompt(false)}
+											className="absolute top-1 right-1 p-1 hover:bg-muted rounded-full transition-colors"
+											title="Dismiss"
+										>
+											<X className="h-3.5 w-3.5" />
+										</button>
+									</div>
+								)}
+
 								<Textarea
 									id="new-content"
-									placeholder="Describe your experience, skills, or motivation..."
+									placeholder={CATEGORY_PROMPTS[newCategory]}
 									className="min-h-[150px]"
 									value={newContent}
 									onChange={(e) =>
@@ -123,10 +151,7 @@ export function BlockList() {
 							</div>
 						</div>
 						<DialogFooter>
-							<Button
-								onClick={handleAdd}
-								disabled={!newTitle || !newContent}
-							>
+							<Button onClick={handleAdd} disabled={!newContent}>
 								Add Block
 							</Button>
 						</DialogFooter>

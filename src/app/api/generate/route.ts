@@ -64,9 +64,7 @@ export async function POST(req: NextRequest) {
     Addressee: ${targetInfo.addressee || "Hiring Manager"}
 
     Content Blocks (Enabled):
-    ${blocks
-		.map((b) => `[${b.category}] ${b.title}: ${b.content}`)
-		.join("\n\n")}
+    ${blocks.map((b) => `[${b.category}]: ${b.content}`).join("\n\n")}
 
     Please write the cover letter now.
     `;

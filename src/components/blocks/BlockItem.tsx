@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Pencil, Trash2, GripVertical } from "lucide-react";
+import { Pencil, Trash2, GripVertical, Info, X } from "lucide-react";
 import { useAppStore } from "@/store/useAppStore";
 import { BlockCategory, ContentBlock } from "@/types";
 import { Button } from "@/components/ui/button";
@@ -27,11 +27,27 @@ export function BlockItem({ block }: BlockItemProps) {
 	const [isEditing, setIsEditing] = useState(false);
 
 	// Local edit state
-	const [title, setTitle] = useState(block.title);
 	const [content, setContent] = useState(block.content);
+	const [showPrompt, setShowPrompt] = useState(true);
+
+	const CATEGORY_PROMPTS: Record<BlockCategory, string> = {
+		Education:
+			"Enter your Institution, Degree/Certificate, honors, and notable academic achievements...",
+		Experience:
+			"Enter the Company, Role, key responsibilities, and specific wins or impacts...",
+		Projects:
+			"Enter the Project Name, Tech Stack, your specific role, and outcomes or links...",
+		Skills: "List your Tech Stack, soft skills, certifications, and level of expertise...",
+		Motivation:
+			"Explain why you want this specific role and company, and your personal connection...",
+		Expectations:
+			"Describe what you're looking for, salary range (optional), and potential start date...",
+		Personal:
+			"Share hobbies, volunteering, or interesting facts that show your personality...",
+	};
 
 	const handleUpdate = () => {
-		updateBlock(block.id, { title, content });
+		updateBlock(block.id, { content });
 		setIsEditing(false);
 	};
 
@@ -72,10 +88,7 @@ export function BlockItem({ block }: BlockItemProps) {
 				</div>
 
 				<div>
-					<h4 className="font-medium text-sm leading-none">
-						{block.title}
-					</h4>
-					<p className="mt-1.5 text-xs text-muted-foreground line-clamp-2">
+					<p className="text-sm leading-relaxed line-clamp-3">
 						{block.content}
 					</p>
 				</div>
@@ -103,24 +116,46 @@ export function BlockItem({ block }: BlockItemProps) {
 			<Dialog open={isEditing} onOpenChange={setIsEditing}>
 				<DialogContent>
 					<DialogHeader>
-						<DialogTitle>Edit Block</DialogTitle>
+						<DialogTitle>Edit {block.category} Block</DialogTitle>
 					</DialogHeader>
 					<div className="grid gap-4 py-2">
 						<div className="grid gap-2">
-							<Label htmlFor="title">Title / Role</Label>
-							<Input
-								id="title"
-								value={title}
-								onChange={(e) => setTitle(e.target.value)}
-							/>
-						</div>
-						<div className="grid gap-2">
-							<Label htmlFor="content">Content</Label>
+							<div className="flex items-center justify-between">
+								<Label htmlFor="content">Content</Label>
+								{!showPrompt && !!content && (
+									<Button
+										variant="ghost"
+										size="icon"
+										className="h-5 w-5"
+										onClick={() => setShowPrompt(true)}
+										title="Show guide"
+									>
+										<Info className="h-3.5 w-3.5 text-muted-foreground" />
+									</Button>
+								)}
+							</div>
+
+							{showPrompt && !!content && (
+								<div className="relative bg-muted/50 rounded-md p-3 pr-8 text-xs text-muted-foreground border border-border">
+									<p>{CATEGORY_PROMPTS[block.category]}</p>
+									<Button
+										variant="ghost"
+										size="icon"
+										className="absolute top-1 right-1 h-5 w-5"
+										onClick={() => setShowPrompt(false)}
+										title="Dismiss"
+									>
+										<X className="h-3.5 w-3.5" />
+									</Button>
+								</div>
+							)}
+
 							<Textarea
 								id="content"
 								value={content}
 								onChange={(e) => setContent(e.target.value)}
 								className="min-h-[150px]"
+								placeholder={CATEGORY_PROMPTS[block.category]}
 							/>
 						</div>
 					</div>

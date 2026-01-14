@@ -10,7 +10,6 @@ export type BlockCategory =
 export interface ContentBlock {
 	id: string;
 	category: BlockCategory;
-	title: string;
 	content: string;
 	isEnabled: boolean;
 }
