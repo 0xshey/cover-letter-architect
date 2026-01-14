@@ -8,11 +8,14 @@ import { TargetInfoForm } from "@/components/blocks/TargetInfo";
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {}
 
+import { ModeToggle } from "@/components/ModeToggle";
+
 export function Sidebar({ className, ...props }: SidebarProps) {
 	return (
 		<div className={cn("flex flex-col bg-muted/30", className)} {...props}>
-			<div className="flex h-14 items-center border-b px-4 font-semibold">
-				Block Library
+			<div className="flex h-14 items-center border-b px-4 justify-between">
+				<span className="font-bold tracking-tight">COVER LETTER</span>
+				<ModeToggle />
 			</div>
 
 			<div className="flex-1 overflow-hidden p-4">
@@ -26,9 +29,9 @@ export function Sidebar({ className, ...props }: SidebarProps) {
 				</div>
 			</div>
 
-			<div className="border-t p-4 flex justify-between items-center">
-				<span className="text-xs text-muted-foreground">
-					Cover Letter Architect
+			<div className="border-t p-4 flex justify-between items-center bg-background/50">
+				<span className="text-xs text-muted-foreground font-medium">
+					Architect v0.1
 				</span>
 				<SettingsDialog />
 			</div>

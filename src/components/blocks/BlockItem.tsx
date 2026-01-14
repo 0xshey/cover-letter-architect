@@ -38,7 +38,7 @@ export function BlockItem({ block }: BlockItemProps) {
 	// Categories color coding
 	const categoryColors: Record<BlockCategory, string> = {
 		Education:
-			"bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300",
+			"bg-blue-500/20 text-white dark:bg-blue-300/30 dark:text-blue-300",
 		Experience:
 			"bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300",
 		Projects:
@@ -65,7 +65,7 @@ export function BlockItem({ block }: BlockItemProps) {
 						<GripVertical className="h-4 w-4 text-muted-foreground/30 cursor-move" />
 						<span
 							className={cn(
-								"text-xs px-2 py-0.5 rounded-full font-medium",
+								"text-xs px-2 py-0.5 rounded font-medium",
 								categoryColors[block.category]
 							)}
 						>
