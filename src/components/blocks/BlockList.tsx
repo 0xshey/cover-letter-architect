@@ -136,7 +136,7 @@ export function BlockList() {
 
 			<div className="space-y-3">
 				{sortedBlocks.length === 0 ? (
-					<div className="rounded-lg border border-dashed p-8 text-center text-sm text-muted-foreground">
+					<div className="rounded-lg border border-border border-dashed p-8 text-center text-sm text-muted-foreground">
 						No blocks yet. Click + to add one.
 					</div>
 				) : (

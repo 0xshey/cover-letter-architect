@@ -12,8 +12,14 @@ import { ModeToggle } from "@/components/ModeToggle";
 
 export function Sidebar({ className, ...props }: SidebarProps) {
 	return (
-		<div className={cn("flex flex-col bg-muted/30", className)} {...props}>
-			<div className="flex h-14 items-center border-b px-4 justify-between">
+		<div
+			className={cn(
+				"flex flex-col bg-muted/30 border-r border-border",
+				className
+			)}
+			{...props}
+		>
+			<div className="flex h-14 items-center border-b border-border px-4 justify-between">
 				<span className="font-bold tracking-tight">COVER LETTER</span>
 				<ModeToggle />
 			</div>
@@ -29,7 +35,7 @@ export function Sidebar({ className, ...props }: SidebarProps) {
 				</div>
 			</div>
 
-			<div className="border-t p-4 flex justify-between items-center bg-background/50">
+			<div className="border-t border-border p-4 flex justify-between items-center bg-background/50">
 				<span className="text-xs text-muted-foreground font-medium">
 					Architect v0.1
 				</span>

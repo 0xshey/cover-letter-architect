@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:is(.dark, .dark *));
+
 @theme {
   --color-background: hsl(var(--background));
   --color-foreground: hsl(var(--foreground));
@@ -28,6 +30,22 @@
   --color-border: hsl(var(--border));
   --color-input: hsl(var(--input));
   --color-ring: hsl(var(--ring));
+
+  /* Category Badge Colors */
+  --color-badge-edu-bg: var(--badge-edu-bg);
+  --color-badge-edu-fg: var(--badge-edu-fg);
+  --color-badge-exp-bg: var(--badge-exp-bg);
+  --color-badge-exp-fg: var(--badge-exp-fg);
+  --color-badge-proj-bg: var(--badge-proj-bg);
+  --color-badge-proj-fg: var(--badge-proj-fg);
+  --color-badge-skill-bg: var(--badge-skill-bg);
+  --color-badge-skill-fg: var(--badge-skill-fg);
+  --color-badge-mot-bg: var(--badge-mot-bg);
+  --color-badge-mot-fg: var(--badge-mot-fg);
+  --color-badge-expct-bg: var(--badge-expct-bg);
+  --color-badge-expct-fg: var(--badge-expct-fg);
+  --color-badge-pers-bg: var(--badge-pers-bg);
+  --color-badge-pers-fg: var(--badge-pers-fg);
   
   --radius: 0.5rem;
 }
@@ -52,6 +70,22 @@
   --border: 240 5.9% 90%;
   --input: 240 5.9% 90%;
   --ring: 240 5.9% 10%;
+
+  /* Category Badges (Light) */
+  --badge-edu-bg: #dbeafe; /* blue-100 */
+  --badge-edu-fg: #1d4ed8; /* blue-700 */
+  --badge-exp-bg: #dcfce7; /* green-100 */
+  --badge-exp-fg: #15803d; /* green-700 */
+  --badge-proj-bg: #fef9c3; /* yellow-100 */
+  --badge-proj-fg: #a16207; /* yellow-700 */
+  --badge-skill-bg: #f3e8ff; /* purple-100 */
+  --badge-skill-fg: #7e22ce; /* purple-700 */
+  --badge-mot-bg: #ffedd5; /* orange-100 */
+  --badge-mot-fg: #c2410c; /* orange-700 */
+  --badge-expct-bg: #fee2e2; /* red-100 */
+  --badge-expct-fg: #b91c1c; /* red-700 */
+  --badge-pers-bg: #f1f5f9; /* slate-100 */
+  --badge-pers-fg: #334155; /* slate-700 */
 }
 
 .dark {
@@ -74,13 +108,30 @@
   --border: 240 3.7% 15.9%;
   --input: 240 3.7% 15.9%;
   --ring: 240 4.9% 83.9%;
+
+  /* Category Badges (Dark) */
+  --badge-edu-bg: rgba(30, 58, 138, 0.3); /* blue-900/30 */
+  --badge-edu-fg: #93c5fd; /* blue-300 */
+  --badge-exp-bg: rgba(20, 83, 45, 0.3); /* green-900/30 */
+  --badge-exp-fg: #86efac; /* green-300 */
+  --badge-proj-bg: rgba(113, 63, 18, 0.3); /* yellow-900/30 */
+  --badge-proj-fg: #fde047; /* yellow-300 */
+  --badge-skill-bg: rgba(81, 33, 125, 0.3); /* purple-900/30 */
+  --badge-skill-fg: #d8b4fe; /* purple-300 */
+  --badge-mot-bg: rgba(124, 45, 18, 0.3); /* orange-900/30 */
+  --badge-mot-fg: #fdba74; /* orange-300 */
+  --badge-expct-bg: rgba(127, 29, 29, 0.3); /* red-900/30 */
+  --badge-expct-fg: #fca5a5; /* red-300 */
+  --badge-pers-bg: rgba(30, 41, 59, 0.3); /* slate-900/30 */
+  --badge-pers-fg: #cbd5e1; /* slate-300 */
 }
 
 @layer base {
-  * {
-    @apply border-border;
+  *, ::before, ::after {
+    border-color: hsl(var(--border));
   }
   body {
-    @apply bg-background text-foreground;
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
   }
 }

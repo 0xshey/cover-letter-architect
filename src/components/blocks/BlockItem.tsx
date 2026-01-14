@@ -35,28 +35,21 @@ export function BlockItem({ block }: BlockItemProps) {
 		setIsEditing(false);
 	};
 
-	// Categories color coding
 	const categoryColors: Record<BlockCategory, string> = {
-		Education:
-			"bg-blue-500/20 text-white dark:bg-blue-300/30 dark:text-blue-300",
-		Experience:
-			"bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300",
-		Projects:
-			"bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300",
-		Skills: "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300",
-		Motivation:
-			"bg-pink-100 text-pink-700 dark:bg-pink-900/30 dark:text-pink-300",
-		Expectations:
-			"bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300",
-		Personal:
-			"bg-gray-100 text-gray-700 dark:bg-gray-800/50 dark:text-gray-300",
+		Education: "bg-badge-edu-bg text-badge-edu-fg",
+		Experience: "bg-badge-exp-bg text-badge-exp-fg",
+		Projects: "bg-badge-proj-bg text-badge-proj-fg",
+		Skills: "bg-badge-skill-bg text-badge-skill-fg",
+		Motivation: "bg-badge-mot-bg text-badge-mot-fg",
+		Expectations: "bg-badge-expct-bg text-badge-expct-fg",
+		Personal: "bg-badge-pers-bg text-badge-pers-fg",
 	};
 
 	return (
 		<>
 			<div
 				className={cn(
-					"group relative flex flex-col gap-2 rounded-lg border p-3 shadow-sm transition-all hover:shadow-md",
+					"group relative flex flex-col gap-2 rounded-lg border border-border p-3 shadow-sm transition-all hover:shadow-md",
 					!block.isEnabled && "opacity-60 bg-muted/20"
 				)}
 			>
