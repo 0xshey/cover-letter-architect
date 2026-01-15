@@ -8,7 +8,7 @@ export function TargetInfoForm() {
 	const { targetInfo, setTargetInfo } = useAppStore();
 
 	return (
-		<div className="space-y-4 rounded-lg border bg-card p-4 shadow-sm">
+		<div className="space-y-4 border border-transparent hover:bg-muted/40 p-4 transition-colors">
 			<h3 className="text-sm font-semibold">Target Application</h3>
 			<div className="grid gap-3">
 				<div className="grid gap-1.5">

@@ -8,7 +8,7 @@ import { TargetInfoForm } from "@/components/blocks/TargetInfo";
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-import { ModeToggle } from "@/components/ModeToggle";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { useAppStore } from "@/store/useAppStore";
 import { ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -17,19 +17,14 @@ export function Sidebar({ className, ...props }: SidebarProps) {
 	const { setActiveMobileView } = useAppStore();
 
 	return (
-		<div
-			className={cn(
-				"flex flex-col bg-muted/30 border-r border-border h-full",
-				className
-			)}
-			{...props}
-		>
-			<div className="flex h-14 items-center border-b border-border px-4 justify-between shrink-0">
-				<div className="flex items-center gap-2">
-					<span className="font-bold tracking-tight">ARCHITECT</span>
+		<div className={cn("flex flex-col h-full", className)} {...props}>
+			<div className="w-full flex h-14 items-center px-4 justify-between shrink-0">
+				<div className="w-full flex items-center justify-center gap-2">
+					<span className="font-bold tracking-tight">
+						COVER LETTER ARCHITECT™
+					</span>
 				</div>
 				<div className="flex items-center gap-2">
-					<ModeToggle />
 					<Button
 						variant="ghost"
 						size="icon"
@@ -53,11 +48,14 @@ export function Sidebar({ className, ...props }: SidebarProps) {
 				</div>
 			</div>
 
-			<div className="border-t border-border p-4 flex justify-between items-center bg-background/50">
+			<div className=" p-4 flex justify-between items-center bg-background/50">
 				<span className="text-xs text-muted-foreground font-medium">
 					Architect v0.1
 				</span>
-				<SettingsDialog />
+				<div className="flex items-center gap-2">
+					<ThemeToggle />
+					<SettingsDialog />
+				</div>
 			</div>
 		</div>
 	);

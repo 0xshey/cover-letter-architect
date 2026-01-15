@@ -74,7 +74,7 @@ export function Workspace({ className, ...props }: WorkspaceProps) {
 
 	return (
 		<div className={cn("flex flex-col h-full", className)} {...props}>
-			<div className="flex items-center border-b border-border px-4 py-2 justify-between bg-background z-10 shrink-0 h-14">
+			<div className="flex items-center px-4 py-2 justify-between bg-background z-10 shrink-0 h-14">
 				<div className="flex items-center gap-2">
 					<Button
 						variant="ghost"

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenAI } from "@google/genai";
 import { ContentBlock, TargetInfo } from "@/types";
 
 interface GenerateRequest {
@@ -50,13 +50,7 @@ export async function POST(req: NextRequest) {
 			);
 		}
 
-		const genAI = new GoogleGenerativeAI(apiKey);
-		const model = genAI.getGenerativeModel({
-			model: selectedModel || "gemini-1.5-flash",
-			generationConfig: {
-				responseMimeType: "application/json",
-			},
-		});
+		const ai = new GoogleGenAI({ apiKey });
 
 		const userContent = `
     Target Company: ${targetInfo.companyName}
@@ -69,25 +63,29 @@ export async function POST(req: NextRequest) {
     Please write the cover letter now.
     `;
 
-		const result = await model.generateContent({
+		const response = await ai.models.generateContent({
+			model: selectedModel || "gemini-2.0-flash-exp",
 			contents: [
 				{
 					role: "user",
 					parts: [{ text: SYSTEM_PROMPT + "\n\n" + userContent }],
 				},
 			],
+			config: {
+				responseMimeType: "application/json",
+			},
 		});
 
-		const response = result.response;
-		const text = response.text();
+		const text = response.text;
 
 		// Parse JSON response safely
 		try {
+			// response.text() in new SDK might return null or undefined, so handle that
+			if (!text) throw new Error("Empty response from AI");
 			const jsonResponse = JSON.parse(text);
 			return NextResponse.json(jsonResponse);
 		} catch (e) {
 			console.error("Failed to parse JSON from AI response:", text);
-			// Fallback if model didn't return perfect JSON (though gemini-1.5-flash is good at this with mimeType set)
 			return NextResponse.json({ markdown: text, rawText: text });
 		}
 	} catch (error: any) {

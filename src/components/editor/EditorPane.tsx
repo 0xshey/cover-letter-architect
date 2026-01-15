@@ -16,7 +16,7 @@ export function EditorPane() {
 
 	return (
 		<div className="h-full flex flex-col relative w-full">
-			<div className="flex items-center justify-end px-4 py-2 bg-muted/30 border-b border-border">
+			<div className="w-fit ml-auto flex items-center justify-end px-2 py-2 border bg-muted/30 rounded-full">
 				<div className="flex items-center space-x-2">
 					<Switch
 						id="suggestions-mode"
@@ -25,7 +25,7 @@ export function EditorPane() {
 					/>
 					<Label
 						htmlFor="suggestions-mode"
-						className="text-xs cursor-pointer"
+						className="text-xs cursor-pointer text-muted-foreground"
 					>
 						Suggestions Mode
 					</Label>

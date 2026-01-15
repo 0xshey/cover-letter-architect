@@ -18,7 +18,7 @@ export default function Home() {
 						: "translate-x-0"
 				)}
 			>
-				<Sidebar className="w-1/2 md:w-[400px] border-r flex-shrink-0" />
+				<Sidebar className="w-1/2 md:w-[400px] flex-shrink-0" />
 				<Workspace className="w-1/2 md:flex-1 min-w-0" />
 			</div>
 		</main>
