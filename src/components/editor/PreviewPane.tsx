@@ -19,8 +19,8 @@ export function PreviewPane() {
 	// To satisfy the requirement "Live Preview must render Markdown", we use react-markdown.
 
 	return (
-		<div className="h-full overflow-hidden bg-muted p-8">
-			<div className="max-w-[21cm] mx-auto min-h-full bg-background text-foreground p-[1cm] shadow-sm border font-sans text-xs leading-relaxed whitespace-pre-wrap">
+		<div className="h-full overflow-hidden bg-muted p-8 border rounded">
+			<div className="max-w-[21cm] mx-auto min-h-full bg-background text-foreground p-[1cm] border font-sans text-xs leading-relaxed whitespace-pre-wrap rounded-">
 				{currentLetter ? (
 					<ReactMarkdown
 						components={{

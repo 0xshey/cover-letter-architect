@@ -79,11 +79,11 @@ export function Workspace({ className, ...props }: WorkspaceProps) {
 					<Button
 						variant="ghost"
 						size="icon"
-						className="md:hidden rounded-md bg-yellow-400 text-black -ml-2"
+						className="md:hidden h-8 w-8 rounded-md bg-yellow-400 text-black -ml-2"
 						onClick={() => setActiveMobileView("sidebar")}
 						title="Go to Blocks"
 					>
-						<ChevronLeft className="h-4 w-4" />
+						<ChevronLeft className="h-3.5 w-3.5" />
 					</Button>
 					<div className="flex items-center gap-4">
 						<Tabs
@@ -113,7 +113,7 @@ export function Workspace({ className, ...props }: WorkspaceProps) {
 					<Button
 						variant="ghost"
 						size="sm"
-						className="h-9 w-9 p-0 md:h-9 md:w-auto md:px-3 text-muted-foreground hover:text-foreground rounded-md"
+						className="h-8 w-8 p-0 md:h-8 md:w-auto md:px-2.5 text-muted-foreground hover:text-foreground rounded-md"
 						disabled={!currentLetter}
 						onClick={() => {
 							if (!currentLetter) return;
@@ -145,30 +145,30 @@ export function Workspace({ className, ...props }: WorkspaceProps) {
 						}}
 						title="Download Markdown"
 					>
-						<Download className="h-4 w-4 md:mr-2" />
+						<Download className="h-3.5 w-3.5 md:mr-1.5" />
 						<span className="hidden md:inline text-xs font-sans">
 							Download
 						</span>
 					</Button>
 					<Button
-						variant="default"
+						variant="secondary"
 						size="sm"
 						onClick={handleGenerate}
 						disabled={isGenerating}
-						className="bg-primary text-primary-foreground h-9 w-9 p-0 md:h-9 md:w-auto md:px-3 shadow-none rounded-md"
+						className="h-8 w-8 p-0 md:h-8 md:w-auto md:px-2.5 shadow-none rounded-md"
 						title="Generate Cover Letter"
 					>
 						{isGenerating ? (
 							<>
-								<Loader2 className="h-4 w-4 animate-spin md:mr-2" />
-								<span className="hidden md:inline text-xs font-sans">
+								<Loader2 className="h-3 w-3 animate-spin md:mr-1.5" />
+								<span className="hidden md:inline text-xs font-sans leading-none">
 									Generating...
 								</span>
 							</>
 						) : (
 							<>
-								<Wand2 className="h-4 w-4 md:mr-2" />
-								<span className="hidden md:inline text-xs font-sans">
+								<Wand2 className="h-3 w-3 md:mr-1.5" />
+								<span className="hidden md:inline text-xs font-sans leading-none">
 									Generate
 								</span>
 							</>
@@ -178,16 +178,16 @@ export function Workspace({ className, ...props }: WorkspaceProps) {
 			</div>
 
 			<div className="flex-1 overflow-hidden bg-muted/10 relative">
-				<Tabs value={activeTab} className="h-full w-full">
+				<Tabs value={activeTab} className="h-full p-2 w-full">
 					<TabsContent
 						value="editor"
-						className="h-full mt-0 data-[state=active]:flex flex-col"
+						className="h-full mt-0 data-[state=active]:flex flex-col border rounded overflow-hidden"
 					>
 						<EditorPane />
 					</TabsContent>
 					<TabsContent
 						value="preview"
-						className="h-full mt-0 data-[state=active]:block overflow-auto"
+						className="h-full mt-0 data-[state=active]:block rounded overflow-hidden"
 					>
 						<PreviewPane />
 					</TabsContent>
