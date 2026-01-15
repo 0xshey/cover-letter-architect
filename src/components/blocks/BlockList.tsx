@@ -76,24 +76,22 @@ export function BlockList() {
 	return (
 		<div className="space-y-4">
 			<div className="flex items-center justify-between">
-				<h3 className="text-sm font-medium text-muted-foreground">
+				<h3 className="text-xs font-medium text-muted-foreground">
 					My Blocks
 				</h3>
 				<Dialog open={isAdding} onOpenChange={setIsAdding}>
 					<DialogTrigger asChild>
 						<Button
-							variant="outline"
+							variant="ghost"
 							size="sm"
-							className="h-8 w-8 p-0 rounded-full"
+							className="h-6 w-6 p-0 rounded-full"
 						>
-							<Plus className="h-4 w-4" />
+							<Plus className="h-4 w-4 text-muted-foreground" />
 						</Button>
 					</DialogTrigger>
 					<DialogContent>
-						<DialogHeader>
-							<DialogTitle>Add New Block</DialogTitle>
-						</DialogHeader>
-						<div className="grid gap-4 py-4">
+						<div className="grid gap-6">
+							<h3 className="text-md">New Block</h3>
 							<div className="grid gap-2">
 								<Label>Category</Label>
 								<div className="flex flex-wrap gap-2">
@@ -101,10 +99,10 @@ export function BlockList() {
 										<button
 											key={cat}
 											onClick={() => setNewCategory(cat)}
-											className={`px-3 py-1 rounded-full text-xs border transition-colors ${
+											className={`px-2 py-1 rounded text-xs font-medium text-muted-foreground transition-colors ${
 												newCategory === cat
-													? "bg-primary text-primary-foreground border-primary"
-													: "bg-background hover:bg-muted"
+													? "bg-primary text-primary-foreground"
+													: "bg-muted hover:bg-muted-foreground/20"
 											}`}
 										>
 											{cat}
@@ -151,7 +149,11 @@ export function BlockList() {
 							</div>
 						</div>
 						<DialogFooter>
-							<Button onClick={handleAdd} disabled={!newContent}>
+							<Button
+								onClick={handleAdd}
+								disabled={!newContent}
+								size="sm"
+							>
 								Add Block
 							</Button>
 						</DialogFooter>

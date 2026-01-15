@@ -65,13 +65,12 @@ export function BlockItem({ block }: BlockItemProps) {
 		<>
 			<div
 				className={cn(
-					"group relative flex flex-col gap-2 rounded-lg border border-border p-3 shadow-sm transition-all hover:shadow-md",
+					"group relative flex flex-col gap-0 border border-transparent p-1 transition-all hover:bg-muted",
 					!block.isEnabled && "opacity-60 bg-muted/20"
 				)}
 			>
-				<div className="flex items-start justify-between gap-2">
-					<div className="flex items-center gap-2">
-						<GripVertical className="h-4 w-4 text-muted-foreground/30 cursor-move" />
+				<div className="h-8 flex items-start justify-between gap-2">
+					<div className="flex h-full items-center gap-2 px-1">
 						<span
 							className={cn(
 								"text-xs px-2 py-0.5 rounded font-medium",
@@ -81,35 +80,35 @@ export function BlockItem({ block }: BlockItemProps) {
 							{block.category}
 						</span>
 					</div>
-					<Switch
-						checked={block.isEnabled}
-						onCheckedChange={() => toggleBlock(block.id)}
-					/>
+					<div className="flex items-center gap-2 p-1">
+						<Button
+							variant="ghost"
+							size="icon"
+							className="h-7 w-7 opacity-0 transition-opacity group-hover:opacity-100"
+							onClick={() => setIsEditing(true)}
+						>
+							<Pencil className="h-3.5 w-3.5" />
+						</Button>
+						<Button
+							variant="ghost"
+							size="icon"
+							className="h-7 w-7 text-destructive hover:text-destructive opacity-0 transition-opacity group-hover:opacity-100"
+							onClick={() => removeBlock(block.id)}
+						>
+							<Trash2 className="h-3.5 w-3.5" />
+						</Button>
+						<Switch
+							checked={block.isEnabled}
+							onCheckedChange={() => toggleBlock(block.id)}
+							className="ml-2"
+						/>
+					</div>
 				</div>
 
 				<div>
-					<p className="text-sm leading-relaxed line-clamp-3">
+					<p className="text-xs leading-relaxed line-clamp-3 p-1">
 						{block.content}
 					</p>
-				</div>
-
-				<div className="flex justify-end gap-1 opacity-0 transition-opacity group-hover:opacity-100">
-					<Button
-						variant="ghost"
-						size="icon"
-						className="h-7 w-7"
-						onClick={() => setIsEditing(true)}
-					>
-						<Pencil className="h-3.5 w-3.5" />
-					</Button>
-					<Button
-						variant="ghost"
-						size="icon"
-						className="h-7 w-7 text-destructive hover:text-destructive"
-						onClick={() => removeBlock(block.id)}
-					>
-						<Trash2 className="h-3.5 w-3.5" />
-					</Button>
 				</div>
 			</div>
 
