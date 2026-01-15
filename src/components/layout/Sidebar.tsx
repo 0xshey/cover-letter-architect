@@ -33,11 +33,11 @@ export function Sidebar({ className, ...props }: SidebarProps) {
 					<Button
 						variant="ghost"
 						size="icon"
-						className="md:hidden"
+						className="md:hidden rounded-full bg-yellow-400 text-black"
 						onClick={() => setActiveMobileView("workspace")}
 						title="Go to Editor"
 					>
-						<ChevronRight className="h-5 w-5" />
+						<ChevronRight className="h-4 w-4" />
 					</Button>
 				</div>
 			</div>

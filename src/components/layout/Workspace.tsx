@@ -79,11 +79,11 @@ export function Workspace({ className, ...props }: WorkspaceProps) {
 					<Button
 						variant="ghost"
 						size="icon"
-						className="md:hidden -ml-2"
+						className="md:hidden rounded-full bg-yellow-400 text-black -ml-2"
 						onClick={() => setActiveMobileView("sidebar")}
 						title="Go to Blocks"
 					>
-						<ChevronLeft className="h-5 w-5" />
+						<ChevronLeft className="h-4 w-4" />
 					</Button>
 					<div className="flex items-center gap-4">
 						<Tabs
