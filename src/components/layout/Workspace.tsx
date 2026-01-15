@@ -105,6 +105,7 @@ export function Workspace({ className, ...props }: WorkspaceProps) {
 					<Button
 						variant="outline"
 						size="sm"
+						className="h-9 w-9 p-0 md:h-9 md:w-auto md:px-3"
 						disabled={!currentLetter}
 						onClick={() => {
 							if (!currentLetter) return;
@@ -134,25 +135,31 @@ export function Workspace({ className, ...props }: WorkspaceProps) {
 							document.body.removeChild(a);
 							URL.revokeObjectURL(url);
 						}}
+						title="Download Markdown"
 					>
-						<Download className="mr-2 h-4 w-4" />
-						Download
+						<Download className="h-4 w-4 md:mr-2" />
+						<span className="hidden md:inline">Download</span>
 					</Button>
 					<Button
 						size="sm"
 						onClick={handleGenerate}
 						disabled={isGenerating}
-						className="bg-indigo-600 hover:bg-indigo-700 text-white"
+						className="bg-indigo-600 hover:bg-indigo-700 text-white h-9 w-9 p-0 md:h-9 md:w-auto md:px-3"
+						title="Generate Cover Letter"
 					>
 						{isGenerating ? (
 							<>
-								<Loader2 className="mr-2 h-4 w-4 animate-spin" />
-								Generating...
+								<Loader2 className="h-4 w-4 animate-spin md:mr-2" />
+								<span className="hidden md:inline">
+									Generating...
+								</span>
 							</>
 						) : (
 							<>
-								<Wand2 className="mr-2 h-4 w-4" />
-								Generate
+								<Wand2 className="h-4 w-4 md:mr-2" />
+								<span className="hidden md:inline">
+									Generate
+								</span>
 							</>
 						)}
 					</Button>
