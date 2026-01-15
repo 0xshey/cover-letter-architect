@@ -7,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { EditorPane } from "@/components/editor/EditorPane";
 import { PreviewPane } from "@/components/editor/PreviewPane";
 import { Button } from "@/components/ui/button";
-import { Wand2, Download, Loader2 } from "lucide-react";
+import { Wand2, Download, Loader2, ChevronLeft } from "lucide-react";
 
 interface WorkspaceProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -18,13 +18,14 @@ export function Workspace({ className, ...props }: WorkspaceProps) {
 		blocks,
 		targetInfo,
 		apiKey,
-		selectedModel, // Add this
+		selectedModel,
 		setIsGenerating,
 		setCurrentLetter,
 		saveLetter,
+		setActiveMobileView,
 	} = useAppStore();
 	const [activeTab, setActiveTab] = useState("editor");
-	const { toast } = { toast: (opts: any) => console.log(opts) }; // Placeholder for toast if we want it later
+	const { toast } = { toast: (opts: any) => console.log(opts) };
 
 	const handleGenerate = async () => {
 		if (blocks.filter((b) => b.isEnabled).length === 0) {
@@ -41,7 +42,7 @@ export function Workspace({ className, ...props }: WorkspaceProps) {
 					blocks: blocks.filter((b) => b.isEnabled),
 					targetInfo,
 					apiKey,
-					model: selectedModel, // Pass the selected model
+					model: selectedModel,
 				}),
 			});
 
@@ -53,7 +54,6 @@ export function Workspace({ className, ...props }: WorkspaceProps) {
 			const data = await response.json();
 			setCurrentLetter(data.markdown);
 
-			// Auto-save history
 			saveLetter({
 				id: crypto.randomUUID(),
 				markdown: data.markdown,
@@ -63,7 +63,7 @@ export function Workspace({ className, ...props }: WorkspaceProps) {
 				targetRole: targetInfo.roleTitle,
 			});
 
-			setActiveTab("preview"); // Switch to preview to see result
+			setActiveTab("preview");
 		} catch (error: any) {
 			console.error(error);
 			alert(error.message);
@@ -75,18 +75,30 @@ export function Workspace({ className, ...props }: WorkspaceProps) {
 	return (
 		<div className={cn("flex flex-col h-full", className)} {...props}>
 			<div className="flex items-center border-b border-border px-4 py-2 justify-between bg-background z-10 shrink-0 h-14">
-				<div className="flex items-center gap-4">
-					<h2 className="font-semibold text-sm">Workspace</h2>
-					<Tabs
-						value={activeTab}
-						onValueChange={setActiveTab}
-						className="h-9"
+				<div className="flex items-center gap-2">
+					<Button
+						variant="ghost"
+						size="icon"
+						className="md:hidden -ml-2"
+						onClick={() => setActiveMobileView("sidebar")}
+						title="Go to Blocks"
 					>
-						<TabsList>
-							<TabsTrigger value="editor">Editor</TabsTrigger>
-							<TabsTrigger value="preview">Preview</TabsTrigger>
-						</TabsList>
-					</Tabs>
+						<ChevronLeft className="h-5 w-5" />
+					</Button>
+					<div className="flex items-center gap-4">
+						<Tabs
+							value={activeTab}
+							onValueChange={setActiveTab}
+							className="h-9"
+						>
+							<TabsList>
+								<TabsTrigger value="editor">Editor</TabsTrigger>
+								<TabsTrigger value="preview">
+									Preview
+								</TabsTrigger>
+							</TabsList>
+						</Tabs>
+					</div>
 				</div>
 
 				<div className="flex items-center gap-2">

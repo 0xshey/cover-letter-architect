@@ -9,19 +9,37 @@ import { TargetInfoForm } from "@/components/blocks/TargetInfo";
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 import { ModeToggle } from "@/components/ModeToggle";
+import { useAppStore } from "@/store/useAppStore";
+import { ChevronRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export function Sidebar({ className, ...props }: SidebarProps) {
+	const { setActiveMobileView } = useAppStore();
+
 	return (
 		<div
 			className={cn(
-				"flex flex-col bg-muted/30 border-r border-border",
+				"flex flex-col bg-muted/30 border-r border-border h-full",
 				className
 			)}
 			{...props}
 		>
-			<div className="flex h-14 items-center border-b border-border px-4 justify-between">
-				<span className="font-bold tracking-tight">COVER LETTER</span>
-				<ModeToggle />
+			<div className="flex h-14 items-center border-b border-border px-4 justify-between shrink-0">
+				<div className="flex items-center gap-2">
+					<span className="font-bold tracking-tight">ARCHITECT</span>
+				</div>
+				<div className="flex items-center gap-2">
+					<ModeToggle />
+					<Button
+						variant="ghost"
+						size="icon"
+						className="md:hidden"
+						onClick={() => setActiveMobileView("workspace")}
+						title="Go to Editor"
+					>
+						<ChevronRight className="h-5 w-5" />
+					</Button>
+				</div>
 			</div>
 
 			<div className="flex-1 overflow-hidden p-4">

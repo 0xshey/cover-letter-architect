@@ -38,6 +38,10 @@ interface AppState {
 	// history
 	savedLetters: GeneratedLetter[];
 	saveLetter: (letter: GeneratedLetter) => void;
+
+	// mobile view
+	activeMobileView: "sidebar" | "workspace";
+	setActiveMobileView: (view: "sidebar" | "workspace") => void;
 }
 
 export const useAppStore = create<AppState>()(
@@ -103,6 +107,9 @@ export const useAppStore = create<AppState>()(
 				set((state) => ({
 					savedLetters: [letter, ...state.savedLetters],
 				})),
+
+			activeMobileView: "sidebar",
+			setActiveMobileView: (view) => set({ activeMobileView: view }),
 		}),
 		{
 			name: "cover-letter-storage",
