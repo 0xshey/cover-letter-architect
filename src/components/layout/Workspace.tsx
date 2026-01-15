@@ -74,12 +74,12 @@ export function Workspace({ className, ...props }: WorkspaceProps) {
 
 	return (
 		<div className={cn("flex flex-col h-full", className)} {...props}>
-			<div className="flex items-center px-4 py-2 justify-between bg-background z-10 shrink-0 h-14">
+			<div className="flex items-center px-4 py-2 justify-between shrink-0 h-14">
 				<div className="flex items-center gap-2">
 					<Button
 						variant="ghost"
 						size="icon"
-						className="md:hidden rounded-full bg-yellow-400 text-black -ml-2"
+						className="md:hidden rounded-md bg-yellow-400 text-black -ml-2"
 						onClick={() => setActiveMobileView("sidebar")}
 						title="Go to Blocks"
 					>
@@ -91,9 +91,17 @@ export function Workspace({ className, ...props }: WorkspaceProps) {
 							onValueChange={setActiveTab}
 							className="h-9"
 						>
-							<TabsList>
-								<TabsTrigger value="editor">Editor</TabsTrigger>
-								<TabsTrigger value="preview">
+							<TabsList className="bg-transparent p-0">
+								<TabsTrigger
+									value="editor"
+									className="data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:rounded-none px-4 rounded-none border-b-2 border-transparent text-xs font-sans"
+								>
+									Editor
+								</TabsTrigger>
+								<TabsTrigger
+									value="preview"
+									className="data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:rounded-none px-4 rounded-none border-b-2 border-transparent text-xs font-sans"
+								>
 									Preview
 								</TabsTrigger>
 							</TabsList>
@@ -103,9 +111,9 @@ export function Workspace({ className, ...props }: WorkspaceProps) {
 
 				<div className="flex items-center gap-2">
 					<Button
-						variant="outline"
+						variant="ghost"
 						size="sm"
-						className="h-9 w-9 p-0 md:h-9 md:w-auto md:px-3"
+						className="h-9 w-9 p-0 md:h-9 md:w-auto md:px-3 text-muted-foreground hover:text-foreground rounded-md"
 						disabled={!currentLetter}
 						onClick={() => {
 							if (!currentLetter) return;
@@ -138,26 +146,29 @@ export function Workspace({ className, ...props }: WorkspaceProps) {
 						title="Download Markdown"
 					>
 						<Download className="h-4 w-4 md:mr-2" />
-						<span className="hidden md:inline">Download</span>
+						<span className="hidden md:inline text-xs font-sans">
+							Download
+						</span>
 					</Button>
 					<Button
+						variant="default"
 						size="sm"
 						onClick={handleGenerate}
 						disabled={isGenerating}
-						className="bg-indigo-600 hover:bg-indigo-700 text-white h-9 w-9 p-0 md:h-9 md:w-auto md:px-3"
+						className="bg-primary text-primary-foreground h-9 w-9 p-0 md:h-9 md:w-auto md:px-3 shadow-none rounded-md"
 						title="Generate Cover Letter"
 					>
 						{isGenerating ? (
 							<>
 								<Loader2 className="h-4 w-4 animate-spin md:mr-2" />
-								<span className="hidden md:inline">
+								<span className="hidden md:inline text-xs font-sans">
 									Generating...
 								</span>
 							</>
 						) : (
 							<>
 								<Wand2 className="h-4 w-4 md:mr-2" />
-								<span className="hidden md:inline">
+								<span className="hidden md:inline text-xs font-sans">
 									Generate
 								</span>
 							</>

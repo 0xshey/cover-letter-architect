@@ -17,7 +17,10 @@ export function Sidebar({ className, ...props }: SidebarProps) {
 	const { setActiveMobileView } = useAppStore();
 
 	return (
-		<div className={cn("flex flex-col h-full", className)} {...props}>
+		<div
+			className={cn("flex flex-col h-full border-r", className)}
+			{...props}
+		>
 			<div className="w-full flex h-14 items-center px-4 justify-between shrink-0">
 				<div className="w-full flex items-center justify-center gap-2">
 					<span className="font-bold tracking-tight">

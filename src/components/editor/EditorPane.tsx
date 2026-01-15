@@ -16,7 +16,7 @@ export function EditorPane() {
 
 	return (
 		<div className="h-full flex flex-col relative w-full">
-			<div className="w-fit ml-auto flex items-center justify-end px-2 py-2 border bg-muted/30 rounded-full">
+			<div className="w-full flex items-center justify-end px-6 py-2">
 				<div className="flex items-center space-x-2">
 					<Switch
 						id="suggestions-mode"
@@ -36,7 +36,7 @@ export function EditorPane() {
 				<Textarea
 					value={currentLetter || ""}
 					onChange={(e) => setCurrentLetter(e.target.value)}
-					className="h-full resize-none p-6 font-mono text-sm leading-relaxed border-0 focus-visible:ring-0 rounded-none bg-background relative z-0"
+					className="h-full w-full resize-none p-8 font-sans text-xs leading-relaxed border-0 focus-visible:ring-0 rounded-none bg-transparent"
 					placeholder="Content will appear here after generation..."
 					spellCheck={false}
 				/>

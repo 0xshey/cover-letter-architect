@@ -19,8 +19,8 @@ export function PreviewPane() {
 	// To satisfy the requirement "Live Preview must render Markdown", we use react-markdown.
 
 	return (
-		<div className="h-full overflow-hidden bg-white dark:bg-zinc-950 p-8 shadow-sm">
-			<div className="max-w-[21cm] mx-auto min-h-full bg-white dark:bg-zinc-900 text-black dark:text-gray-100 p-[1cm] shadow-md font-serif text-base leading-relaxed whitespace-pre-wrap">
+		<div className="h-full overflow-hidden bg-muted p-8">
+			<div className="max-w-[21cm] mx-auto min-h-full bg-background text-foreground p-[1cm] shadow-sm border font-sans text-xs leading-relaxed whitespace-pre-wrap">
 				{currentLetter ? (
 					<ReactMarkdown
 						components={{
@@ -42,7 +42,7 @@ export function PreviewPane() {
 							// Style the mark tag for the highlighting requirement
 							mark: ({ node, ...props }) => (
 								<span
-									className="bg-yellow-100 dark:bg-yellow-900/30 rounded px-0.5"
+									className="bg-yellow-100/50 dark:bg-yellow-900/20 rounded px-0.5"
 									{...props}
 								/>
 							),
