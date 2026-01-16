@@ -14,7 +14,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 					// Styling
 					"border border-transparent text-foreground/90 ring-offset-background font-medium",
 					// Inputs & Placeholders
-					"file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground",
+					"file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground/60",
 					// Focus & States
 					"focus-visible:outline-none focus-visible:ring-transparent focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
 					className

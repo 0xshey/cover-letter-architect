@@ -47,20 +47,34 @@ export async function POST(req: NextRequest) {
 			);
 		}
 
+		// Allow any model selected by the user, defaulting to 1.5-flash if missing
+		const model = selectedModel || "gemini-1.5-flash";
+
 		const userContent = `
     Target Company: ${targetInfo.companyName}
     Target Role: ${targetInfo.roleTitle}
     Addressee: ${targetInfo.addressee || "Hiring Manager"}
-    Author Name: ${targetInfo.authorName || "[Your Name]"}
+
+    My Information (For Header/Signature):
+    Name: ${targetInfo.authorName || "[Your Name]"}
+    Email: ${targetInfo.isEmailEnabled !== false ? targetInfo.email || "" : ""}
+    Phone: ${targetInfo.isPhoneEnabled !== false ? targetInfo.phone || "" : ""}
+    Location: ${
+		targetInfo.isCityStateEnabled !== false
+			? targetInfo.cityState || ""
+			: ""
+	}
+    Portfolio/Link: ${
+		targetInfo.isPortfolioUrlEnabled !== false
+			? targetInfo.portfolioUrl || ""
+			: ""
+	}
 
     Content Blocks (Enabled):
     ${blocks.map((b) => `[${b.category}]: ${b.content}`).join("\n\n")}
 
-    Please write the cover letter now.
+    Please write the cover letter now. Ensure you include a professional header with my contact info if provided.
     `;
-
-		// Allow any model selected by the user, defaulting to 1.5-flash if missing
-		const model = selectedModel || "gemini-1.5-flash";
 
 		console.log("Calling Gemini API with model:", model);
 		const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;

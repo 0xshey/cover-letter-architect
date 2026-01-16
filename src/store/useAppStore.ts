@@ -74,6 +74,14 @@ export const useAppStore = create<AppState>()(
 				roleTitle: "",
 				addressee: "",
 				authorName: "",
+				email: "",
+				isEmailEnabled: true,
+				phone: "",
+				isPhoneEnabled: true,
+				cityState: "",
+				isCityStateEnabled: true,
+				portfolioUrl: "",
+				isPortfolioUrlEnabled: true,
 			},
 			setTargetInfo: (info) =>
 				set((state) => ({

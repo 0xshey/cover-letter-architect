@@ -19,6 +19,14 @@ export interface TargetInfo {
 	roleTitle: string;
 	addressee: string;
 	authorName?: string;
+	email?: string;
+	isEmailEnabled?: boolean;
+	phone?: string;
+	isPhoneEnabled?: boolean;
+	cityState?: string;
+	isCityStateEnabled?: boolean;
+	portfolioUrl?: string;
+	isPortfolioUrlEnabled?: boolean;
 }
 
 export interface GeneratedLetter {

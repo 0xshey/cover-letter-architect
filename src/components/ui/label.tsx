@@ -12,7 +12,7 @@ const Label = React.forwardRef<
 		ref={ref}
 		className={cn(
 			// Layout & Typography
-			"text-xs font-base text-foreground/75 leading-none",
+			"text-xs font-base text-foreground/70 leading-none tracking-wide",
 			// States
 			"peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
 			className
