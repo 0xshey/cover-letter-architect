@@ -65,7 +65,7 @@ export function BlockItem({ block }: BlockItemProps) {
 		<>
 			<div
 				className={cn(
-					"group relative flex flex-col gap-0 border border-transparent p-1 transition-all hover:bg-muted",
+					"group relative flex flex-col gap-0 border border-transparent p-1 transition-all bg-muted rounded",
 					!block.isEnabled && "opacity-60 bg-muted/20"
 				)}
 			>

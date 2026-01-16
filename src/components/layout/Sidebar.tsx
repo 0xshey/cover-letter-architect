@@ -37,7 +37,7 @@ export function Sidebar({ className, ...props }: SidebarProps) {
 				</div>
 			</div>
 
-			<div className="flex-1 overflow-hidden p-4">
+			<div className="flex-1 overflow-hidden p-2">
 				<div className="h-full flex flex-col gap-16 p-4">
 					<TargetInfoForm />
 					<div className="flex-1 min-h-0 relative">

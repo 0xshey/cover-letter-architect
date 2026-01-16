@@ -293,7 +293,7 @@ export function Workspace({ className, ...props }: WorkspaceProps) {
 			</div>
 
 			<div className="flex-1 overflow-hidden bg-muted/10 relative">
-				<Tabs value={activeTab} className="h-full p-2 w-full">
+				<Tabs value={activeTab} className="h-full p-2 pb-4 pr-4 w-full">
 					<TabsContent
 						value="editor"
 						className="h-full mt-0 data-[state=active]:flex flex-col border rounded overflow-hidden"
@@ -312,7 +312,7 @@ export function Workspace({ className, ...props }: WorkspaceProps) {
 					</TabsContent>
 					<TabsContent
 						value="preview"
-						className="h-full mt-0 data-[state=active]:block rounded overflow-hidden"
+						className="h-full mt-0 data-[state=active]:block rounded overflow-hidden border bg-muted"
 					>
 						<PreviewPane />
 					</TabsContent>
