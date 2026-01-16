@@ -52,6 +52,20 @@ export function TargetInfoForm() {
 						placeholder="e.g. Hiring Manager"
 					/>
 				</div>
+				<div className="grid gap-1.5">
+					<Label htmlFor="authorName" className="text-xs">
+						Your Name (for Signature)
+					</Label>
+					<Input
+						id="authorName"
+						value={targetInfo.authorName || ""}
+						onChange={(e) =>
+							setTargetInfo({ authorName: e.target.value })
+						}
+						className="h-8"
+						placeholder="e.g. Jane Doe"
+					/>
+				</div>
 			</div>
 		</div>
 	);

@@ -51,6 +51,7 @@ export async function POST(req: NextRequest) {
     Target Company: ${targetInfo.companyName}
     Target Role: ${targetInfo.roleTitle}
     Addressee: ${targetInfo.addressee || "Hiring Manager"}
+    Author Name: ${targetInfo.authorName || "[Your Name]"}
 
     Content Blocks (Enabled):
     ${blocks.map((b) => `[${b.category}]: ${b.content}`).join("\n\n")}

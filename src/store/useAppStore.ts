@@ -73,6 +73,7 @@ export const useAppStore = create<AppState>()(
 				companyName: "",
 				roleTitle: "",
 				addressee: "",
+				authorName: "",
 			},
 			setTargetInfo: (info) =>
 				set((state) => ({

@@ -18,6 +18,7 @@ export interface TargetInfo {
 	companyName: string;
 	roleTitle: string;
 	addressee: string;
+	authorName?: string;
 }
 
 export interface GeneratedLetter {
