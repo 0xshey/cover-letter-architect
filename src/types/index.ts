@@ -27,6 +27,8 @@ export interface TargetInfo {
 	isCityStateEnabled?: boolean;
 	portfolioUrl?: string;
 	isPortfolioUrlEnabled?: boolean;
+	companyAddress?: string;
+	jobId?: string;
 }
 
 export interface GeneratedLetter {

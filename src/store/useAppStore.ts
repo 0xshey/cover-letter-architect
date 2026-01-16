@@ -82,6 +82,8 @@ export const useAppStore = create<AppState>()(
 				isCityStateEnabled: true,
 				portfolioUrl: "",
 				isPortfolioUrlEnabled: true,
+				companyAddress: "",
+				jobId: "",
 			},
 			setTargetInfo: (info) =>
 				set((state) => ({

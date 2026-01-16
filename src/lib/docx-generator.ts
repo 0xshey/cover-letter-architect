@@ -5,6 +5,7 @@ import {
 	TextRun,
 	AlignmentType,
 	HeadingLevel,
+	ExternalHyperlink,
 } from "docx";
 import { TargetInfo } from "@/types";
 
@@ -27,27 +28,66 @@ export const createCoverLetterDoc = async (
 	}
 
 	// 2. Contact Info Line (constructed from enabled fields)
-	const contactParts = [];
-	if (targetInfo.isEmailEnabled !== false && targetInfo.email)
-		contactParts.push(targetInfo.email);
-	if (targetInfo.isPhoneEnabled !== false && targetInfo.phone)
-		contactParts.push(targetInfo.phone);
-	if (targetInfo.isCityStateEnabled !== false && targetInfo.cityState)
-		contactParts.push(targetInfo.cityState);
-	if (targetInfo.isPortfolioUrlEnabled !== false && targetInfo.portfolioUrl)
-		contactParts.push(targetInfo.portfolioUrl);
+	// 2. Contact Info Line (constructed from enabled fields)
+	const contactChildren = [];
+	const separator = new TextRun({ text: " | ", size: 20, color: "666666" });
 
-	if (contactParts.length > 0) {
+	if (targetInfo.isEmailEnabled !== false && targetInfo.email) {
+		contactChildren.push(
+			new ExternalHyperlink({
+				children: [
+					new TextRun({
+						text: targetInfo.email,
+						style: "Hyperlink",
+						size: 20,
+					}),
+				],
+				link: `mailto:${targetInfo.email}`,
+			})
+		);
+	}
+
+	if (targetInfo.isPhoneEnabled !== false && targetInfo.phone) {
+		if (contactChildren.length > 0) contactChildren.push(separator);
+		contactChildren.push(
+			new TextRun({ text: targetInfo.phone, size: 20, color: "666666" })
+		);
+	}
+
+	if (targetInfo.isCityStateEnabled !== false && targetInfo.cityState) {
+		if (contactChildren.length > 0) contactChildren.push(separator);
+		contactChildren.push(
+			new TextRun({
+				text: targetInfo.cityState,
+				size: 20,
+				color: "666666",
+			})
+		);
+	}
+
+	if (targetInfo.isPortfolioUrlEnabled !== false && targetInfo.portfolioUrl) {
+		if (contactChildren.length > 0) contactChildren.push(separator);
+		let url = targetInfo.portfolioUrl;
+		if (!url.startsWith("http")) url = "https://" + url;
+		contactChildren.push(
+			new ExternalHyperlink({
+				children: [
+					new TextRun({
+						text: targetInfo.portfolioUrl,
+						style: "Hyperlink",
+						size: 20,
+					}),
+				],
+				link: url,
+			})
+		);
+	}
+
+	if (contactChildren.length > 0) {
 		paragraphs.push(
 			new Paragraph({
 				alignment: AlignmentType.CENTER,
-				children: [
-					new TextRun({
-						text: contactParts.join(" | "),
-						size: 20, // 10pt
-						color: "666666",
-					}),
-				],
+				children: contactChildren,
 				spacing: { after: 400 }, // space after header
 			})
 		);
@@ -56,56 +96,76 @@ export const createCoverLetterDoc = async (
 	// 3. Date
 	paragraphs.push(
 		new Paragraph({
-			text: new Date().toLocaleDateString("en-US", {
-				year: "numeric",
-				month: "long",
-				day: "numeric",
-			}),
+			children: [
+				new TextRun({
+					text: new Date().toLocaleDateString("en-US", {
+						year: "numeric",
+						month: "long",
+						day: "numeric",
+					}),
+					size: 22, // 11pt
+				}),
+			],
 			spacing: { after: 400 },
 		})
 	);
 
 	// 4. Addressee Block
 	const addresseeLines = [];
-	if (targetInfo.addressee) addresseeLines.push(targetInfo.addressee);
-	if (targetInfo.roleTitle)
-		addresseeLines.push("Hiring Manager for " + targetInfo.roleTitle);
-	// Wait, if Addressee is "Hiring Manager", line 2 is redundant?
-	// Logic: If addressee is present, use it. If not, default to "Hiring Manager"
 
-	// Better logic:
-	// Line 1: Addressee Name (or "Hiring Manager")
-	// Line 2: Role (if relevant to recipient?) No, usually Company Name and Address follow.
-	// Since we only have Company Name, let's just list Company.
-
-	// Standard block:
-	// Name
-	// Title?
-	// Company
-
+	// Line 1: Recipient Name or Generic Title
 	if (targetInfo.addressee) {
 		addresseeLines.push(targetInfo.addressee);
 	} else {
 		addresseeLines.push("Hiring Manager");
 	}
 
+	// Line 2: Role Title (e.g. "Software Engineer Application")
+	if (targetInfo.roleTitle) {
+		let roleLine = targetInfo.roleTitle;
+		if (targetInfo.jobId) {
+			roleLine += ` (${targetInfo.jobId})`;
+		}
+		addresseeLines.push(roleLine);
+	}
+
+	// Line 3: Company Name
 	if (targetInfo.companyName) {
 		addresseeLines.push(targetInfo.companyName);
 	}
 
+	// Line 4: Company Location
+	if (targetInfo.companyAddress) {
+		addresseeLines.push(targetInfo.companyAddress);
+	}
+
 	for (const line of addresseeLines) {
-		paragraphs.push(new Paragraph({ text: line }));
+		paragraphs.push(
+			new Paragraph({
+				children: [new TextRun({ text: line, size: 22 })],
+			})
+		);
 	}
 	// Add spacing after address block
 	paragraphs[paragraphs.length - 1] = new Paragraph({
-		text: addresseeLines[addresseeLines.length - 1],
+		children: [
+			new TextRun({
+				text: addresseeLines[addresseeLines.length - 1],
+				size: 22,
+			}),
+		],
 		spacing: { after: 400 },
 	});
 
 	// 5. Greeting
 	paragraphs.push(
 		new Paragraph({
-			text: `Dear ${targetInfo.addressee || "Hiring Manager"},`,
+			children: [
+				new TextRun({
+					text: `Dear ${targetInfo.addressee || "Hiring Manager"},`,
+					size: 22,
+				}),
+			],
 			spacing: { after: 200 },
 		})
 	);
@@ -117,7 +177,9 @@ export const createCoverLetterDoc = async (
 		if (paraText.trim()) {
 			paragraphs.push(
 				new Paragraph({
-					children: [new TextRun(paraText.trim())],
+					children: [
+						new TextRun({ text: paraText.trim(), size: 22 }),
+					],
 					spacing: { after: 200 }, // Standard paragraph spacing
 				})
 			);
@@ -127,7 +189,7 @@ export const createCoverLetterDoc = async (
 	// 7. Sign-off
 	paragraphs.push(
 		new Paragraph({
-			text: "Sincerely,",
+			children: [new TextRun({ text: "Sincerely,", size: 22 })],
 			spacing: { before: 400, after: 600 }, // Space before signoff, Space for signature
 		})
 	);
@@ -135,7 +197,9 @@ export const createCoverLetterDoc = async (
 	if (targetInfo.authorName) {
 		paragraphs.push(
 			new Paragraph({
-				text: targetInfo.authorName,
+				children: [
+					new TextRun({ text: targetInfo.authorName, size: 22 }),
+				],
 			})
 		);
 	}

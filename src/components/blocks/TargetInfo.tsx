@@ -9,60 +9,7 @@ export function TargetInfoForm() {
 
 	return (
 		<div className="space-y-6 border border-transparent transition-colors">
-			{/* Target Details Section */}
-			<div className="space-y-3">
-				<h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-					Target Job
-				</h3>
-				<div className="grid gap-6">
-					<div className="grid gap-1.5">
-						<Label htmlFor="company" className="text-xs">
-							Company Name
-						</Label>
-						<Input
-							id="company"
-							value={targetInfo.companyName}
-							onChange={(e) =>
-								setTargetInfo({ companyName: e.target.value })
-							}
-							className="h-8"
-							placeholder="e.g. Acme Corp"
-						/>
-					</div>
-					<div className="grid gap-1.5">
-						<Label htmlFor="role" className="text-xs">
-							Role Title
-						</Label>
-						<Input
-							id="role"
-							value={targetInfo.roleTitle}
-							onChange={(e) =>
-								setTargetInfo({ roleTitle: e.target.value })
-							}
-							className="h-8"
-							placeholder="e.g. Senior Product Designer"
-						/>
-					</div>
-					<div className="grid gap-1.5">
-						<Label htmlFor="addressee" className="text-xs">
-							To (Addressee)
-						</Label>
-						<Input
-							id="addressee"
-							value={targetInfo.addressee}
-							onChange={(e) =>
-								setTargetInfo({ addressee: e.target.value })
-							}
-							className="h-8"
-							placeholder="e.g. Hiring Manager"
-						/>
-					</div>
-				</div>
-			</div>
-
-			<div className="h-[1px] bg-border w-full" />
-
-			{/* Personal Details Section */}
+			{/* Personal Details Section (Moved to Top) */}
 			<div className="space-y-3">
 				<h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
 					Your Details
@@ -225,6 +172,89 @@ export function TargetInfoForm() {
 									: ""
 							}`}
 							placeholder="e.g. linkedin.com/in/jane"
+						/>
+					</div>
+				</div>
+			</div>
+
+			<div className="h-[1px] bg-border w-full" />
+
+			{/* Target Job Details Section (Moved to Bottom) */}
+			<div className="space-y-3">
+				<h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+					Target Job
+				</h3>
+				<div className="grid gap-6">
+					<div className="grid gap-1.5">
+						<Label htmlFor="company" className="text-xs">
+							Company Name
+						</Label>
+						<Input
+							id="company"
+							value={targetInfo.companyName}
+							onChange={(e) =>
+								setTargetInfo({ companyName: e.target.value })
+							}
+							className="h-8"
+							placeholder="e.g. Acme Corp"
+						/>
+					</div>
+					<div className="grid gap-1.5">
+						<Label htmlFor="companyAddress" className="text-xs">
+							Company Location
+						</Label>
+						<Input
+							id="companyAddress"
+							value={targetInfo.companyAddress || ""}
+							onChange={(e) =>
+								setTargetInfo({
+									companyAddress: e.target.value,
+								})
+							}
+							className="h-8"
+							placeholder="e.g. New York, NY"
+						/>
+					</div>
+					<div className="grid gap-1.5">
+						<Label htmlFor="role" className="text-xs">
+							Role Title
+						</Label>
+						<Input
+							id="role"
+							value={targetInfo.roleTitle}
+							onChange={(e) =>
+								setTargetInfo({ roleTitle: e.target.value })
+							}
+							className="h-8"
+							placeholder="e.g. Senior Product Designer"
+						/>
+					</div>
+					<div className="grid gap-1.5">
+						<Label htmlFor="jobId" className="text-xs">
+							Job ID (Optional)
+						</Label>
+						<Input
+							id="jobId"
+							value={targetInfo.jobId || ""}
+							onChange={(e) =>
+								setTargetInfo({ jobId: e.target.value })
+							}
+							className="h-8"
+							placeholder="e.g. Requisition #12345"
+						/>
+					</div>
+					<div className="grid gap-1.5">
+						<Label htmlFor="addressee" className="text-xs">
+							To (Addressee)
+						</Label>
+						<Input
+							id="addressee"
+							value={targetInfo.addressee}
+							onChange={(e) =>
+								setTargetInfo({ addressee: e.target.value })
+							}
+							className="h-8"
+							placeholder="e.g. Hiring Manager"
 						/>
 					</div>
 				</div>
