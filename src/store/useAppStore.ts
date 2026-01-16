@@ -22,7 +22,7 @@ interface AppState {
 
 	// current letter
 	currentLetter: string | null; // markdown content
-	setCurrentLetter: (letter: string) => void;
+	setCurrentLetter: (letter: string | null) => void;
 
 	// suggestions
 	suggestionsMode: boolean;
@@ -117,6 +117,7 @@ export const useAppStore = create<AppState>()(
 				targetInfo: state.targetInfo,
 				selectedModel: state.selectedModel,
 				savedLetters: state.savedLetters,
+				currentLetter: state.currentLetter,
 			}), // persisting only necessary data
 		}
 	)

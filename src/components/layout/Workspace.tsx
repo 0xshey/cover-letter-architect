@@ -7,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { EditorPane } from "@/components/editor/EditorPane";
 import { PreviewPane } from "@/components/editor/PreviewPane";
 import { Button } from "@/components/ui/button";
-import { Wand2, Download, Loader2, ChevronLeft } from "lucide-react";
+import { Wand2, Download, Loader2, ChevronLeft, Trash2 } from "lucide-react";
 
 import { ErrorDialog } from "@/components/ErrorDialog";
 import { createCoverLetterDoc } from "@/lib/docx-generator";
@@ -119,6 +119,20 @@ export function Workspace({ className, ...props }: WorkspaceProps) {
 				</div>
 
 				<div className="flex items-center gap-2">
+					{currentLetter && (
+						<Button
+							variant="ghost"
+							size="sm"
+							className="h-8 w-8 p-0 md:h-8 md:w-auto md:px-2.5 text-muted-foreground hover:text-foreground rounded-md hover:bg-destructive/10 hover:text-destructive"
+							onClick={() => setCurrentLetter(null)}
+							title="Clear Content"
+						>
+							<Trash2 className="h-3.5 w-3.5 md:mr-1.5" />
+							<span className="hidden md:inline text-xs font-sans">
+								Clear
+							</span>
+						</Button>
+					)}
 					<Button
 						variant="ghost"
 						size="sm"
@@ -166,20 +180,26 @@ export function Workspace({ className, ...props }: WorkspaceProps) {
 						onClick={handleGenerate}
 						disabled={isGenerating}
 						className="h-8 w-8 p-0 md:h-8 md:w-auto md:px-2.5 shadow-none rounded-md"
-						title="Generate Cover Letter"
+						title={
+							currentLetter
+								? "Regenerate Cover Letter"
+								: "Generate Cover Letter"
+						}
 					>
 						{isGenerating ? (
 							<>
 								<Loader2 className="h-3 w-3 animate-spin md:mr-1.5" />
 								<span className="hidden md:inline text-xs font-sans leading-none">
-									Generating...
+									{currentLetter
+										? "Regenerating..."
+										: "Generating..."}
 								</span>
 							</>
 						) : (
 							<>
 								<Wand2 className="h-3 w-3 md:mr-1.5" />
 								<span className="hidden md:inline text-xs font-sans leading-none">
-									Generate
+									{currentLetter ? "Regenerate" : "Generate"}
 								</span>
 							</>
 						)}
