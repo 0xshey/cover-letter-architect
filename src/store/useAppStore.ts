@@ -1,11 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import {
-	ContentBlock,
-	TargetInfo,
-	GeneratedLetter,
-	BlockCategory,
-} from "@/types";
+import { ContentBlock, TargetInfo, GeneratedLetter } from "@/types";
 
 interface AppState {
 	// content blocks
@@ -20,8 +15,6 @@ interface AppState {
 	setTargetInfo: (info: Partial<TargetInfo>) => void;
 
 	// generation
-	apiKey: string;
-	setApiKey: (key: string) => void;
 	selectedModel: string;
 	setSelectedModel: (model: string) => void;
 	isGenerating: boolean;
@@ -86,10 +79,7 @@ export const useAppStore = create<AppState>()(
 					targetInfo: { ...state.targetInfo, ...info },
 				})),
 
-			apiKey: "",
-			setApiKey: (key) => set({ apiKey: key }),
-
-			selectedModel: "gemini-2.0-flash-exp",
+			selectedModel: "gemini-1.5-flash",
 			setSelectedModel: (model) => set({ selectedModel: model }),
 
 			isGenerating: false,
@@ -116,7 +106,6 @@ export const useAppStore = create<AppState>()(
 			partialize: (state) => ({
 				blocks: state.blocks,
 				targetInfo: state.targetInfo,
-				apiKey: state.apiKey,
 				selectedModel: state.selectedModel,
 				savedLetters: state.savedLetters,
 			}), // persisting only necessary data

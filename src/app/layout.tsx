@@ -15,6 +15,7 @@ export const metadata: Metadata = {
 	description: "Assemble personalized cover letters with AI",
 };
 
+import { Providers } from "@/components/Providers";
 import { ThemeProvider } from "@/components/ThemeProvider";
 
 export default function RootLayout({
@@ -31,14 +32,16 @@ export default function RootLayout({
 					merriweather.variable
 				)}
 			>
-				<ThemeProvider
-					attribute="class"
-					defaultTheme="system"
-					enableSystem
-					disableTransitionOnChange
-				>
-					{children}
-				</ThemeProvider>
+				<Providers>
+					<ThemeProvider
+						attribute="class"
+						defaultTheme="system"
+						enableSystem
+						disableTransitionOnChange
+					>
+						{children}
+					</ThemeProvider>
+				</Providers>
 			</body>
 		</html>
 	);

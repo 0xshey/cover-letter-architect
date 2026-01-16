@@ -6,7 +6,7 @@ import { SettingsDialog } from "@/components/SettingsDialog";
 import { BlockList } from "@/components/blocks/BlockList";
 import { TargetInfoForm } from "@/components/blocks/TargetInfo";
 
-interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {}
+type SidebarProps = React.HTMLAttributes<HTMLDivElement>;
 
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { useAppStore } from "@/store/useAppStore";

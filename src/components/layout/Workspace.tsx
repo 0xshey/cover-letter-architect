@@ -9,7 +9,7 @@ import { PreviewPane } from "@/components/editor/PreviewPane";
 import { Button } from "@/components/ui/button";
 import { Wand2, Download, Loader2, ChevronLeft } from "lucide-react";
 
-interface WorkspaceProps extends React.HTMLAttributes<HTMLDivElement> {}
+type WorkspaceProps = React.HTMLAttributes<HTMLDivElement>;
 
 export function Workspace({ className, ...props }: WorkspaceProps) {
 	const {
@@ -17,7 +17,6 @@ export function Workspace({ className, ...props }: WorkspaceProps) {
 		currentLetter,
 		blocks,
 		targetInfo,
-		apiKey,
 		selectedModel,
 		setIsGenerating,
 		setCurrentLetter,
@@ -25,7 +24,6 @@ export function Workspace({ className, ...props }: WorkspaceProps) {
 		setActiveMobileView,
 	} = useAppStore();
 	const [activeTab, setActiveTab] = useState("editor");
-	const { toast } = { toast: (opts: any) => console.log(opts) };
 
 	const handleGenerate = async () => {
 		if (blocks.filter((b) => b.isEnabled).length === 0) {
@@ -41,7 +39,6 @@ export function Workspace({ className, ...props }: WorkspaceProps) {
 				body: JSON.stringify({
 					blocks: blocks.filter((b) => b.isEnabled),
 					targetInfo,
-					apiKey,
 					model: selectedModel,
 				}),
 			});
@@ -64,9 +61,11 @@ export function Workspace({ className, ...props }: WorkspaceProps) {
 			});
 
 			setActiveTab("preview");
-		} catch (error: any) {
+		} catch (error: unknown) {
 			console.error(error);
-			alert(error.message);
+			const message =
+				error instanceof Error ? error.message : "An error occurred";
+			alert(message);
 		} finally {
 			setIsGenerating(false);
 		}

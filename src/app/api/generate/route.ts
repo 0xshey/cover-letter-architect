@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { GoogleGenAI } from "@google/genai";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/auth";
 import { ContentBlock, TargetInfo } from "@/types";
 
 interface GenerateRequest {
 	blocks: ContentBlock[];
 	targetInfo: TargetInfo;
-	apiKey?: string;
 	model?: string;
 }
 
@@ -25,23 +25,20 @@ Instructions:
 
 export async function POST(req: NextRequest) {
 	try {
+		const session = await getServerSession(authOptions);
+
+		if (!session || !session.accessToken) {
+			return NextResponse.json(
+				{ error: "Unauthorized. Please sign in with Google." },
+				{ status: 401 }
+			);
+		}
+
 		const {
 			blocks,
 			targetInfo,
-			apiKey: userApiKey,
 			model: selectedModel,
 		} = (await req.json()) as GenerateRequest;
-
-		const apiKey = userApiKey || process.env.GOOGLE_GENERATIVE_AI_API_KEY;
-
-		if (!apiKey) {
-			return NextResponse.json(
-				{
-					error: "API Key is missing. Please provide one in Settings or set GOOGLE_GENERATIVE_AI_API_KEY env var.",
-				},
-				{ status: 400 }
-			);
-		}
 
 		if (!blocks || blocks.length === 0) {
 			return NextResponse.json(
@@ -49,8 +46,6 @@ export async function POST(req: NextRequest) {
 				{ status: 400 }
 			);
 		}
-
-		const ai = new GoogleGenAI({ apiKey });
 
 		const userContent = `
     Target Company: ${targetInfo.companyName}
@@ -63,36 +58,64 @@ export async function POST(req: NextRequest) {
     Please write the cover letter now.
     `;
 
-		const response = await ai.models.generateContent({
-			model: selectedModel || "gemini-2.0-flash-exp",
-			contents: [
-				{
-					role: "user",
-					parts: [{ text: SYSTEM_PROMPT + "\n\n" + userContent }],
-				},
-			],
-			config: {
-				responseMimeType: "application/json",
+		// Allow any model selected by the user, defaulting to 1.5-flash if missing
+		const model = selectedModel || "gemini-1.5-flash";
+
+		console.log("Calling Gemini API with model:", model);
+		const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
+
+		console.log("Calling Gemini API with model:", model);
+
+		const geminiResponse = await fetch(url, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${session.accessToken}`,
 			},
+			body: JSON.stringify({
+				contents: [
+					{
+						role: "user",
+						parts: [{ text: SYSTEM_PROMPT + "\n\n" + userContent }],
+					},
+				],
+				generationConfig: {
+					responseMimeType: "application/json",
+				},
+			}),
 		});
 
-		const text = response.text;
+		if (!geminiResponse.ok) {
+			const errorData = await geminiResponse.json();
+			console.error("Gemini API Error:", errorData);
+			throw new Error(
+				errorData.error?.message ||
+					`Gemini API request failed: ${geminiResponse.statusText}`
+			);
+		}
+
+		const data = await geminiResponse.json();
+		// Gemini REST API response structure: candidates[0].content.parts[0].text
+		const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+
+		if (!text) {
+			throw new Error("Empty response from AI");
+		}
 
 		// Parse JSON response safely
 		try {
-			// response.text() in new SDK might return null or undefined, so handle that
-			if (!text) throw new Error("Empty response from AI");
 			const jsonResponse = JSON.parse(text);
 			return NextResponse.json(jsonResponse);
-		} catch (e) {
+		} catch {
 			console.error("Failed to parse JSON from AI response:", text);
 			return NextResponse.json({ markdown: text, rawText: text });
 		}
-	} catch (error: any) {
+	} catch (error: unknown) {
 		console.error("Generation error:", error);
-		return NextResponse.json(
-			{ error: error.message || "Failed to generate cover letter" },
-			{ status: 500 }
-		);
+		const errorMessage =
+			error instanceof Error
+				? error.message
+				: "Failed to generate cover letter";
+		return NextResponse.json({ error: errorMessage }, { status: 500 });
 	}
 }
