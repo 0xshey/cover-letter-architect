@@ -65,7 +65,7 @@ export function PreviewPane() {
 	}, [currentLetter, targetInfo]);
 
 	return (
-		<div className="h-full bg-muted/50 p-4 md:p-8 border rounded flex flex-col items-center justify-center">
+		<div className="h-full w-full flex flex-col items-center justify-center bg-gray-50 overflow-hidden p-8">
 			{!currentLetter ? (
 				<div className="text-muted-foreground italic">
 					Preview will appear here...
@@ -76,7 +76,7 @@ export function PreviewPane() {
 					<span>Rendering PDF...</span>
 				</div>
 			) : error ? (
-				<div className="text-destructive p-4 bg-destructive/10 rounded max-w-md text-center">
+				<div className="text-destructive p-4 bg-destructive/50 rounded max-w-md text-center">
 					<p className="font-semibold mb-1">Preview Error</p>
 					<p className="text-sm overflow-auto max-h-40 whitespace-pre-wrap text-left text-xs bg-white/50 p-2 rounded mt-2">
 						{error}
@@ -84,8 +84,8 @@ export function PreviewPane() {
 				</div>
 			) : (
 				<iframe
-					src={pdfUrl + "#toolbar=0&view=FitH"}
-					className="w-full h-full min-h-[500px] shadow-xl bg-white rounded-sm"
+					src={pdfUrl + "#toolbar=0&navpanes=0&view=Fit"}
+					className="w-full h-full border-none shadow-lg bg-white rounded-sm"
 					title="PDF Preview"
 				/>
 			)}

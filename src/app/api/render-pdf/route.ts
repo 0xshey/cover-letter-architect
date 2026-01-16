@@ -22,7 +22,6 @@ export async function POST(req: NextRequest) {
 		// node-latex returns a stream
 		const pdf = latex(input);
 
-		// Buffer the stream
 		const pdfBuffer = await new Promise<Buffer>((resolve, reject) => {
 			const chunks: Uint8Array[] = [];
 			pdf.on("data", (chunk: Uint8Array) => chunks.push(chunk));
@@ -30,7 +29,7 @@ export async function POST(req: NextRequest) {
 			pdf.on("end", () => resolve(Buffer.concat(chunks)));
 		});
 
-		return new NextResponse(pdfBuffer, {
+		return new NextResponse(pdfBuffer as any, {
 			headers: {
 				"Content-Type": "application/pdf",
 				// "Content-Disposition": "inline; filename=preview.pdf"
