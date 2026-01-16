@@ -88,10 +88,21 @@ export async function POST(req: NextRequest) {
 		if (!geminiResponse.ok) {
 			const errorData = await geminiResponse.json();
 			console.error("Gemini API Error:", errorData);
-			throw new Error(
+
+			const errorMessage =
 				errorData.error?.message ||
-					`Gemini API request failed: ${geminiResponse.statusText}`
-			);
+				`Gemini API request failed: ${geminiResponse.statusText}`;
+
+			if (
+				geminiResponse.status === 401 ||
+				errorMessage.includes("invalid authentication credentials")
+			) {
+				throw new Error(
+					"Your Google session has expired. Please Sign Out and Sign In again in Settings."
+				);
+			}
+
+			throw new Error(errorMessage);
 		}
 
 		const data = await geminiResponse.json();

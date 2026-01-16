@@ -9,6 +9,8 @@ import { PreviewPane } from "@/components/editor/PreviewPane";
 import { Button } from "@/components/ui/button";
 import { Wand2, Download, Loader2, ChevronLeft } from "lucide-react";
 
+import { ErrorDialog } from "@/components/ErrorDialog";
+
 type WorkspaceProps = React.HTMLAttributes<HTMLDivElement>;
 
 export function Workspace({ className, ...props }: WorkspaceProps) {
@@ -24,10 +26,11 @@ export function Workspace({ className, ...props }: WorkspaceProps) {
 		setActiveMobileView,
 	} = useAppStore();
 	const [activeTab, setActiveTab] = useState("editor");
+	const [error, setError] = useState<string | null>(null);
 
 	const handleGenerate = async () => {
 		if (blocks.filter((b) => b.isEnabled).length === 0) {
-			alert("Please enable at least one content block.");
+			setError("Please enable at least one content block.");
 			return;
 		}
 
@@ -65,7 +68,7 @@ export function Workspace({ className, ...props }: WorkspaceProps) {
 			console.error(error);
 			const message =
 				error instanceof Error ? error.message : "An error occurred";
-			alert(message);
+			setError(message);
 		} finally {
 			setIsGenerating(false);
 		}
@@ -73,6 +76,12 @@ export function Workspace({ className, ...props }: WorkspaceProps) {
 
 	return (
 		<div className={cn("flex flex-col h-full", className)} {...props}>
+			<ErrorDialog
+				open={!!error}
+				onOpenChange={(open) => !open && setError(null)}
+				error={error}
+				title="Action Failed"
+			/>
 			<div className="flex items-center px-4 py-2 justify-between shrink-0 h-14">
 				<div className="flex items-center gap-2">
 					<Button
