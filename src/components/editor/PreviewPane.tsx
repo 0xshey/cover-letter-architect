@@ -1,57 +1,92 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useAppStore } from "@/store/useAppStore";
-import { renderAsync } from "docx-preview";
-import { createCoverLetterDoc } from "@/lib/docx-generator";
+import { generateLatexCode } from "@/lib/latex-generator";
 
 export function PreviewPane() {
 	const { currentLetter, targetInfo } = useAppStore();
-	const containerRef = useRef<HTMLDivElement>(null);
+	const [pdfUrl, setPdfUrl] = useState<string | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
+	const [error, setError] = useState<string | null>(null);
 
 	useEffect(() => {
-		const renderDoc = async () => {
-			if (currentLetter && containerRef.current) {
-				setIsLoading(true);
-				try {
-					const blob = await createCoverLetterDoc(
-						targetInfo,
-						currentLetter
+		const fetchPdf = async () => {
+			if (!currentLetter) {
+				if (pdfUrl) URL.revokeObjectURL(pdfUrl);
+				setPdfUrl(null);
+				return;
+			}
+
+			setIsLoading(true);
+			setError(null);
+			// Ideally we revoke old URL to avoid leaks, but we need to keep it until new one loads
+			// or show loading state.
+			// Let's hold onto old one briefly or clear it? Clearing it shows flicker.
+			// Just clearing old one is safer.
+			if (pdfUrl) URL.revokeObjectURL(pdfUrl);
+			setPdfUrl(null);
+
+			try {
+				const latexCode = generateLatexCode(targetInfo, currentLetter);
+				const response = await fetch("/api/render-pdf", {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({ latexCode }),
+				});
+
+				if (!response.ok) {
+					const errData = await response.json();
+					throw new Error(
+						errData.details ||
+							errData.error ||
+							"Failed to render PDF"
 					);
-					// Clear previous content
-					containerRef.current.innerHTML = "";
-					// Create a dedicated wrapper because docx-preview appends styles globally sometimes or needs wrapping
-					await renderAsync(blob, containerRef.current, undefined, {
-						className: "docx_viewer", // optional class
-						inWrapper: true,
-						ignoreWidth: false,
-						ignoreHeight: false,
-						// docx-preview options
-					});
-				} catch (err) {
-					console.error("Failed to render docx preview:", err);
-				} finally {
-					setIsLoading(false);
 				}
+
+				const blob = await response.blob();
+				const url = URL.createObjectURL(blob);
+				setPdfUrl(url);
+			} catch (err: any) {
+				console.error("PDF Preview Error:", err);
+				setError(err.message);
+			} finally {
+				setIsLoading(false);
 			}
 		};
 
-		renderDoc();
+		// Debounce slightly? For now standard effect is fine as currentLetter changes only on generation
+		fetchPdf();
+
+		return () => {
+			if (pdfUrl) URL.revokeObjectURL(pdfUrl);
+		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [currentLetter, targetInfo]);
 
 	return (
-		<div className="h-full overflow-auto bg-muted/50 p-4 md:p-8 border rounded flex flex-col items-center">
+		<div className="h-full bg-muted/50 p-4 md:p-8 border rounded flex flex-col items-center justify-center">
 			{!currentLetter ? (
-				<div className="h-full flex items-center justify-center text-muted-foreground italic">
+				<div className="text-muted-foreground italic">
 					Preview will appear here...
 				</div>
+			) : isLoading && !pdfUrl ? (
+				<div className="flex flex-col items-center gap-2 text-muted-foreground">
+					<div className="h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+					<span>Rendering PDF...</span>
+				</div>
+			) : error ? (
+				<div className="text-destructive p-4 bg-destructive/10 rounded max-w-md text-center">
+					<p className="font-semibold mb-1">Preview Error</p>
+					<p className="text-sm overflow-auto max-h-40 whitespace-pre-wrap text-left text-xs bg-white/50 p-2 rounded mt-2">
+						{error}
+					</p>
+				</div>
 			) : (
-				<div
-					ref={containerRef}
-					// docx-preview renders styled HTML. We ensure it's centered and has a paper-like shadow.
-					className="bg-white shadow-xl min-h-[297mm] w-full max-w-[210mm] p-0 overflow-hidden text-black transition-opacity duration-300"
-					style={{ opacity: isLoading ? 0.5 : 1 }}
+				<iframe
+					src={pdfUrl + "#toolbar=0&view=FitH"}
+					className="w-full h-full min-h-[500px] shadow-xl bg-white rounded-sm"
+					title="PDF Preview"
 				/>
 			)}
 		</div>

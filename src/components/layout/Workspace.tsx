@@ -7,10 +7,18 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { EditorPane } from "@/components/editor/EditorPane";
 import { PreviewPane } from "@/components/editor/PreviewPane";
 import { Button } from "@/components/ui/button";
-import { Wand2, Download, Loader2, ChevronLeft, Trash2 } from "lucide-react";
+import {
+	Wand2,
+	Download,
+	Loader2,
+	ChevronLeft,
+	Trash2,
+	FileText,
+	Code,
+} from "lucide-react";
 
 import { ErrorDialog } from "@/components/ErrorDialog";
-import { createCoverLetterDoc } from "@/lib/docx-generator";
+import { generateLatexCode } from "@/lib/latex-generator";
 
 type WorkspaceProps = React.HTMLAttributes<HTMLDivElement>;
 
@@ -100,12 +108,18 @@ export function Workspace({ className, ...props }: WorkspaceProps) {
 							onValueChange={setActiveTab}
 							className="h-9"
 						>
-							<TabsList className="bg-transparent p-0">
+							<TabsList className="bg-transparent p-0 gap-1">
 								<TabsTrigger
 									value="editor"
 									className="data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:rounded-none px-4 rounded-none border-b-2 border-transparent text-xs font-sans"
 								>
 									Editor
+								</TabsTrigger>
+								<TabsTrigger
+									value="latex"
+									className="data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:rounded-none px-4 rounded-none border-b-2 border-transparent text-xs font-sans"
+								>
+									LaTeX
 								</TabsTrigger>
 								<TabsTrigger
 									value="preview"
@@ -152,12 +166,83 @@ export function Workspace({ className, ...props }: WorkspaceProps) {
 							);
 							const filename = `${date}_${company || "Company"}_${
 								role || "Role"
-							}.docx`;
+							}.pdf`;
 
-							const blob = await createCoverLetterDoc(
+							try {
+								const latexCode = generateLatexCode(
+									targetInfo,
+									currentLetter
+								);
+								const response = await fetch(
+									"/api/render-pdf",
+									{
+										method: "POST",
+										headers: {
+											"Content-Type": "application/json",
+										},
+										body: JSON.stringify({ latexCode }),
+									}
+								);
+
+								if (!response.ok) {
+									const errData = await response.json();
+									throw new Error(
+										errData.details ||
+											"Failed to generate PDF"
+									);
+								}
+
+								const blob = await response.blob();
+								const url = URL.createObjectURL(blob);
+								const a = document.createElement("a");
+								a.href = url;
+								a.download = filename;
+								document.body.appendChild(a);
+								a.click();
+								document.body.removeChild(a);
+								URL.revokeObjectURL(url);
+							} catch (err) {
+								console.error("Download PDF failed:", err);
+								alert(
+									"Failed to download PDF. Please try again."
+								);
+							}
+						}}
+						title="Download PDF"
+					>
+						<Download className="h-3.5 w-3.5 md:mr-1.5" />
+						<span className="hidden md:inline text-xs font-sans">
+							Download PDF
+						</span>
+					</Button>
+					<Button
+						variant="ghost"
+						size="sm"
+						className="h-8 w-8 p-0 md:h-8 md:w-auto md:px-2.5 text-muted-foreground hover:text-foreground rounded-md"
+						disabled={!currentLetter}
+						onClick={() => {
+							if (!currentLetter) return;
+
+							const date = new Date().toISOString().split("T")[0];
+							const company = targetInfo.companyName.replace(
+								/[^a-z0-9]/gi,
+								"_"
+							);
+							const role = targetInfo.roleTitle.replace(
+								/[^a-z0-9]/gi,
+								"_"
+							);
+							const filename = `${date}_${company || "Company"}_${
+								role || "Role"
+							}.tex`;
+
+							const latexCode = generateLatexCode(
 								targetInfo,
 								currentLetter
 							);
+							const blob = new Blob([latexCode], {
+								type: "application/x-latex",
+							});
 							const url = URL.createObjectURL(blob);
 							const a = document.createElement("a");
 							a.href = url;
@@ -167,11 +252,11 @@ export function Workspace({ className, ...props }: WorkspaceProps) {
 							document.body.removeChild(a);
 							URL.revokeObjectURL(url);
 						}}
-						title="Download DOCX"
+						title="Download Source (.tex)"
 					>
-						<Download className="h-3.5 w-3.5 md:mr-1.5" />
+						<Code className="h-3.5 w-3.5 md:mr-1.5" />
 						<span className="hidden md:inline text-xs font-sans">
-							Download DOCX
+							Source (.tex)
 						</span>
 					</Button>
 					<Button
@@ -214,6 +299,16 @@ export function Workspace({ className, ...props }: WorkspaceProps) {
 						className="h-full mt-0 data-[state=active]:flex flex-col border rounded overflow-hidden"
 					>
 						<EditorPane />
+					</TabsContent>
+					<TabsContent
+						value="latex"
+						className="h-full mt-0 data-[state=active]:flex flex-col border rounded overflow-hidden bg-background"
+					>
+						<div className="p-8 h-full overflow-auto font-mono text-xs whitespace-pre-wrap">
+							{currentLetter
+								? generateLatexCode(targetInfo, currentLetter)
+								: "Generate a letter to see the LaTeX source."}
+						</div>
 					</TabsContent>
 					<TabsContent
 						value="preview"
