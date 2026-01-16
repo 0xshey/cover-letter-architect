@@ -18,9 +18,15 @@ Instructions:
 2. If the user's blocks are informal, be informal. If they are academic, be academic. Do NOT force "corporate speak" if it doesn't match the input.
 3. Structure the letter for the specific Role and Company provided.
 4. You MUST use the content from the blocks. Do not invent completely new experiences, but you can smooth out transitions.
-5. CRITICAL: Whenever you use a sentence or significant phrase directly from the provided Content Blocks, wrap it in <mark> tags. Example: "I am <mark>experienced in React and Node.js</mark>."
-6. Return the response in a JSON structure with "markdown" (the full letter with mark tags) and "rawText" (plain text without mark tags).
-7. The output markdown should be clean and ready to render.
+5. GENERATE ONLY THE BODY PARAGRAPHS of the letter.
+   - DO NOT include a header (name, email, etc).
+   - DO NOT include the Date.
+   - DO NOT include the Greeting (Dear X).
+   - DO NOT include the Sign-off or Signature.
+   - Just the paragraphs of the letter itself.
+6. Return the response in a JSON structure with:
+   - "markdown": The body paragraphs.
+   - "rawText": The same body paragraphs.
 `;
 
 export async function POST(req: NextRequest) {

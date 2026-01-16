@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Wand2, Download, Loader2, ChevronLeft } from "lucide-react";
 
 import { ErrorDialog } from "@/components/ErrorDialog";
+import { createCoverLetterDoc } from "@/lib/docx-generator";
 
 type WorkspaceProps = React.HTMLAttributes<HTMLDivElement>;
 
@@ -123,7 +124,7 @@ export function Workspace({ className, ...props }: WorkspaceProps) {
 						size="sm"
 						className="h-8 w-8 p-0 md:h-8 md:w-auto md:px-2.5 text-muted-foreground hover:text-foreground rounded-md"
 						disabled={!currentLetter}
-						onClick={() => {
+						onClick={async () => {
 							if (!currentLetter) return;
 
 							const date = new Date().toISOString().split("T")[0];
@@ -137,11 +138,12 @@ export function Workspace({ className, ...props }: WorkspaceProps) {
 							);
 							const filename = `${date}_${company || "Company"}_${
 								role || "Role"
-							}.md`;
+							}.docx`;
 
-							const blob = new Blob([currentLetter], {
-								type: "text/markdown",
-							});
+							const blob = await createCoverLetterDoc(
+								targetInfo,
+								currentLetter
+							);
 							const url = URL.createObjectURL(blob);
 							const a = document.createElement("a");
 							a.href = url;
@@ -151,11 +153,11 @@ export function Workspace({ className, ...props }: WorkspaceProps) {
 							document.body.removeChild(a);
 							URL.revokeObjectURL(url);
 						}}
-						title="Download Markdown"
+						title="Download DOCX"
 					>
 						<Download className="h-3.5 w-3.5 md:mr-1.5" />
 						<span className="hidden md:inline text-xs font-sans">
-							Download
+							Download DOCX
 						</span>
 					</Button>
 					<Button
