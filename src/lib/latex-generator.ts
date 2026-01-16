@@ -78,28 +78,41 @@ export const generateLatexCode = (
 		day: "numeric",
 	});
 
-	return `\\documentclass{article}
+	return `\\documentclass[11pt,letterpaper]{article}
+\\usepackage[utf8]{inputenc}
+\\usepackage[T1]{fontenc}
+\\usepackage{lmodern}
+\\usepackage[margin=1in]{geometry}
 \\usepackage{hyperref}
-\\usepackage{graphicx}
+\\usepackage{parskip} % Adds vertical space between paragraphs, removes indentation
+\\usepackage{xcolor}
 
-% Minimal minimal preamble for compatibility with JS-based LaTeX parsers
-% Standard Article Class
+% Remove page numbers
+\\pagenumbering{gobble}
+
+% Hyperlink Setup
+\\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    filecolor=black,
+    urlcolor=black,
+}
 
 \\begin{document}
 
 % --- Header ---
 \\begin{center}
-    {\\huge \\bfseries ${safe(targetInfo.authorName || "")}} \\\\[0.5em]
+    {\\huge \\bfseries ${safe(targetInfo.authorName || "")}} \\\\[0.4em]
     {\\small ${headerContact}}
 \\end{center}
 
-\\vspace{1em}
-\\noindent\\rule{\\linewidth}{0.4pt}
+\\vspace{0.5em}
+\\noindent\\rule{\\linewidth}{0.5pt}
 \\vspace{1.5em}
 
 % --- Date ---
 ${dateStr}
-\\vspace{1.5em}
+\\vspace{1em}
 
 % --- Addressee ---
 \\noindent
