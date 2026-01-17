@@ -21,7 +21,7 @@ export async function GET(
 
 		const { data, error } = await supabase
 			.from("cover_letters")
-			.select("*")
+			.select("*, generations(markdown, latex, created_at)")
 			.eq("id", id)
 			.single();
 
@@ -29,7 +29,23 @@ export async function GET(
 			throw error;
 		}
 
-		return NextResponse.json({ coverLetter: data });
+		// Sort generations to find the latest one (client-side sort for safety)
+		const generations = (data.generations as any[]) || [];
+		generations.sort(
+			(a, b) =>
+				new Date(b.created_at).getTime() -
+				new Date(a.created_at).getTime()
+		);
+		const latest = generations[0];
+
+		const responsePayload = {
+			...data,
+			markdown: latest?.markdown || null,
+			latex: latest?.latex || null,
+			generations: undefined, // Remove generic array to clean up
+		};
+
+		return NextResponse.json({ coverLetter: responsePayload });
 	} catch (error: unknown) {
 		console.error("Fetch cover letter error:", error);
 		const message =
@@ -57,9 +73,9 @@ export async function PUT(
 		}
 
 		const body = await request.json();
-		const { title, target_info, blocks } = body;
+		const { title, target_info, blocks, markdown, latex } = body;
 
-		const { data, error } = await supabase
+		const { data: coverLetter, error: clError } = await supabase
 			.from("cover_letters")
 			.update({
 				title,
@@ -71,11 +87,44 @@ export async function PUT(
 			.select()
 			.single();
 
-		if (error) {
-			throw error;
+		if (clError) {
+			throw clError;
 		}
 
-		return NextResponse.json({ coverLetter: data });
+		if (markdown) {
+			// Insert new generation
+			const { error: genError } = await supabase
+				.from("generations")
+				.insert({
+					cover_letter_id: id,
+					markdown,
+					latex,
+					description: "Update",
+				});
+
+			if (genError) {
+				console.error("Failed to save generation:", genError);
+			}
+
+			// Prune old generations (keep latest 10)
+			const { data: latestGenerations } = await supabase
+				.from("generations")
+				.select("id")
+				.eq("cover_letter_id", id)
+				.order("created_at", { ascending: false })
+				.limit(10);
+
+			if (latestGenerations && latestGenerations.length > 0) {
+				const keepIds = latestGenerations.map((g) => g.id);
+				await supabase
+					.from("generations")
+					.delete()
+					.eq("cover_letter_id", id)
+					.not("id", "in", `(${keepIds})`); // Supabase filter syntax for list
+			}
+		}
+
+		return NextResponse.json({ coverLetter });
 	} catch (error: unknown) {
 		console.error("Update cover letter error:", error);
 		const message =

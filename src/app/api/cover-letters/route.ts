@@ -49,7 +49,7 @@ export async function POST(req: NextRequest) {
 		}
 
 		const body = await req.json();
-		const { title, target_info, blocks } = body;
+		const { title, target_info, blocks, markdown, latex } = body;
 
 		if (!title || !target_info || !blocks) {
 			return NextResponse.json(
@@ -59,7 +59,7 @@ export async function POST(req: NextRequest) {
 		}
 
 		// Insert new cover letter
-		const { data, error } = await supabase
+		const { data: coverLetter, error: clError } = await supabase
 			.from("cover_letters")
 			.insert({
 				user_id: session.user.id,
@@ -70,11 +70,28 @@ export async function POST(req: NextRequest) {
 			.select()
 			.single();
 
-		if (error) {
-			throw error;
+		if (clError) {
+			throw clError;
 		}
 
-		return NextResponse.json({ coverLetter: data });
+		// Insert initial generation if content is provided
+		if (markdown) {
+			const { error: genError } = await supabase
+				.from("generations")
+				.insert({
+					cover_letter_id: coverLetter.id,
+					markdown,
+					latex,
+					description: "Initial Save",
+				});
+
+			if (genError) {
+				console.error("Failed to save initial generation:", genError);
+				// We don't fail the whole request, but log it
+			}
+		}
+
+		return NextResponse.json({ coverLetter });
 	} catch (error: unknown) {
 		console.error("Save cover letter error:", error);
 		const message =

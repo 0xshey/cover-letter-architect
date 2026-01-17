@@ -104,6 +104,10 @@ export function Workspace({ className, ...props }: WorkspaceProps) {
 			title,
 			target_info: targetInfo,
 			blocks,
+			markdown: currentLetter,
+			latex: currentLetter
+				? generateLatexCode(targetInfo, currentLetter)
+				: null,
 		};
 
 		try {

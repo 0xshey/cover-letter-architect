@@ -75,12 +75,24 @@ export function DashboardClient() {
 		}
 	};
 
-	const handleLoad = (cl: CoverLetter) => {
-		setTargetInfo(cl.target_info);
-		setBlocks(cl.blocks);
-		setCurrentCoverLetterId(cl.id);
-		setCurrentLetter(null);
-		router.push("/");
+	const handleLoad = async (cl: CoverLetter) => {
+		try {
+			// Optimistically set metadata
+			setTargetInfo(cl.target_info);
+			setBlocks(cl.blocks);
+			setCurrentCoverLetterId(cl.id);
+
+			// Fetch full content (including latest generation)
+			const res = await fetch(`/api/cover-letters/${cl.id}`);
+			if (res.ok) {
+				const { coverLetter } = await res.json();
+				setCurrentLetter(coverLetter.markdown || null);
+			}
+
+			router.push("/");
+		} catch (error) {
+			console.error("Failed to load cover letter details", error);
+		}
 	};
 
 	if (isLoading) {
