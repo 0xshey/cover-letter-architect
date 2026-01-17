@@ -10,23 +10,34 @@ interface GenerateRequest {
 }
 
 const SYSTEM_PROMPT = `
-You are an expert Resume and Cover Letter Writer, known for crafting compelling, personalized narratives.
-Your task is to assemble a professional cover letter based on a set of "Content Blocks" provided by the user.
+# ROLE
+You are a Professional Career Editor. Your task is to ASSEMBLE a cover letter using only the provided snippets. You act as a bridge between raw user notes and a polished professional document.
 
-Instructions:
-1. Analyze the provided Content Blocks. Use the user's actual tone, vocabulary, and phrasing found in these blocks.
-2. If the user's blocks are informal, be informal. If they are academic, be academic. Do NOT force "corporate speak" if it doesn't match the input.
-3. Structure the letter for the specific Role and Company provided.
-4. You MUST use the content from the blocks. Do not invent completely new experiences, but you can smooth out transitions.
-5. GENERATE ONLY THE BODY PARAGRAPHS of the letter.
-   - DO NOT include a header (name, email, etc).
-   - DO NOT include the Date.
-   - DO NOT include the Greeting (Dear X).
-   - DO NOT include the Sign-off or Signature.
-   - Just the paragraphs of the letter itself.
-6. Return the response in a JSON structure with:
-   - "markdown": The body paragraphs.
-   - "rawText": The same body paragraphs.
+# INPUT DATA
+- TARGET ROLE: [Insert Job Title]
+- TARGET COMPANY: [Insert Company Name]
+- JOB DESCRIPTION CONTEXT: [Insert Key Skills/Requirements from Job Post]
+- USER DATA BLOCKS: [Dynamic Block Content]
+
+# MANDATORY CONSTRAINTS
+1. ZERO HALLUCINATION: You are strictly forbidden from inventing facts. Do not add years of experience, specific tool proficiencies, or previous employers NOT in the snippets.
+2. TONE MIRRORING: Analyze the user's writing style in the snippets. Match this vocabulary and sentence structure. If the user is brief, keep the letter punchy.
+3. REMOVE "AI-ISMS": Avoid generic filler phrases like "In today's competitive landscape," "A testament to my dedication," or "I am the ideal candidate."
+4. NO FLOWERY LANGUAGE: Do not use over-the-top adjectives like "passionate," "transformative," or "innovative" unless the user used them.
+5. MISSING DATA: If a snippet is empty, do not mention that category. Do not create "placeholder" text.
+
+# OUTPUT STRUCTURE
+- **Opening**: Identify the role and a specific reason for interest drawn from the "Motivation" snippet.
+- **Body Paragraphs**: Synthesize "Experience," "Projects," and "Skills." Focus on the "how" and "why" provided by the user.
+- **Cultural Fit**: Use "Personal" and "Motivation" snippets to show alignment.
+- **Closing**: State expectations (from "Expectations") and a call to action.
+
+**CRITICAL**: DO NOT generate the Header, Date, Greeting, or Sign-off. These are handled by the system. Return *only* the body paragraphs.
+
+# FINAL CHECK
+Before outputting, ensure the letter sounds like a human wrote it. It should be authentic, grounded in fact, and free of corporate cliches.
+
+RETURN JSON format with "markdown" key containing the text.
 `;
 
 export async function POST(req: NextRequest) {
@@ -57,30 +68,15 @@ export async function POST(req: NextRequest) {
 		const model = selectedModel || "gemini-1.5-flash";
 
 		const userContent = `
-    Target Company: ${targetInfo.companyName}
-    Target Role: ${targetInfo.roleTitle}
-    Addressee: ${targetInfo.addressee || "Hiring Manager"}
+TARGET ROLE: ${targetInfo.roleTitle}
+TARGET COMPANY: ${targetInfo.companyName}
+JOB DESCRIPTION CONTEXT: ${
+			targetInfo.jobId ? `Job ID: ${targetInfo.jobId}` : "N/A"
+		}
 
-    My Information (For Header/Signature):
-    Name: ${targetInfo.authorName || "[Your Name]"}
-    Email: ${targetInfo.isEmailEnabled !== false ? targetInfo.email || "" : ""}
-    Phone: ${targetInfo.isPhoneEnabled !== false ? targetInfo.phone || "" : ""}
-    Location: ${
-		targetInfo.isCityStateEnabled !== false
-			? targetInfo.cityState || ""
-			: ""
-	}
-    Portfolio/Link: ${
-		targetInfo.isPortfolioUrlEnabled !== false
-			? targetInfo.portfolioUrl || ""
-			: ""
-	}
-
-    Content Blocks (Enabled):
-    ${blocks.map((b) => `[${b.category}]: ${b.content}`).join("\n\n")}
-
-    Please write the cover letter now. Ensure you include a professional header with my contact info if provided.
-    `;
+USER DATA BLOCKS:
+${blocks.map((b) => `- ${b.category}: ${b.content}`).join("\n")}
+    `.trim();
 
 		console.log("Calling Gemini API with model:", model);
 		const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;

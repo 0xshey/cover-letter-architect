@@ -18,8 +18,8 @@ export default function Home() {
 						: "translate-x-0"
 				)}
 			>
-				<Sidebar className="w-1/2 md:w-[400px] flex-shrink-0" />
-				<Workspace className="w-1/2 md:flex-1 min-w-0" />
+				<Sidebar className="w-1/2 md:w-[400px] flex-shrink-0 border-r" />
+				<Workspace className="w-1/2 md:flex-1 min-w-0 max-w-4xl mx-auto" />
 			</div>
 		</main>
 	);
