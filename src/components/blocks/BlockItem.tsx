@@ -65,22 +65,22 @@ export function BlockItem({ block }: BlockItemProps) {
 		<>
 			<div
 				className={cn(
-					"group relative flex flex-col gap-0 border border-transparent p-1 transition-all bg-muted rounded",
+					"group relative flex flex-col gap-0 border border-transparent p-1 transition-all bg-muted rounded-xl",
 					!block.isEnabled && "opacity-60 bg-muted/20"
 				)}
 			>
-				<div className="h-8 flex items-start justify-between gap-2">
-					<div className="flex h-full items-center gap-2 px-1">
+				<div className="h-8 flex items-center justify-between gap-2 px-1">
+					<div className="flex h-full items-center gap-2">
 						<span
 							className={cn(
-								"text-xs px-2 py-0.5 rounded font-medium",
+								"text-xs px-2 py-0.5 rounded-md font-medium",
 								categoryColors[block.category]
 							)}
 						>
 							{block.category}
 						</span>
 					</div>
-					<div className="flex items-center gap-2 p-1">
+					<div className="flex items-center gap-2">
 						<Button
 							variant="ghost"
 							size="icon"
