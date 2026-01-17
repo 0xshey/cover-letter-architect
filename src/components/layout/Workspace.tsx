@@ -13,12 +13,17 @@ import {
 	Loader2,
 	ChevronLeft,
 	Trash2,
-	FileText,
 	Code,
 } from "lucide-react";
-
 import { ErrorDialog } from "@/components/ErrorDialog";
 import { generateLatexCode } from "@/lib/latex-generator";
+import { useSession } from "next-auth/react";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 type WorkspaceProps = React.HTMLAttributes<HTMLDivElement>;
 
@@ -34,6 +39,7 @@ export function Workspace({ className, ...props }: WorkspaceProps) {
 		saveLetter,
 		setActiveMobileView,
 	} = useAppStore();
+	const { data: session } = useSession();
 	const [activeTab, setActiveTab] = useState("editor");
 	const [error, setError] = useState<string | null>(null);
 
@@ -133,162 +139,201 @@ export function Workspace({ className, ...props }: WorkspaceProps) {
 				</div>
 
 				<div className="flex items-center gap-2">
-					{currentLetter && (
-						<Button
-							variant="ghost"
-							size="sm"
-							className="h-8 w-8 p-0 md:h-8 md:w-auto md:px-2.5 text-muted-foreground hover:text-foreground rounded-md hover:bg-destructive/10 hover:text-destructive"
-							onClick={() => setCurrentLetter(null)}
-							title="Clear Content"
-						>
-							<Trash2 className="h-3.5 w-3.5 md:mr-1.5" />
-							<span className="hidden md:inline text-xs font-sans">
-								Clear
-							</span>
-						</Button>
-					)}
-					<Button
-						variant="ghost"
-						size="sm"
-						className="h-8 w-8 p-0 md:h-8 md:w-auto md:px-2.5 text-muted-foreground hover:text-foreground rounded-md"
-						disabled={!currentLetter}
-						onClick={async () => {
-							if (!currentLetter) return;
+					{session && currentLetter && (
+						<>
+							<Button
+								variant="ghost"
+								size="sm"
+								className="h-8 w-8 p-0 md:h-8 md:w-auto md:px-2.5 text-muted-foreground hover:text-foreground rounded-md hover:bg-destructive/10 hover:text-destructive"
+								onClick={() => setCurrentLetter(null)}
+								title="Clear Content"
+							>
+								<Trash2 className="h-3.5 w-3.5 md:mr-1.5" />
+								<span className="hidden md:inline text-xs font-sans">
+									Clear
+								</span>
+							</Button>
 
-							const date = new Date().toISOString().split("T")[0];
-							const company = targetInfo.companyName.replace(
-								/[^a-z0-9]/gi,
-								"_"
-							);
-							const role = targetInfo.roleTitle.replace(
-								/[^a-z0-9]/gi,
-								"_"
-							);
-							const filename = `${date}_${company || "Company"}_${
-								role || "Role"
-							}.pdf`;
+							<Button
+								variant="ghost"
+								size="sm"
+								className="h-8 w-8 p-0 md:h-8 md:w-auto md:px-2.5 text-muted-foreground hover:text-foreground rounded-md"
+								disabled={!currentLetter}
+								onClick={async () => {
+									if (!currentLetter) return;
 
-							try {
-								const latexCode = generateLatexCode(
-									targetInfo,
-									currentLetter
-								);
-								const response = await fetch(
-									"/api/render-pdf",
-									{
-										method: "POST",
-										headers: {
-											"Content-Type": "application/json",
-										},
-										body: JSON.stringify({ latexCode }),
-									}
-								);
-
-								if (!response.ok) {
-									const errData = await response.json();
-									throw new Error(
-										errData.details ||
-											"Failed to generate PDF"
+									const date = new Date()
+										.toISOString()
+										.split("T")[0];
+									const company =
+										targetInfo.companyName.replace(
+											/[^a-z0-9]/gi,
+											"_"
+										);
+									const role = targetInfo.roleTitle.replace(
+										/[^a-z0-9]/gi,
+										"_"
 									);
-								}
+									const filename = `${date}_${
+										company || "Company"
+									}_${role || "Role"}.pdf`;
 
-								const blob = await response.blob();
-								const url = URL.createObjectURL(blob);
-								const a = document.createElement("a");
-								a.href = url;
-								a.download = filename;
-								document.body.appendChild(a);
-								a.click();
-								document.body.removeChild(a);
-								URL.revokeObjectURL(url);
-							} catch (err) {
-								console.error("Download PDF failed:", err);
-								alert(
-									"Failed to download PDF. Please try again."
-								);
-							}
-						}}
-						title="Download PDF"
-					>
-						<Download className="h-3.5 w-3.5 md:mr-1.5" />
-						<span className="hidden md:inline text-xs font-sans">
-							Download PDF
-						</span>
-					</Button>
-					<Button
-						variant="ghost"
-						size="sm"
-						className="h-8 w-8 p-0 md:h-8 md:w-auto md:px-2.5 text-muted-foreground hover:text-foreground rounded-md"
-						disabled={!currentLetter}
-						onClick={() => {
-							if (!currentLetter) return;
+									try {
+										const latexCode = generateLatexCode(
+											targetInfo,
+											currentLetter
+										);
+										const response = await fetch(
+											"/api/render-pdf",
+											{
+												method: "POST",
+												headers: {
+													"Content-Type":
+														"application/json",
+												},
+												body: JSON.stringify({
+													latexCode,
+												}),
+											}
+										);
 
-							const date = new Date().toISOString().split("T")[0];
-							const company = targetInfo.companyName.replace(
-								/[^a-z0-9]/gi,
-								"_"
-							);
-							const role = targetInfo.roleTitle.replace(
-								/[^a-z0-9]/gi,
-								"_"
-							);
-							const filename = `${date}_${company || "Company"}_${
-								role || "Role"
-							}.tex`;
+										if (!response.ok) {
+											const errData =
+												await response.json();
+											throw new Error(
+												errData.details ||
+													"Failed to generate PDF"
+											);
+										}
 
-							const latexCode = generateLatexCode(
-								targetInfo,
-								currentLetter
-							);
-							const blob = new Blob([latexCode], {
-								type: "application/x-latex",
-							});
-							const url = URL.createObjectURL(blob);
-							const a = document.createElement("a");
-							a.href = url;
-							a.download = filename;
-							document.body.appendChild(a);
-							a.click();
-							document.body.removeChild(a);
-							URL.revokeObjectURL(url);
-						}}
-						title="Download Source (.tex)"
-					>
-						<Code className="h-3.5 w-3.5 md:mr-1.5" />
-						<span className="hidden md:inline text-xs font-sans">
-							Source (.tex)
-						</span>
-					</Button>
-					<Button
-						variant="secondary"
-						size="sm"
-						onClick={handleGenerate}
-						disabled={isGenerating}
-						className="h-8 w-8 p-0 md:h-8 md:w-auto md:px-2.5 shadow-none rounded-md"
-						title={
-							currentLetter
-								? "Regenerate Cover Letter"
-								: "Generate Cover Letter"
-						}
-					>
-						{isGenerating ? (
-							<>
-								<Loader2 className="h-3 w-3 animate-spin md:mr-1.5" />
-								<span className="hidden md:inline text-xs font-sans leading-none">
-									{currentLetter
-										? "Regenerating..."
-										: "Generating..."}
+										const blob = await response.blob();
+										const url = URL.createObjectURL(blob);
+										const a = document.createElement("a");
+										a.href = url;
+										a.download = filename;
+										document.body.appendChild(a);
+										a.click();
+										document.body.removeChild(a);
+										URL.revokeObjectURL(url);
+									} catch (err) {
+										console.error(
+											"Download PDF failed:",
+											err
+										);
+										alert(
+											"Failed to download PDF. Please try again."
+										);
+									}
+								}}
+								title="Download PDF"
+							>
+								<Download className="h-3.5 w-3.5 md:mr-1.5" />
+								<span className="hidden md:inline text-xs font-sans">
+									Download PDF
 								</span>
-							</>
-						) : (
-							<>
-								<Wand2 className="h-3 w-3 md:mr-1.5" />
-								<span className="hidden md:inline text-xs font-sans leading-none">
-									{currentLetter ? "Regenerate" : "Generate"}
+							</Button>
+							<Button
+								variant="ghost"
+								size="sm"
+								className="h-8 w-8 p-0 md:h-8 md:w-auto md:px-2.5 text-muted-foreground hover:text-foreground rounded-md"
+								disabled={!currentLetter}
+								onClick={() => {
+									if (!currentLetter) return;
+
+									const date = new Date()
+										.toISOString()
+										.split("T")[0];
+									const company =
+										targetInfo.companyName.replace(
+											/[^a-z0-9]/gi,
+											"_"
+										);
+									const role = targetInfo.roleTitle.replace(
+										/[^a-z0-9]/gi,
+										"_"
+									);
+									const filename = `${date}_${
+										company || "Company"
+									}_${role || "Role"}.tex`;
+
+									const latexCode = generateLatexCode(
+										targetInfo,
+										currentLetter
+									);
+									const blob = new Blob([latexCode], {
+										type: "application/x-latex",
+									});
+									const url = URL.createObjectURL(blob);
+									const a = document.createElement("a");
+									a.href = url;
+									a.download = filename;
+									document.body.appendChild(a);
+									a.click();
+									document.body.removeChild(a);
+									URL.revokeObjectURL(url);
+								}}
+								title="Download Source (.tex)"
+							>
+								<Code className="h-3.5 w-3.5 md:mr-1.5" />
+								<span className="hidden md:inline text-xs font-sans">
+									Source (.tex)
 								</span>
-							</>
-						)}
-					</Button>
+							</Button>
+						</>
+					)}
+
+					<TooltipProvider>
+						<Tooltip delayDuration={300}>
+							<TooltipTrigger asChild>
+								{/* Span wrapper required to allow tooltip events on disabled button */}
+								<span
+									className={
+										!session ? "cursor-not-allowed" : ""
+									}
+								>
+									<Button
+										variant="secondary"
+										size="sm"
+										onClick={handleGenerate}
+										disabled={isGenerating || !session}
+										className="h-8 w-8 p-0 md:h-8 md:w-auto md:px-2.5 shadow-none rounded-md"
+										title={
+											session
+												? currentLetter
+													? "Regenerate Cover Letter"
+													: "Generate Cover Letter"
+												: undefined
+										}
+									>
+										{isGenerating ? (
+											<>
+												<Loader2 className="h-3 w-3 animate-spin md:mr-1.5" />
+												<span className="hidden md:inline text-xs font-sans leading-none">
+													{currentLetter
+														? "Regenerating..."
+														: "Generating..."}
+												</span>
+											</>
+										) : (
+											<>
+												<Wand2 className="h-3 w-3 md:mr-1.5" />
+												<span className="hidden md:inline text-xs font-sans leading-none">
+													{currentLetter
+														? "Regenerate"
+														: "Generate"}
+												</span>
+											</>
+										)}
+									</Button>
+								</span>
+							</TooltipTrigger>
+							{!session && (
+								<TooltipContent>
+									<p>Sign in to access generation models</p>
+								</TooltipContent>
+							)}
+						</Tooltip>
+					</TooltipProvider>
 				</div>
 			</div>
 
