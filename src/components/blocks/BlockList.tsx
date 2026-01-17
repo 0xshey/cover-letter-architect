@@ -69,7 +69,7 @@ export function BlockList() {
 	});
 
 	return (
-		<div className="flex flex-col h-full gap-4">
+		<div className="flex flex-col h-full gap-4 bg-background border-t pt-4">
 			<div className="flex items-center justify-between shrink-0">
 				<h3 className="text-xs font-medium text-muted-foreground">
 					My Blocks
