@@ -103,6 +103,7 @@ export function Sidebar({ className, ...props }: SidebarProps) {
 	const handleSignOut = async () => {
 		await supabase.auth.signOut();
 		clearState();
+		window.location.href = "/";
 	};
 
 	return (

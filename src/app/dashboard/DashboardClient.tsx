@@ -90,7 +90,7 @@ export function DashboardClient() {
 				setCurrentLetter(coverLetter.markdown || null);
 			}
 
-			router.push("/");
+			router.push("/editor");
 		} catch (error) {
 			console.error("Failed to load cover letter details", error);
 		}
@@ -98,7 +98,7 @@ export function DashboardClient() {
 
 	const handleNew = () => {
 		resetEditorState();
-		router.push("/");
+		router.push("/editor");
 	};
 
 	if (isLoading) {
@@ -133,9 +133,7 @@ export function DashboardClient() {
 					<p className="text-muted-foreground mb-4">
 						Create your first cover letter to get started.
 					</p>
-					<Button onClick={() => router.push("/")}>
-						Go to Editor
-					</Button>
+					<Button onClick={handleNew}>Go to Editor</Button>
 				</div>
 			) : (
 				<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
