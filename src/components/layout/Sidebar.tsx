@@ -2,10 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { BlockList } from "@/components/blocks/BlockList";
 import { TargetInfoForm } from "@/components/blocks/TargetInfo";
-import { useSession, signIn, signOut } from "next-auth/react";
 import {
 	Select,
 	SelectContent,
@@ -15,8 +13,17 @@ import {
 } from "@/components/ui/select";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { useAppStore } from "@/store/useAppStore";
-import { ChevronRight, LogOut, User, Sparkles, RefreshCw } from "lucide-react";
+import {
+	ChevronRight,
+	LogOut,
+	User,
+	Sparkles,
+	RefreshCw,
+	LayoutDashboard,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { createClient } from "@/lib/supabase/client";
+import Link from "next/link";
 
 type SidebarProps = React.HTMLAttributes<HTMLDivElement>;
 
@@ -28,11 +35,33 @@ const DEFAULT_MODELS = [
 ];
 
 export function Sidebar({ className, ...props }: SidebarProps) {
-	const { setActiveMobileView, selectedModel, setSelectedModel } =
-		useAppStore();
-	const { data: session } = useSession();
+	const {
+		setActiveMobileView,
+		selectedModel,
+		setSelectedModel,
+		session,
+		setSession,
+		clearState,
+	} = useAppStore();
 	const [availableModels, setAvailableModels] = useState(DEFAULT_MODELS);
 	const [isLoadingModels, setIsLoadingModels] = useState(false);
+	const supabase = createClient();
+
+	useEffect(() => {
+		// Initial session check
+		supabase.auth.getSession().then(({ data: { session } }) => {
+			setSession(session);
+		});
+
+		// Listen for auth changes
+		const {
+			data: { subscription },
+		} = supabase.auth.onAuthStateChange((_event, session) => {
+			setSession(session);
+		});
+
+		return () => subscription.unsubscribe();
+	}, [setSession]);
 
 	useEffect(() => {
 		if (session) {
@@ -55,6 +84,25 @@ export function Sidebar({ className, ...props }: SidebarProps) {
 		} finally {
 			setIsLoadingModels(false);
 		}
+	};
+
+	const handleSignIn = async () => {
+		await supabase.auth.signInWithOAuth({
+			provider: "google",
+			options: {
+				redirectTo: `${window.location.origin}/auth/callback`,
+				scopes: "openid profile email https://www.googleapis.com/auth/generative-language.retriever",
+				queryParams: {
+					access_type: "offline",
+					prompt: "consent",
+				},
+			},
+		});
+	};
+
+	const handleSignOut = async () => {
+		await supabase.auth.signOut();
+		clearState();
 	};
 
 	return (
@@ -94,6 +142,20 @@ export function Sidebar({ className, ...props }: SidebarProps) {
 
 			{/* Footer: Auth & Models */}
 			<div className="p-4 border-t bg-muted/30 flex flex-col gap-4 shrink-0">
+				{session && (
+					<Button
+						variant="outline"
+						size="sm"
+						className="w-full justify-start text-xs font-medium"
+						asChild
+					>
+						<Link href="/dashboard">
+							<LayoutDashboard className="mr-2 h-4 w-4" />
+							My Cover Letters
+						</Link>
+					</Button>
+				)}
+
 				{/* Model Selector */}
 				{session && (
 					<div className="grid gap-2">
@@ -140,13 +202,18 @@ export function Sidebar({ className, ...props }: SidebarProps) {
 
 				{/* Account Section */}
 				<div className="flex items-center justify-between gap-8 pt-2">
-					{session ? (
+					{session && session.user ? (
 						<div className="flex-1 flex items-center gap-4 border p-2 rounded-xl group bg-background/50 hover:bg-background transition-colors">
 							<div className="h-8 w-8 rounded-sm bg-primary/10 flex items-center justify-center shrink-0 overflow-hidden ">
-								{session.user?.image ? (
+								{session.user.user_metadata?.avatar_url ||
+								session.user.user_metadata?.picture ? (
 									// eslint-disable-next-line @next/next/no-img-element
 									<img
-										src={session.user.image}
+										src={
+											session.user.user_metadata
+												.avatar_url ||
+											session.user.user_metadata.picture
+										}
 										alt="User"
 										className="h-full w-full object-cover"
 									/>
@@ -156,17 +223,19 @@ export function Sidebar({ className, ...props }: SidebarProps) {
 							</div>
 							<div className="flex-1 min-w-0 flex flex-col">
 								<span className="text-xs font-medium truncate">
-									{session.user?.name || "User"}
+									{session.user.user_metadata?.full_name ||
+										session.user.user_metadata?.name ||
+										"User"}
 								</span>
 								<span className="text-[10px] text-muted-foreground truncate">
-									{session.user?.email}
+									{session.user.email}
 								</span>
 							</div>
 							<Button
 								variant="ghost"
 								size="icon"
 								className="h-7 w-7 text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100"
-								onClick={() => signOut()}
+								onClick={handleSignOut}
 								title="Sign Out"
 							>
 								<LogOut className="h-3.5 w-3.5" />
@@ -176,7 +245,7 @@ export function Sidebar({ className, ...props }: SidebarProps) {
 						<div className="flex-1 flex flex-col gap-2">
 							<Button
 								size="sm"
-								onClick={() => signIn("google")}
+								onClick={handleSignIn}
 								className="w-full text-xs"
 							>
 								Sign In with Google

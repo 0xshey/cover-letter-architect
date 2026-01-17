@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/lib/auth";
+import { createClient } from "@/lib/supabase/server";
 import { ContentBlock, TargetInfo } from "@/types";
 
 interface GenerateRequest {
@@ -42,9 +41,12 @@ RETURN JSON format with "markdown" key containing the text.
 
 export async function POST(req: NextRequest) {
 	try {
-		const session = await getServerSession(authOptions);
+		const supabase = await createClient();
+		const {
+			data: { session },
+		} = await supabase.auth.getSession();
 
-		if (!session || !session.accessToken) {
+		if (!session || !session.provider_token) {
 			return NextResponse.json(
 				{ error: "Unauthorized. Please sign in with Google." },
 				{ status: 401 }
@@ -81,13 +83,11 @@ ${blocks.map((b) => `- ${b.category}: ${b.content}`).join("\n")}
 		console.log("Calling Gemini API with model:", model);
 		const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
 
-		console.log("Calling Gemini API with model:", model);
-
 		const geminiResponse = await fetch(url, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
-				Authorization: `Bearer ${session.accessToken}`,
+				Authorization: `Bearer ${session.provider_token}`,
 			},
 			body: JSON.stringify({
 				contents: [

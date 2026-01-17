@@ -14,10 +14,11 @@ import {
 	ChevronLeft,
 	Trash2,
 	Code,
+	Save,
+	Check,
 } from "lucide-react";
 import { ErrorDialog } from "@/components/ErrorDialog";
 import { generateLatexCode } from "@/lib/latex-generator";
-import { useSession } from "next-auth/react";
 import {
 	Tooltip,
 	TooltipContent,
@@ -38,10 +39,13 @@ export function Workspace({ className, ...props }: WorkspaceProps) {
 		setCurrentLetter,
 		saveLetter,
 		setActiveMobileView,
+		session,
+		currentCoverLetterId,
+		setCurrentCoverLetterId,
 	} = useAppStore();
-	const { data: session } = useSession();
 	const [activeTab, setActiveTab] = useState("editor");
 	const [error, setError] = useState<string | null>(null);
+	const [isSaved, setIsSaved] = useState(false);
 
 	const handleGenerate = async () => {
 		if (blocks.filter((b) => b.isEnabled).length === 0) {
@@ -86,6 +90,49 @@ export function Workspace({ className, ...props }: WorkspaceProps) {
 			setError(message);
 		} finally {
 			setIsGenerating(false);
+		}
+	};
+
+	const handleSave = async () => {
+		if (!session) return;
+
+		const title = targetInfo.roleTitle
+			? `${targetInfo.roleTitle} at ${targetInfo.companyName}`
+			: targetInfo.companyName || "Untitled Cover Letter";
+
+		const payload = {
+			title,
+			target_info: targetInfo,
+			blocks,
+		};
+
+		try {
+			const url = currentCoverLetterId
+				? `/api/cover-letters/${currentCoverLetterId}`
+				: "/api/cover-letters";
+
+			const method = currentCoverLetterId ? "PUT" : "POST";
+
+			const res = await fetch(url, {
+				method,
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(payload),
+			});
+
+			if (res.ok) {
+				const data = await res.json();
+				if (data.coverLetter) {
+					setCurrentCoverLetterId(data.coverLetter.id);
+					setIsSaved(true);
+					setTimeout(() => setIsSaved(false), 5000);
+				}
+			} else {
+				const err = await res.json();
+				setError(err.error || "Failed to save");
+			}
+		} catch (error) {
+			console.error("Save failed", error);
+			setError("Failed to save changes.");
 		}
 	};
 
@@ -139,6 +186,36 @@ export function Workspace({ className, ...props }: WorkspaceProps) {
 				</div>
 
 				<div className="flex items-center gap-2">
+					{session && (
+						<Button
+							variant={isSaved ? "default" : "outline"}
+							size="sm"
+							onClick={handleSave}
+							disabled={!session || isSaved}
+							title="Save to Cloud"
+							className={cn(
+								"h-8 md:h-8 transition-all duration-300",
+								isSaved &&
+									"bg-success hover:bg-success text-white border-success"
+							)}
+						>
+							{isSaved ? (
+								<>
+									<Check className="h-4 w-4 md:mr-2" />
+									<span className="hidden md:inline text-xs font-sans">
+										Saved
+									</span>
+								</>
+							) : (
+								<>
+									<Save className="h-4 w-4 md:mr-2" />
+									<span className="hidden md:inline text-xs font-sans">
+										Save
+									</span>
+								</>
+							)}
+						</Button>
+					)}
 					{session && currentLetter && (
 						<>
 							<Button

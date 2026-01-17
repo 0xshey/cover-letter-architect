@@ -1,10 +1,19 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { ContentBlock, TargetInfo, GeneratedLetter } from "@/types";
+import { Session } from "@supabase/supabase-js";
 
 interface AppState {
+	// auth
+	session: Session | null;
+	setSession: (session: Session | null) => void;
+
+	currentCoverLetterId: string | null;
+	setCurrentCoverLetterId: (id: string | null) => void;
+
 	// content blocks
 	blocks: ContentBlock[];
+	setBlocks: (blocks: ContentBlock[]) => void;
 	addBlock: (block: Omit<ContentBlock, "id" | "isEnabled">) => void;
 	updateBlock: (id: string, updates: Partial<ContentBlock>) => void;
 	removeBlock: (id: string) => void;
@@ -35,12 +44,22 @@ interface AppState {
 	// mobile view
 	activeMobileView: "sidebar" | "workspace";
 	setActiveMobileView: (view: "sidebar" | "workspace") => void;
+
+	// reset
+	clearState: () => void;
 }
 
 export const useAppStore = create<AppState>()(
 	persist(
 		(set) => ({
+			session: null,
+			setSession: (session) => set({ session }),
+
+			currentCoverLetterId: null,
+			setCurrentCoverLetterId: (id) => set({ currentCoverLetterId: id }),
+
 			blocks: [],
+			setBlocks: (blocks) => set({ blocks }),
 			addBlock: (block) =>
 				set((state) => ({
 					blocks: [
@@ -111,6 +130,33 @@ export const useAppStore = create<AppState>()(
 
 			activeMobileView: "sidebar",
 			setActiveMobileView: (view) => set({ activeMobileView: view }),
+
+			clearState: () =>
+				set({
+					session: null,
+					currentCoverLetterId: null,
+					blocks: [],
+					targetInfo: {
+						companyName: "",
+						roleTitle: "",
+						addressee: "",
+						authorName: "",
+						email: "",
+						isEmailEnabled: true,
+						phone: "",
+						isPhoneEnabled: true,
+						cityState: "",
+						isCityStateEnabled: true,
+						portfolioUrl: "",
+						isPortfolioUrlEnabled: true,
+						companyAddress: "",
+						jobId: "",
+					},
+					currentLetter: null,
+					savedLetters: [],
+					selectedModel: "gemini-1.5-flash",
+					isGenerating: false,
+				}),
 		}),
 		{
 			name: "cover-letter-storage",
@@ -120,6 +166,7 @@ export const useAppStore = create<AppState>()(
 				selectedModel: state.selectedModel,
 				savedLetters: state.savedLetters,
 				currentLetter: state.currentLetter,
+				currentCoverLetterId: state.currentCoverLetterId,
 			}), // persisting only necessary data
 		}
 	)
