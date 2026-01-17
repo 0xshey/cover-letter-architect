@@ -22,23 +22,26 @@ export const generateLatexCode = (
 	const recipient = targetInfo.addressee || "Hiring Manager";
 	addressBlock += `${safe(recipient)} \\\\\n`;
 
-	// Line 2: Role / Job ID
-	if (targetInfo.roleTitle) {
-		let roleLine = targetInfo.roleTitle;
-		if (targetInfo.jobId) {
-			roleLine += ` (${targetInfo.jobId})`;
-		}
-		addressBlock += `${safe(roleLine)} \\\\\n`;
-	}
-
-	// Line 3: Company Name
+	// Line 2: Company Name
 	if (targetInfo.companyName) {
 		addressBlock += `${safe(targetInfo.companyName)} \\\\\n`;
 	}
 
-	// Line 4: Company Location
+	// Line 3: Company Location
 	if (targetInfo.companyAddress) {
 		addressBlock += `${safe(targetInfo.companyAddress)} \\\\\n`;
+	}
+
+	// Construct Subject Line
+	let subjectLine = "";
+	if (targetInfo.roleTitle) {
+		let roleInfo = targetInfo.roleTitle;
+		if (targetInfo.jobId) {
+			roleInfo += ` (${targetInfo.jobId})`;
+		}
+		subjectLine = `\\noindent\\textbf{RE: Application for ${safe(
+			roleInfo
+		)}}\n\n\\vspace{1em}`;
 	}
 
 	// Construct Header Contact Info
@@ -118,6 +121,8 @@ ${dateStr}
 \\noindent
 ${addressBlock}
 \\vspace{1em}
+
+${subjectLine}
 
 % --- Greeting ---
 \\noindent

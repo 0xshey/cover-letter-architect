@@ -40,7 +40,7 @@ export default function Icon() {
 						fill="currentColor"
 						fillRule="evenodd"
 						clipRule="evenodd"
-					></path>
+					></path>{" "}
 				</svg>
 			</div>
 		),
