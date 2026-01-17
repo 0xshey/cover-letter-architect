@@ -93,9 +93,9 @@ export const generateLatexCode = (
 % Hyperlink Setup
 \\hypersetup{
     colorlinks=true,
-    linkcolor=black,
-    filecolor=black,
-    urlcolor=black,
+    linkcolor=blue,
+    filecolor=magenta,
+    urlcolor=blue,
 }
 
 \\begin{document}
