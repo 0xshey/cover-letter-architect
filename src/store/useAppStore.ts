@@ -47,6 +47,7 @@ interface AppState {
 
 	// reset
 	clearState: () => void;
+	resetEditorState: () => void;
 }
 
 export const useAppStore = create<AppState>()(
@@ -155,6 +156,30 @@ export const useAppStore = create<AppState>()(
 					currentLetter: null,
 					savedLetters: [],
 					selectedModel: "gemini-1.5-flash",
+					isGenerating: false,
+				}),
+
+			resetEditorState: () =>
+				set({
+					currentCoverLetterId: null,
+					currentLetter: null,
+					blocks: [],
+					targetInfo: {
+						companyName: "",
+						roleTitle: "",
+						addressee: "",
+						authorName: "",
+						email: "",
+						isEmailEnabled: true,
+						phone: "",
+						isPhoneEnabled: true,
+						cityState: "",
+						isCityStateEnabled: true,
+						portfolioUrl: "",
+						isPortfolioUrlEnabled: true,
+						companyAddress: "",
+						jobId: "",
+					},
 					isGenerating: false,
 				}),
 		}),

@@ -43,6 +43,7 @@ export function DashboardClient() {
 		setCurrentLetter,
 		session,
 		setCurrentCoverLetterId,
+		resetEditorState,
 	} = useAppStore();
 
 	const [coverLetters, setCoverLetters] = useState<CoverLetter[]>([]);
@@ -95,6 +96,11 @@ export function DashboardClient() {
 		}
 	};
 
+	const handleNew = () => {
+		resetEditorState();
+		router.push("/");
+	};
+
 	if (isLoading) {
 		return (
 			<div className="flex items-center justify-center p-12">
@@ -114,7 +120,7 @@ export function DashboardClient() {
 						Manage your saved letters and configurations.
 					</p>
 				</div>
-				<Button onClick={() => router.push("/")}>
+				<Button onClick={handleNew}>
 					<Plus className="mr-2 h-4 w-4" /> New Letter
 				</Button>
 			</div>
