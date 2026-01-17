@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import { useAppStore } from "@/store/useAppStore";
 import { cn } from "@/lib/utils";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { EditorPane } from "@/components/editor/EditorPane";
-import { PreviewPane } from "@/components/editor/PreviewPane";
 import { Button } from "@/components/ui/button";
 import {
 	Wand2,
@@ -27,6 +27,21 @@ import {
 } from "@/components/ui/tooltip";
 
 type WorkspaceProps = React.HTMLAttributes<HTMLDivElement>;
+
+const PreviewPane = dynamic(
+	() =>
+		import("@/components/editor/PreviewPane").then(
+			(mod) => mod.PreviewPane
+		),
+	{
+		ssr: false,
+		loading: () => (
+			<div className="flex h-full items-center justify-center">
+				<Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+			</div>
+		),
+	}
+);
 
 export function Workspace({ className, ...props }: WorkspaceProps) {
 	const {
