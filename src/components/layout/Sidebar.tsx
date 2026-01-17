@@ -81,13 +81,13 @@ export function Sidebar({ className, ...props }: SidebarProps) {
 				</div>
 			</div>
 
-			<div className="flex-1 overflow-hidden p-2">
-				<div className="h-full flex flex-col gap-8 p-4">
-					<TargetInfoForm />
-					<div className="flex-1 min-h-0 relative">
-						<ScrollArea className="h-full pr-4">
-							<BlockList />
-						</ScrollArea>
+			<div className="flex-1 overflow-hidden">
+				<div className="h-full flex flex-col gap-8">
+					<div className="flex-1 min-h-0 relativ p-4">
+						<TargetInfoForm />
+					</div>
+					<div className=" min-h-0 relative pt-4 px-4">
+						<BlockList />
 					</div>
 				</div>
 			</div>

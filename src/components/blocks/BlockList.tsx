@@ -6,6 +6,7 @@ import { useAppStore } from "@/store/useAppStore";
 import { BlockCategory } from "@/types";
 import { Button } from "@/components/ui/button";
 import { BlockItem } from "./BlockItem";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
 	Dialog,
 	DialogContent,
@@ -17,8 +18,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-// Note: We'll implement a simple select using native select for simplicity since we didn't add Select primitive yet
-// or we can just use buttons for categories.
 
 const CATEGORIES: BlockCategory[] = [
 	"Education",
@@ -65,17 +64,13 @@ export function BlockList() {
 		setIsAdding(false);
 	};
 
-	// Group blocks by category for display? Or just list them?
-	// User asked for "multi-section form". But maybe a flat list with filters or headings is better for the sidebar.
-	// Let's do a simple list sorted by category order for now.
-
 	const sortedBlocks = [...blocks].sort((a, b) => {
 		return CATEGORIES.indexOf(a.category) - CATEGORIES.indexOf(b.category);
 	});
 
 	return (
-		<div className="space-y-4">
-			<div className="flex items-center justify-between">
+		<div className="flex flex-col h-full gap-4">
+			<div className="flex items-center justify-between shrink-0">
 				<h3 className="text-xs font-medium text-muted-foreground">
 					My Blocks
 				</h3>
@@ -161,16 +156,20 @@ export function BlockList() {
 				</Dialog>
 			</div>
 
-			<div className="space-y-3">
-				{sortedBlocks.length === 0 ? (
-					<div className="rounded-lg border border-border border-dashed p-8 text-center text-sm text-muted-foreground">
-						No blocks yet. Click + to add one.
+			<div className="flex-1 min-h-0 relative">
+				<ScrollArea className="h-full pr-4">
+					<div className="space-y-3 pb-4">
+						{sortedBlocks.length === 0 ? (
+							<div className="rounded-lg border border-border border-dashed p-8 text-center text-sm text-muted-foreground">
+								No blocks yet. Click + to add one.
+							</div>
+						) : (
+							sortedBlocks.map((block) => (
+								<BlockItem key={block.id} block={block} />
+							))
+						)}
 					</div>
-				) : (
-					sortedBlocks.map((block) => (
-						<BlockItem key={block.id} block={block} />
-					))
-				)}
+				</ScrollArea>
 			</div>
 		</div>
 	);
