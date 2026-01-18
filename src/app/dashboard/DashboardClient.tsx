@@ -5,27 +5,8 @@ import { useRouter } from "next/navigation";
 import { useAppStore } from "@/store/useAppStore";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardFooter,
-	CardHeader,
-	CardTitle,
-} from "@/components/ui/card";
-import { Trash2, Edit, FileText, Loader2, Plus } from "lucide-react";
-import { formatDistanceToNow } from "date-fns";
-import {
-	AlertDialog,
-	AlertDialogAction,
-	AlertDialogCancel,
-	AlertDialogContent,
-	AlertDialogDescription,
-	AlertDialogFooter,
-	AlertDialogHeader,
-	AlertDialogTitle,
-	AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+import { CoverLetterCard } from "@/components/dashboard/CoverLetterCard";
+import { Loader2, Plus } from "lucide-react";
 
 interface CoverLetter {
 	id: string;
@@ -33,6 +14,7 @@ interface CoverLetter {
 	updated_at: string;
 	target_info: any;
 	blocks: any;
+	markdown?: string; // Optional field if available in DB
 }
 
 export function DashboardClient() {
@@ -41,7 +23,6 @@ export function DashboardClient() {
 		setTargetInfo,
 		setBlocks,
 		setCurrentLetter,
-		session,
 		setCurrentCoverLetterId,
 		resetEditorState,
 	} = useAppStore();
@@ -101,109 +82,72 @@ export function DashboardClient() {
 		router.push("/editor");
 	};
 
+	const getPreviewText = (cl: CoverLetter) => {
+		if (cl.markdown) return cl.markdown;
+		if (Array.isArray(cl.blocks)) {
+			// Attempt to find the first meaningful text block
+			// Assuming blocks might have 'content' or similar
+			const textBlocks = cl.blocks
+				.filter((b: any) => b.content && typeof b.content === "string")
+				.map((b: any) => b.content)
+				.join(" ");
+			if (textBlocks) return textBlocks;
+		}
+		return "No preview content available.";
+	};
+
 	if (isLoading) {
 		return (
-			<div className="flex items-center justify-center p-12">
+			<div className="flex h-[50vh] items-center justify-center">
 				<Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
 			</div>
 		);
 	}
 
 	return (
-		<div className="container max-w-4xl mx-auto py-8">
-			<div className="flex items-center justify-between mb-8">
-				<div>
-					<h1 className="text-3xl font-bold tracking-tight">
+		<div className="container max-w-5xl mx-auto py-12 px-4 sm:px-6">
+			<div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-10 gap-4">
+				<div className="space-y-1">
+					<h1 className="text-2xl font-bold tracking-tight text-foreground">
 						My Cover Letters
 					</h1>
-					<p className="text-muted-foreground">
-						Manage your saved letters and configurations.
+					<p className="text-muted-foreground text-md">
+						Manage your saved letters and tailored applications.
 					</p>
 				</div>
-				<Button onClick={handleNew}>
-					<Plus className="mr-2 h-4 w-4" /> New Letter
+				<Button onClick={handleNew} size="sm" className="shadow-sm">
+					<Plus className="mr-2 h-5 w-5" /> New Letter
 				</Button>
 			</div>
 
 			{coverLetters.length === 0 ? (
-				<div className="text-center py-12 border rounded-lg bg-muted/10">
-					<h3 className="text-lg font-medium">
+				<div className="flex flex-col items-center justify-center rounded-xl border border-dashed py-16 text-center bg-muted/5 animate-in fade-in-50">
+					<div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted mb-4">
+						<Plus className="h-6 w-6 text-muted-foreground" />
+					</div>
+					<h3 className="text-xl font-semibold mb-2">
 						No cover letters yet
 					</h3>
-					<p className="text-muted-foreground mb-4">
-						Create your first cover letter to get started.
+					<p className="text-muted-foreground max-w-sm mb-6">
+						Create your first customized cover letter to get started
+						on your job application journey.
 					</p>
-					<Button onClick={handleNew}>Go to Editor</Button>
+					<Button onClick={handleNew} size="lg">
+						Create First Letter
+					</Button>
 				</div>
 			) : (
-				<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+				<div className="grid gap-4 grid-cols-1 md:grid-cols-2">
 					{coverLetters.map((cl) => (
-						<Card key={cl.id} className="group relative">
-							<CardHeader>
-								<CardTitle className="truncate pr-8">
-									{cl.title}
-								</CardTitle>
-								<CardDescription>
-									{cl.target_info.companyName} •{" "}
-									{cl.target_info.roleTitle}
-								</CardDescription>
-							</CardHeader>
-							<CardContent>
-								<p className="text-xs text-muted-foreground">
-									Updated{" "}
-									{formatDistanceToNow(
-										new Date(cl.updated_at),
-										{ addSuffix: true }
-									)}
-								</p>
-							</CardContent>
-							<CardFooter className="flex justify-between gap-2">
-								<Button
-									variant="outline"
-									className="flex-1"
-									onClick={() => handleLoad(cl)}
-								>
-									<Edit className="mr-2 h-4 w-4" /> Open
-								</Button>
-
-								<AlertDialog>
-									<AlertDialogTrigger asChild>
-										<Button
-											variant="ghost"
-											size="icon"
-											className="text-muted-foreground hover:text-destructive"
-										>
-											<Trash2 className="h-4 w-4" />
-										</Button>
-									</AlertDialogTrigger>
-									<AlertDialogContent>
-										<AlertDialogHeader>
-											<AlertDialogTitle>
-												Delete Cover Letter?
-											</AlertDialogTitle>
-											<AlertDialogDescription>
-												This action cannot be undone.
-												This will permanently delete "
-												{cl.title}" and its history.
-											</AlertDialogDescription>
-										</AlertDialogHeader>
-										<AlertDialogFooter>
-											<AlertDialogCancel>
-												Cancel
-											</AlertDialogCancel>
-											<AlertDialogAction
-												onClick={() =>
-													handleDelete(cl.id)
-												}
-												className="bg-destructive hover:bg-destructive/90"
-											>
-												Delete
-											</AlertDialogAction>
-										</AlertDialogFooter>
-									</AlertDialogContent>
-								</AlertDialog>
-							</CardFooter>
-						</Card>
+						<CoverLetterCard
+							key={cl.id}
+							companyName={cl.target_info?.companyName}
+							roleTitle={cl.target_info?.roleTitle}
+							snippet={getPreviewText(cl)}
+							updatedAt={cl.updated_at}
+							onOpen={() => handleLoad(cl)}
+							onDelete={() => handleDelete(cl.id)}
+						/>
 					))}
 				</div>
 			)}
