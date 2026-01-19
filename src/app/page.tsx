@@ -4,9 +4,21 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { FileText, Wand2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { useEffect, useState } from "react";
 
 export default function LandingPage() {
 	const supabase = createClient();
+	const [user, setUser] = useState<any>(null);
+
+	useEffect(() => {
+		const checkUser = async () => {
+			const {
+				data: { user },
+			} = await supabase.auth.getUser();
+			setUser(user);
+		};
+		checkUser();
+	}, [supabase]);
 
 	const handleSignIn = async () => {
 		await supabase.auth.signInWithOAuth({
@@ -30,9 +42,21 @@ export default function LandingPage() {
 					<span className="font-bold">Cover Letter Architect</span>
 				</Link>
 				<nav className="ml-auto flex gap-4 sm:gap-6">
-					<Button variant="ghost" size="sm" onClick={handleSignIn}>
-						Sign In
-					</Button>
+					{user ? (
+						<Link href="/dashboard">
+							<Button variant="ghost" size="sm">
+								Go to Dashboard
+							</Button>
+						</Link>
+					) : (
+						<Button
+							variant="ghost"
+							size="sm"
+							onClick={handleSignIn}
+						>
+							Sign In
+						</Button>
+					)}
 				</nav>
 			</header>
 			<main className="flex-1">
@@ -50,10 +74,19 @@ export default function LandingPage() {
 								</p>
 							</div>
 							<div className="space-x-4">
-								<Button size="lg" onClick={handleSignIn}>
-									<Wand2 className="mr-2 h-4 w-4" />
-									Get Started
-								</Button>
+								{user ? (
+									<Link href="/dashboard">
+										<Button size="lg">
+											<Wand2 className="mr-2 h-4 w-4" />
+											Go to Dashboard
+										</Button>
+									</Link>
+								) : (
+									<Button size="lg" onClick={handleSignIn}>
+										<Wand2 className="mr-2 h-4 w-4" />
+										Get Started
+									</Button>
+								)}
 							</div>
 						</div>
 					</div>
