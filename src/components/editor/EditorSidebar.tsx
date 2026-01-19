@@ -34,7 +34,7 @@ const DEFAULT_MODELS = [
 	{ id: "gemini-1.5-pro", name: "Gemini 1.5 Pro" },
 ];
 
-export function Sidebar({ className, ...props }: SidebarProps) {
+export function EditorSidebar({ className, ...props }: SidebarProps) {
 	const {
 		setActiveMobileView,
 		selectedModel,

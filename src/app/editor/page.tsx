@@ -1,6 +1,6 @@
 "use client";
 
-import { Sidebar } from "@/components/layout/Sidebar";
+import { EditorSidebar } from "@/components/editor/EditorSidebar";
 import { Workspace } from "@/components/layout/Workspace";
 import { useAppStore } from "@/store/useAppStore";
 import { cn } from "@/lib/utils";
@@ -18,7 +18,7 @@ export default function EditorPage() {
 						: "translate-x-0"
 				)}
 			>
-				<Sidebar className="w-1/2 md:w-[400px] flex-shrink-0 border-r" />
+				<EditorSidebar className="w-1/2 md:w-[400px] flex-shrink-0 border-r" />
 				<Workspace className="w-1/2 md:flex-1 min-w-0 max-w-4xl mx-auto" />
 			</div>
 		</main>
