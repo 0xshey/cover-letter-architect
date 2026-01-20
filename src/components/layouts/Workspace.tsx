@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 import { useAppStore } from "@/store/useAppStore";
 import { cn } from "@/lib/utils";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { EditorPane } from "@/components/editor/EditorPane";
+import { EditorPane } from "@/components/editor/editor-pane";
 import { Button } from "@/components/ui/button";
 import {
 	Wand2,
@@ -17,7 +17,7 @@ import {
 	Save,
 	Check,
 } from "lucide-react";
-import { ErrorDialog } from "@/components/ui/ErrorDialog";
+import { ErrorDialog } from "@/components/ui/error-dialog";
 import { generateLatexCode } from "@/lib/latex-generator";
 import {
 	Tooltip,
@@ -26,11 +26,11 @@ import {
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-type WorkspaceProps = React.HTMLAttributes<HTMLDivElement>;
+interface WorkspaceProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 const PreviewPane = dynamic(
 	() =>
-		import("@/components/editor/PreviewPane").then(
+		import("@/components/editor/preview-pane").then(
 			(mod) => mod.PreviewPane
 		),
 	{

@@ -1,7 +1,7 @@
 "use client";
 
-import { EditorSidebar } from "@/components/editor/EditorSidebar";
-import { Workspace } from "@/components/layouts/Workspace";
+import { EditorSidebar } from "@/components/editor/editor-sidebar";
+import { Workspace } from "@/components/layouts/workspace";
 import { useAppStore } from "@/store/useAppStore";
 import { cn } from "@/lib/utils";
 

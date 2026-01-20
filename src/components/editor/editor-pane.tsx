@@ -4,7 +4,7 @@ import { useAppStore } from "@/store/useAppStore";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { SuggestionOverlay } from "./SuggestionTooltip";
+import { SuggestionOverlay } from "./suggestion-tooltip";
 
 export function EditorPane() {
 	const {

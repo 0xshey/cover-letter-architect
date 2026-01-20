@@ -5,7 +5,7 @@ import { Plus, Info, X } from "lucide-react";
 import { useAppStore } from "@/store/useAppStore";
 import { BlockCategory } from "@/types";
 import { Button } from "@/components/ui/button";
-import { BlockItem } from "./BlockItem";
+import { BlockItem } from "./block-item";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
 	Dialog,

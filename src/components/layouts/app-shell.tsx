@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { NAVIGATION_ITEMS } from "./AppNavigation";
+import { NAVIGATION_ITEMS } from "./app-navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useEffect, useState } from "react";
 import { LogOut, FileText } from "lucide-react";

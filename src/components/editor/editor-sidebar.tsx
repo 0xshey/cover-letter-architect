@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
-import { BlockList } from "@/components/editor/blocks/BlockList";
-import { TargetInfoForm } from "@/components/editor/blocks/TargetInfo";
+import { BlockList } from "@/components/editor/blocks/block-list";
+import { TargetInfoForm } from "@/components/editor/blocks/target-info";
 import {
 	Select,
 	SelectContent,
@@ -11,7 +11,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import { ThemeToggle } from "@/components/ui/ThemeToggle";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { useAppStore } from "@/store/useAppStore";
 import {
 	ChevronRight,
@@ -25,7 +25,7 @@ import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
 
-type SidebarProps = React.HTMLAttributes<HTMLDivElement>;
+interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 const DEFAULT_MODELS = [
 	{ id: "gemini-3.0-flash", name: "Gemini 3.0 Flash" },
