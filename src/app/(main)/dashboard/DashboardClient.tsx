@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAppStore } from "@/store/useAppStore";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
-import { CoverLetterCard } from "@/components/dashboard/CoverLetterCard";
+import { CoverLetterCard } from "@/components/cards/CoverLetterCard";
 import { Loader2, Plus } from "lucide-react";
 
 interface CoverLetter {

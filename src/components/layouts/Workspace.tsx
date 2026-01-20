@@ -17,7 +17,7 @@ import {
 	Save,
 	Check,
 } from "lucide-react";
-import { ErrorDialog } from "@/components/ErrorDialog";
+import { ErrorDialog } from "@/components/ui/ErrorDialog";
 import { generateLatexCode } from "@/lib/latex-generator";
 import {
 	Tooltip,

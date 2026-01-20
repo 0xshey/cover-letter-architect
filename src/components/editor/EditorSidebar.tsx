@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
-import { BlockList } from "@/components/blocks/BlockList";
-import { TargetInfoForm } from "@/components/blocks/TargetInfo";
+import { BlockList } from "@/components/editor/blocks/BlockList";
+import { TargetInfoForm } from "@/components/editor/blocks/TargetInfo";
 import {
 	Select,
 	SelectContent,
@@ -11,7 +11,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import { ThemeToggle } from "@/components/ThemeToggle";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { useAppStore } from "@/store/useAppStore";
 import {
 	ChevronRight,

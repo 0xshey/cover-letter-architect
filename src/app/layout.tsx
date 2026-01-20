@@ -15,9 +15,9 @@ export const metadata: Metadata = {
 	description: "Assemble personalized cover letters with AI",
 };
 
-import { Providers } from "@/components/Providers";
-import { ThemeProvider } from "@/components/ThemeProvider";
-import { AppShell } from "@/components/layout/AppShell";
+import { Providers } from "@/components/providers/Providers";
+import { ThemeProvider } from "@/components/providers/ThemeProvider";
+import { AppShell } from "@/components/layouts/AppShell";
 
 export default function RootLayout({
 	children,
