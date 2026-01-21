@@ -2,22 +2,20 @@
 
 import { useState } from "react";
 import { Plus, Info, X } from "lucide-react";
-import { useAppStore } from "@/store/useAppStore";
+import { useContentStore } from "@/store/useContentStore";
 import { BlockCategory } from "@/types";
 import { Button } from "@/components/ui/button";
-import { BlockItem } from "./block-item";
+import { BlockItem } from "./blocks/block-item";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
 	Dialog,
 	DialogContent,
-	DialogHeader,
-	DialogTitle,
 	DialogTrigger,
 	DialogFooter,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
 
 const CATEGORIES: BlockCategory[] = [
 	"Education",
@@ -45,8 +43,8 @@ const CATEGORY_PROMPTS: Record<BlockCategory, string> = {
 		"Share hobbies, volunteering, or interesting facts that show your personality...",
 };
 
-export function BlockList() {
-	const { blocks, addBlock } = useAppStore();
+export function BlockEditor({ className }: { className?: string }) {
+	const { blocks, addBlock } = useContentStore();
 	const [isAdding, setIsAdding] = useState(false);
 
 	// New Block State
@@ -69,24 +67,32 @@ export function BlockList() {
 	});
 
 	return (
-		<div className="flex flex-col h-full gap-4 bg-background border-t pt-4">
-			<div className="flex items-center justify-between shrink-0">
-				<h3 className="text-xs font-medium text-muted-foreground">
-					My Blocks
+		<div
+			className={cn(
+				"flex flex-col h-full bg-background border rounded-xl overflow-hidden",
+				className
+			)}
+		>
+			<div className="flex items-center justify-between p-4 border-b bg-muted/30">
+				<h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
+					<span className="h-2 w-2 rounded-full bg-orange-500" />
+					Blocks
 				</h3>
 				<Dialog open={isAdding} onOpenChange={setIsAdding}>
 					<DialogTrigger asChild>
 						<Button
-							variant="ghost"
+							variant="outline"
 							size="sm"
-							className="h-6 w-6 p-0 rounded-full"
+							className="h-7 text-xs"
 						>
-							<Plus className="h-4 w-4 text-muted-foreground" />
+							<Plus className="h-3.5 w-3.5 mr-1" /> Add Block
 						</Button>
 					</DialogTrigger>
 					<DialogContent>
 						<div className="grid gap-6">
-							<h3 className="text-md">New Block</h3>
+							<h3 className="text-md font-semibold">
+								Add New Block
+							</h3>
 							<div className="grid gap-2">
 								<Label>Category</Label>
 								<div className="flex flex-wrap gap-2">
@@ -94,10 +100,10 @@ export function BlockList() {
 										<button
 											key={cat}
 											onClick={() => setNewCategory(cat)}
-											className={`px-2 py-1 rounded text-xs font-medium text-muted-foreground transition-colors ${
+											className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
 												newCategory === cat
-													? "bg-primary text-primary-foreground"
-													: "bg-muted hover:bg-muted-foreground/20"
+													? "bg-primary text-primary-foreground shadow-sm scale-105"
+													: "bg-muted hover:bg-muted-foreground/20 text-muted-foreground"
 											}`}
 										>
 											{cat}
@@ -120,11 +126,11 @@ export function BlockList() {
 								</div>
 
 								{showPrompt && !!newContent && (
-									<div className="relative bg-muted/50 rounded-md p-3 pr-8 text-xs text-muted-foreground border border-border">
+									<div className="relative bg-blue-50/50 dark:bg-blue-900/10 rounded-md p-3 pr-8 text-xs text-muted-foreground border border-blue-100 dark:border-blue-900/20">
 										<p>{CATEGORY_PROMPTS[newCategory]}</p>
 										<button
 											onClick={() => setShowPrompt(false)}
-											className="absolute top-1 right-1 p-1 hover:bg-muted rounded-full transition-colors"
+											className="absolute top-1 right-1 p-1 hover:bg-background/50 rounded-full transition-colors"
 											title="Dismiss"
 										>
 											<X className="h-3.5 w-3.5" />
@@ -135,7 +141,7 @@ export function BlockList() {
 								<Textarea
 									id="new-content"
 									placeholder={CATEGORY_PROMPTS[newCategory]}
-									className="min-h-[150px]"
+									className="min-h-[150px] resize-none"
 									value={newContent}
 									onChange={(e) =>
 										setNewContent(e.target.value)
@@ -156,21 +162,20 @@ export function BlockList() {
 				</Dialog>
 			</div>
 
-			<div className="flex-1 min-h-0 relative">
-				<ScrollArea className="h-full pr-4">
-					<div className="space-y-3 pb-4">
-						{sortedBlocks.length === 0 ? (
-							<div className="rounded-lg border border-border border-dashed p-8 text-center text-sm text-muted-foreground">
-								No blocks yet. Click + to add one.
-							</div>
-						) : (
-							sortedBlocks.map((block) => (
-								<BlockItem key={block.id} block={block} />
-							))
-						)}
-					</div>
-				</ScrollArea>
-			</div>
+			<ScrollArea className="flex-1">
+				<div className="p-4 space-y-3">
+					{sortedBlocks.length === 0 ? (
+						<div className="rounded-lg border border-dashed p-8 text-center text-sm text-muted-foreground bg-muted/5">
+							No blocks yet. Add a block to start building your
+							letter structure.
+						</div>
+					) : (
+						sortedBlocks.map((block) => (
+							<BlockItem key={block.id} block={block} />
+						))
+					)}
+				</div>
+			</ScrollArea>
 		</div>
 	);
 }

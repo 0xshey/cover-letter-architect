@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useAppStore } from "@/store/useAppStore";
+import { useTargetStore } from "@/store/useTargetStore";
+import { useContentStore } from "@/store/useContentStore";
+import { useEditorStore } from "@/store/useEditorStore";
 import { CoverLetterCard } from "@/components/cards/cover-letter-card";
 import { Plus } from "lucide-react";
 import { NewLetterButton } from "./new-letter-button";
@@ -22,12 +24,9 @@ interface DashboardGridProps {
 
 export function DashboardGrid({ initialCoverLetters }: DashboardGridProps) {
 	const router = useRouter();
-	const {
-		setTargetInfo,
-		setBlocks,
-		setCurrentLetter,
-		setCurrentCoverLetterId,
-	} = useAppStore();
+	const { setTargetInfo } = useTargetStore();
+	const { setBlocks } = useContentStore();
+	const { setCurrentLetter, setCurrentCoverLetterId } = useEditorStore();
 
 	const [coverLetters, setCoverLetters] =
 		useState<CoverLetter[]>(initialCoverLetters);

@@ -3,6 +3,7 @@
 import { LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 export function UserFooter() {
 	const supabase = createClient();
@@ -13,7 +14,10 @@ export function UserFooter() {
 	};
 
 	return (
-		<div className="p-4 shrink-0 mt-auto">
+		<div className="p-4 shrink-0 mt-auto flex flex-col gap-2">
+			<div className="flex justify-center">
+				<ThemeToggle />
+			</div>
 			<div className="relative">
 				<Button
 					variant="ghost"

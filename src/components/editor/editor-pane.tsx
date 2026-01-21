@@ -1,18 +1,15 @@
 "use client";
 
-import { useAppStore } from "@/store/useAppStore";
+import { useEditorStore } from "@/store/useEditorStore";
+import { useUIStore } from "@/store/useUIStore";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { SuggestionOverlay } from "./suggestion-tooltip";
 
 export function EditorPane() {
-	const {
-		currentLetter,
-		setCurrentLetter,
-		suggestionsMode,
-		toggleSuggestionsMode,
-	} = useAppStore();
+	const { currentLetter, setCurrentLetter } = useEditorStore();
+	const { suggestionsMode, toggleSuggestionsMode } = useUIStore();
 
 	return (
 		<div className="h-full flex flex-col relative w-full">

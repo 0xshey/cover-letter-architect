@@ -1,7 +1,9 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { useAppStore } from "@/store/useAppStore";
+import { useTargetStore } from "@/store/useTargetStore";
+import { useContentStore } from "@/store/useContentStore";
+import { useEditorStore } from "@/store/useEditorStore";
 import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -13,10 +15,14 @@ export function NewLetterButton({
 	className?: string;
 }) {
 	const router = useRouter();
-	const { resetEditorState } = useAppStore();
+	const { resetTargetInfo } = useTargetStore();
+	const { resetBlocks } = useContentStore();
+	const { resetEditor } = useEditorStore();
 
 	const handleNew = () => {
-		resetEditorState();
+		resetTargetInfo();
+		resetBlocks();
+		resetEditor();
 		router.push("/editor");
 	};
 

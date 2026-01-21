@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Pencil, Trash2, GripVertical, Info, X } from "lucide-react";
-import { useAppStore } from "@/store/useAppStore";
+import { useContentStore } from "@/store/useContentStore";
 import { BlockCategory, ContentBlock } from "@/types";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
@@ -23,7 +23,7 @@ interface BlockItemProps {
 }
 
 export function BlockItem({ block }: BlockItemProps) {
-	const { toggleBlock, removeBlock, updateBlock } = useAppStore();
+	const { toggleBlock, removeBlock, updateBlock } = useContentStore();
 	const [isEditing, setIsEditing] = useState(false);
 
 	// Local edit state

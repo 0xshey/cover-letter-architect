@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useAppStore } from "@/store/useAppStore";
+import { useUIStore } from "@/store/useUIStore";
 import {
 	Tooltip,
 	TooltipContent,
@@ -29,7 +29,7 @@ const WEAK_PHRASES = [
 ];
 
 export function SuggestionOverlay({ text }: { text: string }) {
-	const { suggestionsMode } = useAppStore();
+	const { suggestionsMode } = useUIStore();
 
 	if (!suggestionsMode || !text) return null;
 

@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { useAppStore } from "@/store/useAppStore";
+import { useEditorStore } from "@/store/useEditorStore";
+import { useTargetStore } from "@/store/useTargetStore";
 import { generateLatexCode } from "@/lib/latex-generator";
 import { Document, Page, pdfjs } from "react-pdf";
 
@@ -10,7 +11,8 @@ import { Document, Page, pdfjs } from "react-pdf";
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 export function PreviewPane() {
-	const { currentLetter, targetInfo } = useAppStore();
+	const { currentLetter } = useEditorStore();
+	const { targetInfo } = useTargetStore();
 	const [pdfUrl, setPdfUrl] = useState<string | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
