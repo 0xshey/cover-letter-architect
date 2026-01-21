@@ -73,7 +73,7 @@ export function BlockEditor({ className }: { className?: string }) {
 				className
 			)}
 		>
-			<div className="flex items-center justify-between p-4 border-b bg-muted/30">
+			<div className="flex items-center justify-between px-4 py-4">
 				<h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
 					<span className="h-2 w-2 rounded-full bg-orange-500" />
 					Blocks

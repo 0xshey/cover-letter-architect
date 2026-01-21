@@ -5,13 +5,16 @@ import { Canvas } from "@/components/editor/canvas";
 
 export default function EditorPage() {
 	return (
-		<main className="h-screen w-full overflow-hidden bg-muted/10 flex flex-col">
-			<div className="flex-1 overflow-hidden p-4 flex flex-col gap-4 max-w-[1600px] mx-auto w-full">
+		<main className="h-screen w-full overflow-hidden flex flex-col">
+			<div className="flex-1 overflow-hidden p-4 flex flex-col gap-4 max-w-6xl mx-auto w-full mt-40">
+				<h1 className="text-4xl mb-2 font-bold tracking-tight text-foreground">
+					Cover Letter Editor
+				</h1>
 				{/* Top Row: Details Editors */}
 				<div className="grid grid-cols-1 md:grid-cols-3 gap-4 h-auto min-h-80 shrink-0">
-					<PersonalDetailsEditor className="shadow-sm" />
-					<RoleDetailsEditor className="shadow-sm" />
-					<BlockEditor className="h-full shadow-sm" />
+					<PersonalDetailsEditor className="bg-muted/50" />
+					<RoleDetailsEditor className="bg-muted/50" />
+					<BlockEditor className="bg-muted/50" />
 				</div>
 
 				{/* Bottom Row: Block Editor + Canvas */}

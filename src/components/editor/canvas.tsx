@@ -161,7 +161,7 @@ export function Canvas({ className, ...props }: CanvasProps) {
 	return (
 		<div
 			className={cn(
-				"flex flex-col h-full bg-background border rounded-xl overflow-hidden",
+				"flex flex-col h-full border rounded-xl overflow-hidden bg-muted/50",
 				className
 			)}
 			{...props}
@@ -172,7 +172,7 @@ export function Canvas({ className, ...props }: CanvasProps) {
 				error={error}
 				title="Action Failed"
 			/>
-			<div className="flex items-center px-4 justify-between shrink-0 h-12 border-b bg-muted/20">
+			<div className="flex items-center px-4 justify-between shrink-0 h-12 border-b">
 				<Tabs
 					value={activeTab}
 					onValueChange={setActiveTab}

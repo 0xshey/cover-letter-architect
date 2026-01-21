@@ -1,3 +1,5 @@
+"use client";
+
 import { useGenerativeModel } from "@/hooks/use-generative-model";
 import { Button } from "@/components/ui/button";
 import {

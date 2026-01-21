@@ -1,41 +1,6 @@
 import { useEffect } from "react";
-import { create } from "zustand";
-import { persist } from "zustand/middleware";
 import { useAuthStore } from "@/store/useAuthStore";
-
-interface GenerativeState {
-	selectedModel: string;
-	setSelectedModel: (model: string) => void;
-	availableModels: { id: string; name: string }[];
-	setAvailableModels: (models: { id: string; name: string }[]) => void;
-	isLoadingModels: boolean;
-	setIsLoadingModels: (isLoading: boolean) => void;
-	isGenerating: boolean;
-	setIsGenerating: (isGenerating: boolean) => void;
-}
-
-const useGenerativeStore = create<GenerativeState>()(
-	persist(
-		(set) => ({
-			selectedModel: "",
-			setSelectedModel: (model) => set({ selectedModel: model }),
-			availableModels: [],
-			setAvailableModels: (models) => set({ availableModels: models }),
-			isLoadingModels: false,
-			setIsLoadingModels: (isLoading) =>
-				set({ isLoadingModels: isLoading }),
-			isGenerating: false,
-			setIsGenerating: (isGenerating) => set({ isGenerating }),
-		}),
-		{
-			name: "generative-model-storage",
-			partialize: (state) => ({
-				selectedModel: state.selectedModel,
-				// We don't necessarily need to persist availableModels, but can if we want offline support
-			}),
-		}
-	)
-);
+import { useGenerativeStore } from "@/store/useGenerativeStore";
 
 export function useGenerativeModel() {
 	const { session } = useAuthStore();

@@ -38,7 +38,7 @@ export default function PagesLayout({
 			</aside>
 
 			{/* Main Content Area */}
-			<main className="flex-1 max-w-6xl mx-auto pb-16 md:pb-0 min-w-0 border border-red-500">
+			<main className="flex-1 max-w-6xl mx-auto pb-16 md:pb-0 min-w-0">
 				{children}
 			</main>
 

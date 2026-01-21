@@ -1,35 +1,12 @@
-"use client";
-
 import { useEditorStore } from "@/store/useEditorStore";
-import { useUIStore } from "@/store/useUIStore";
 import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
-import { SuggestionOverlay } from "./suggestion-tooltip";
 
 export function EditorPane() {
 	const { currentLetter, setCurrentLetter } = useEditorStore();
-	const { suggestionsMode, toggleSuggestionsMode } = useUIStore();
 
 	return (
 		<div className="h-full flex flex-col relative w-full">
-			<div className="w-full flex items-center justify-start px-4 py-2 bg-muted border-b">
-				<div className="flex items-center space-x-2">
-					<Switch
-						id="suggestions-mode"
-						checked={suggestionsMode}
-						onCheckedChange={toggleSuggestionsMode}
-					/>
-					<Label
-						htmlFor="suggestions-mode"
-						className="text-xs cursor-pointer text-muted-foreground"
-					>
-						Suggestions Mode
-					</Label>
-				</div>
-			</div>
 			<div className="flex-1 relative w-full h-full">
-				<SuggestionOverlay text={currentLetter || ""} />
 				<Textarea
 					value={currentLetter || ""}
 					onChange={(e) => setCurrentLetter(e.target.value)}
