@@ -1,5 +1,31 @@
-import { DashboardClient } from "./DashboardClient";
+import { createClient } from "@/lib/supabase/server";
+import { DashboardGrid } from "@/components/dashboard/dashboard-grid";
+import { NewLetterButton } from "@/components/dashboard/new-letter-button";
 
-export default function DashboardPage() {
-	return <DashboardClient />;
+export default async function DashboardPage() {
+	const supabase = await createClient();
+	const { data: coverLetters } = await supabase
+		.from("cover_letters")
+		.select("*")
+		.order("updated_at", { ascending: false });
+
+	return (
+		<div className="h-full mt-40 container">
+			<div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4 px-4">
+				<div className="space-y-1">
+					<h1 className="text-4xl mb-2 font-bold tracking-tight text-foreground">
+						My Cover Letters
+					</h1>
+					<p className="text-muted-foreground text-md">
+						Manage your saved letters and tailored applications.
+					</p>
+				</div>
+				<NewLetterButton className="shadow-sm" />
+			</div>
+
+			<div className="w-full max-h-full bg-muted/50 border rounded-2xl p-4">
+				<DashboardGrid initialCoverLetters={coverLetters || []} />
+			</div>
+		</div>
+	);
 }
