@@ -17,7 +17,6 @@ export const metadata: Metadata = {
 
 import { Providers } from "@/components/providers/providers";
 import { ThemeProvider } from "@/components/providers/theme-provider";
-import { AppShell } from "@/components/layouts/app-shell";
 
 export default function RootLayout({
 	children,
@@ -40,7 +39,7 @@ export default function RootLayout({
 						enableSystem
 						disableTransitionOnChange
 					>
-						<AppShell>{children}</AppShell>
+						{children}
 					</ThemeProvider>
 				</Providers>
 			</body>
