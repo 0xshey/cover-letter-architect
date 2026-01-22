@@ -1,6 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import { DashboardGrid } from "@/components/dashboard/dashboard-grid";
-import { NewLetterButton } from "@/components/dashboard/new-letter-button";
+import { LettersView } from "@/components/letters/letters-view";
 
 export default async function DashboardPage() {
 	const supabase = await createClient();
@@ -20,11 +19,10 @@ export default async function DashboardPage() {
 						Manage your saved letters and tailored applications.
 					</p>
 				</div>
-				<NewLetterButton className="shadow-sm" />
 			</div>
 
-			<div className="w-full max-h-full bg-muted/50 border rounded-2xl p-4">
-				<DashboardGrid initialCoverLetters={coverLetters || []} />
+			<div className="w-full max-h-full">
+				<LettersView initialCoverLetters={coverLetters || []} />
 			</div>
 		</div>
 	);

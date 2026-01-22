@@ -13,40 +13,36 @@ import {
 	AlertDialogTitle,
 	AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { LetterItemProps } from "./types";
 
-interface CoverLetterCardProps {
-	companyName: string;
-	roleTitle: string;
-	snippet?: string;
-	updatedAt: string;
-	onOpen: () => void;
-	onDelete: () => void;
-	className?: string;
-}
+export function GridItem({ letter, onOpen, onDelete }: LetterItemProps) {
+	const companyName = letter.target_info?.companyName;
+	const roleTitle = letter.target_info?.roleTitle;
+	const updatedAt = letter.updated_at;
 
-export function CoverLetterCard({
-	companyName,
-	roleTitle,
-	snippet,
-	updatedAt,
-	onOpen,
-	onDelete,
-	className,
-}: CoverLetterCardProps) {
+	const getPreviewText = () => {
+		if (letter.markdown) return letter.markdown;
+		if (Array.isArray(letter.blocks)) {
+			const textBlocks = letter.blocks
+				.filter((b: any) => b.content && typeof b.content === "string")
+				.map((b: any) => b.content)
+				.join(" ");
+			if (textBlocks) return textBlocks;
+		}
+		return "No preview content available.";
+	};
+
+	const snippet = getPreviewText();
+
 	return (
 		<div
-			className={cn(
-				"group cursor-pointer relative flex flex-col justify-between overflow-hidden rounded-xl border bg-card text-card-foreground shadow-sm transition-all duration-300 hover:shadow-md hover:border-primary/50",
-				className
-			)}
+			className="group cursor-pointer relative flex flex-col justify-between overflow-hidden rounded-xl border bg-card text-card-foreground shadow-sm transition-all duration-300 hover:shadow-md hover:border-primary/50"
 			onClick={(e) => {
 				e.stopPropagation();
-				onOpen();
+				onOpen(letter);
 			}}
 		>
-			{/* Decorative gradient background blobb (optional, subtle) */}
-
-			<div className="p-4 space-y-4 relative z-10">
+			<div className="p-4 space-y-4 relative z-10 w-full flex-1 flex flex-col">
 				{/* Header Section */}
 				<div className="space-y-1">
 					<h3 className="font-semibold text-md leading-tight tracking-tight truncate pr-2 group-hover:text-primary transition-colors">
@@ -58,9 +54,9 @@ export function CoverLetterCard({
 				</div>
 
 				{/* Content Snippet */}
-				<div className="relative mt-auto">
+				<div className="relative mt-auto flex-1 flex flex-col justify-end">
 					<div className="relative z-20 text-sm text-muted-foreground/80 line-clamp-3 min-h-[4.5em] italic bg-muted/50 backdrop-blur-md border border-border/50 p-4 rounded-xl shadow-sm">
-						{snippet || "No preview available."}
+						{snippet}
 					</div>
 					{/* Blur overlay for the footer area below */}
 					<div className="absolute -bottom-12 inset-x-0 h-16 bg-background/5 backdrop-blur-[2px] pointer-events-none z-10" />
@@ -68,7 +64,7 @@ export function CoverLetterCard({
 			</div>
 
 			{/* Footer / Actions Section */}
-			<div className="px-4 pb-4 relative z-10">
+			<div className="px-4 pb-4 relative z-10 mt-auto">
 				<div className="flex items-center justify-between">
 					<div
 						className="flex items-center text-xs text-muted-foreground/60"
@@ -86,10 +82,10 @@ export function CoverLetterCard({
 							size="icon"
 							onClick={(e) => {
 								e.stopPropagation();
-								onOpen();
+								onOpen(letter);
 							}}
 							className="h-8 w-8 text-muted-foreground hover:text-primary"
-							aria-label={`Edit cover letter for ${companyName}`}
+							aria-label={`Edit ${companyName}`}
 						>
 							<Edit className="h-4 w-4" />
 						</Button>
@@ -101,7 +97,7 @@ export function CoverLetterCard({
 									size="icon"
 									className="h-8 w-8 text-muted-foreground hover:text-destructive"
 									onClick={(e) => e.stopPropagation()}
-									aria-label={`Delete cover letter for ${companyName}`}
+									aria-label={`Delete ${companyName}`}
 								>
 									<Trash2 className="h-4 w-4" />
 								</Button>
@@ -114,15 +110,21 @@ export function CoverLetterCard({
 									<AlertDialogDescription>
 										This action cannot be undone. This will
 										permanently delete the cover letter for
-										"{companyName}" and its history.
+										"{companyName || "Untitled"}" and its
+										history.
 									</AlertDialogDescription>
 								</AlertDialogHeader>
 								<AlertDialogFooter>
-									<AlertDialogCancel>
+									<AlertDialogCancel
+										onClick={(e) => e.stopPropagation()}
+									>
 										Cancel
 									</AlertDialogCancel>
 									<AlertDialogAction
-										onClick={onDelete}
+										onClick={(e) => {
+											e.stopPropagation();
+											onDelete(letter.id);
+										}}
 										className="bg-destructive hover:bg-destructive/90"
 									>
 										Delete
@@ -135,7 +137,7 @@ export function CoverLetterCard({
 			</div>
 			<div
 				className="absolute inset-0 z-0 cursor-pointer"
-				onClick={onOpen}
+				onClick={() => onOpen(letter)}
 				aria-hidden="true"
 			/>
 		</div>
