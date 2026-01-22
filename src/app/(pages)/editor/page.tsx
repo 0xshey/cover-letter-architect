@@ -6,7 +6,7 @@ import { Canvas } from "@/components/editor/canvas";
 export default function EditorPage() {
 	return (
 		<main className="h-screen w-full overflow-hidden flex flex-col">
-			<div className="flex-1 overflow-hidden p-4 flex flex-col gap-4 max-w-6xl mx-auto w-full mt-40">
+			<div className="flex-1 overflow-y-scroll p-4 flex flex-col gap-4 max-w-6xl mx-auto w-full mt-40">
 				<h1 className="text-4xl mb-2 font-bold tracking-tight text-foreground">
 					Cover Letter Editor
 				</h1>

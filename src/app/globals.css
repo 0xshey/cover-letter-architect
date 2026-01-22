@@ -166,3 +166,26 @@
     size: auto;
   }
 }
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+/* Global Hidden Scrollbar */
+@layer base {
+  ::-webkit-scrollbar {
+    width: 0px;
+    background: transparent;
+    display: none;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: transparent;
+  }
+}

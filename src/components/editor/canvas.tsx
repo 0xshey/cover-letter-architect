@@ -161,7 +161,7 @@ export function Canvas({ className, ...props }: CanvasProps) {
 	return (
 		<div
 			className={cn(
-				"flex flex-col h-full border rounded-xl overflow-hidden bg-muted/50",
+				"flex flex-col h-full min-h-200 border rounded-xl overflow-hidden bg-muted/50",
 				className
 			)}
 			{...props}

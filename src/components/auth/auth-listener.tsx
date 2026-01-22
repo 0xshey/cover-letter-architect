@@ -22,8 +22,6 @@ export function AuthListener() {
 			setSession(session);
 			if (event === "SIGNED_OUT") {
 				window.location.href = "/";
-			} else if (event === "TOKEN_REFRESHED") {
-				toast("Session refreshed");
 			}
 		});
 

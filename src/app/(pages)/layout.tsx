@@ -1,4 +1,5 @@
-import { Navigator } from "@/components/navigator";
+import { SidebarNavigator } from "@/components/navigators/sidebar-navigator";
+import { MobileNavigator } from "@/components/navigators/mobile-navigator";
 import { AuthListener } from "@/components/auth/auth-listener";
 import Link from "next/link";
 import { UserMenu } from "@/components/user-menu";
@@ -14,7 +15,7 @@ export default function PagesLayout({
 			<AuthListener />
 
 			{/* Desktop Sidebar (Left) */}
-			<aside className="hidden md:flex w-fit flex-col fixed left-0 top-0 h-full z-40 bg-background transition-all duration-300 border-r">
+			<aside className="hidden md:flex w-fit flex-col fixed left-0 top-0 h-full z-40 bg-background transition-all duration-300 border-r no-scrollbar overflow-y-auto">
 				{/* Top: Logo */}
 				<div className="p-4 shrink-0 mt-4">
 					<Link
@@ -29,7 +30,7 @@ export default function PagesLayout({
 
 				{/* Center: Navigation */}
 				<div className="flex-1 flex flex-col justify-center w-full">
-					<Navigator mode="desktop" />
+					<SidebarNavigator />
 				</div>
 
 				{/* Bottom: Logout / Menu */}
@@ -39,12 +40,12 @@ export default function PagesLayout({
 			</aside>
 
 			{/* Main Content Area */}
-			<main className="w-full flex justify-center max-w-6xl mx-auto px-2 md:pr-0 md:pl-24 pb-16">
+			<main className="w-full flex justify-center max-w-6xl mx-auto px-2 md:pl-24 pb-16">
 				{children}
 			</main>
 
 			{/* Mobile Bottom Bar */}
-			<Navigator mode="mobile" />
+			<MobileNavigator />
 		</div>
 	);
 }

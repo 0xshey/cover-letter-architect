@@ -20,9 +20,9 @@ export function LettersToolbar({
 	onViewModeChange,
 }: LettersToolbarProps) {
 	return (
-		<div className="flex flex-col sm:flex-row items-center justify-between gap-4 py-4 w-full">
+		<div className="flex flex-col sm:flex-row items-center justify-between gap-8 py-4 w-full">
 			{/* Left: Search */}
-			<div className="relative w-full max-w-sm">
+			<div className="relative w-full md:max-w-sm">
 				<Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/50 transition-colors group-focus-within:text-primary/50" />
 				<Input
 					placeholder="Search applications..."
@@ -34,7 +34,7 @@ export function LettersToolbar({
 			</div>
 
 			{/* Right: Toggles & New Button */}
-			<div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
+			<div className="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-end">
 				<div className="bg-muted/50 p-1 rounded-lg border border-border/40">
 					<ToggleGroup
 						type="single"
@@ -62,8 +62,6 @@ export function LettersToolbar({
 						</ToggleGroupItem>
 					</ToggleGroup>
 				</div>
-
-				<div className="h-6 w-px bg-border/40 mx-1 hidden sm:block" />
 
 				<NewLetterButton className="shadow-sm" size="sm" />
 			</div>
