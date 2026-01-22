@@ -10,7 +10,7 @@ export default async function DashboardPage() {
 
 	return (
 		<div className="h-full mt-40 container">
-			<div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4 px-4">
+			<div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4 px-2">
 				<div className="space-y-1">
 					<h1 className="text-4xl mb-2 font-bold tracking-tight text-foreground">
 						My Cover Letters

@@ -8,6 +8,7 @@ export interface ResumeProfile {
 	location: string | null;
 	primary_link: string | null;
 	profile_image_url: string | null;
+	username: string | null;
 	about: string | null;
 	show_work_experience: boolean;
 	show_education: boolean;

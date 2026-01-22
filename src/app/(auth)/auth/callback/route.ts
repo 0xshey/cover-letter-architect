@@ -8,8 +8,23 @@ export async function GET(request: Request) {
 
 	if (code) {
 		const supabase = await createClient();
-		const { error } = await supabase.auth.exchangeCodeForSession(code);
-		if (!error) {
+		const {
+			data: { user },
+			error,
+		} = await supabase.auth.exchangeCodeForSession(code);
+
+		if (!error && user) {
+			// Check if user has a username
+			const { data: profile } = await supabase
+				.from("resume_profiles")
+				.select("username")
+				.eq("user_id", user.id)
+				.single();
+
+			if (!profile?.username) {
+				return NextResponse.redirect(`${origin}/signup`);
+			}
+
 			return NextResponse.redirect(`${origin}${next}`);
 		}
 	}
