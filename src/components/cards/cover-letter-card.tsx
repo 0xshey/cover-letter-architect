@@ -36,9 +36,13 @@ export function CoverLetterCard({
 	return (
 		<div
 			className={cn(
-				"group relative flex flex-col justify-between overflow-hidden rounded-xl border bg-card text-card-foreground shadow-sm transition-all duration-300 hover:shadow-md hover:border-primary/50",
+				"group cursor-pointer relative flex flex-col justify-between overflow-hidden rounded-xl border bg-card text-card-foreground shadow-sm transition-all duration-300 hover:shadow-md hover:border-primary/50",
 				className
 			)}
+			onClick={(e) => {
+				e.stopPropagation();
+				onOpen();
+			}}
 		>
 			{/* Decorative gradient background blobb (optional, subtle) */}
 

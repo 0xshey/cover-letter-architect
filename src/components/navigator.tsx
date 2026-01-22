@@ -41,8 +41,7 @@ export function Navigator({ mode }: NavigatorProps) {
 							<div className="flex items-center justify-center w-10 h-10 ">
 								<Icon
 									className={cn(
-										"h-7 w-7 transition-transform group-hover:scale-105",
-										isActive ? "fill-foreground" : ""
+										"h-7 w-7 transition-transform group-hover:scale-105"
 									)}
 									strokeWidth={isActive ? 2.5 : 2}
 								/>

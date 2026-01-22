@@ -1,8 +1,9 @@
 import { Navigator } from "@/components/navigator";
-import { UserFooter } from "@/components/layouts/user-footer";
 import { AuthListener } from "@/components/auth/auth-listener";
-import { FileText } from "lucide-react";
+import { FileText, LogOut } from "lucide-react"; // Add LogOut
 import Link from "next/link";
+import { Button } from "@/components/ui/button"; // Add Button
+import { ThemeToggle } from "@/components/ui/theme-toggle"; // Add ThemeToggle
 
 export default function PagesLayout({
 	children,
@@ -15,7 +16,7 @@ export default function PagesLayout({
 			<AuthListener />
 
 			{/* Desktop Sidebar (Left) */}
-			<aside className="hidden md:flex w-fit flex-col fixed left-0 top-0 h-full z-40 bg-background transition-all duration-300">
+			<aside className="hidden md:flex w-fit flex-col fixed left-0 top-0 h-full z-40 bg-background transition-all duration-300 border-r">
 				{/* Top: Logo */}
 				<div className="p-4 shrink-0 mt-4">
 					<Link
@@ -34,11 +35,30 @@ export default function PagesLayout({
 				</div>
 
 				{/* Bottom: Logout / Menu */}
-				<UserFooter />
+				<div className="p-4 mb-4 shrink-0 mt-auto flex flex-col gap-4">
+					<div className="flex justify-center">
+						<ThemeToggle
+							size={24}
+							className="w-full h-auto py-3 justify-center text-muted-foreground hover:bg-muted group rounded-2xl"
+						/>
+					</div>
+					<div className="relative">
+						<form action="/auth/signout" method="post">
+							<Button
+								variant="ghost"
+								className="w-full h-auto py-3 justify-center text-muted-foreground hover:text-destructive hover:bg-destructive/10 group rounded-2xl"
+								type="submit"
+								title="Sign Out"
+							>
+								<LogOut className="h-6 w-6" />
+							</Button>
+						</form>
+					</div>
+				</div>
 			</aside>
 
 			{/* Main Content Area */}
-			<main className="flex-1 max-w-6xl mx-auto pb-16 md:pb-0 min-w-0">
+			<main className="w-full flex justify-center max-w-6xl mx-auto px-2 md:pr-0 md:pl-24 pb-16">
 				{children}
 			</main>
 
