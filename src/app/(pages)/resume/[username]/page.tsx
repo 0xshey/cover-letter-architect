@@ -2,21 +2,21 @@ import { ResumeView } from "@/components/resume/resume-view";
 
 interface ResumePageProps {
 	params: Promise<{
-		userId: string;
+		username: string;
 	}>;
 }
 
 export default async function ResumePage({ params }: ResumePageProps) {
-	const { userId } = await params;
+	const { username } = await params;
 
-	return <ResumeView userId={userId} />;
+	return <ResumeView username={username} />;
 }
 
 export async function generateMetadata({ params }: ResumePageProps) {
-	const { userId } = await params;
+	const { username } = await params;
 
 	return {
 		title: `Resume | CLA`,
-		description: `View resume for user ${userId}`,
+		description: `View resume for ${username}`,
 	};
 }

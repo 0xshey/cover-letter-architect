@@ -11,5 +11,15 @@ export default async function ResumeRedirectPage() {
 		redirect("/login");
 	}
 
-	redirect(`/resume/${user.id}`);
+	const { data: profile } = await supabase
+		.from("resume_profiles")
+		.select("username")
+		.eq("user_id", user.id)
+		.single();
+
+	if (!profile?.username) {
+		redirect("/signup");
+	}
+
+	redirect(`/resume/${profile.username}`);
 }

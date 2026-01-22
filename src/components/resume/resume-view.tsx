@@ -27,10 +27,10 @@ import {
 } from "@/components/resume";
 
 interface ResumeViewProps {
-	userId: string;
+	username: string;
 }
 
-export function ResumeView({ userId }: ResumeViewProps) {
+export function ResumeView({ username }: ResumeViewProps) {
 	const router = useRouter();
 	const supabase = useMemo(() => createClient(), []);
 	const { session } = useAuthStore();
@@ -56,60 +56,32 @@ export function ResumeView({ userId }: ResumeViewProps) {
 		reset,
 	} = useResumeStore();
 
-	const isOwner = session?.user?.id === userId;
+	const isOwner = session?.user?.id === profile?.user_id;
 	const [notFound, setNotFound] = useState(false);
+
 	// Fetch resume data
 	useEffect(() => {
 		const fetchResumeData = async () => {
 			setLoading(true);
 			try {
-				// Fetch profile
+				// Fetch profile by username
 				const { data: profileData, error: profileError } =
 					await supabase
 						.from("resume_profiles")
 						.select("*")
-						.eq("user_id", userId)
+						.eq("username", username)
 						.single();
 
-				let currentProfile = profileData;
-
-				if (profileError) {
-					if (profileError.code === "PGRST116") {
-						// No profile found
-						if (isOwner) {
-							// Create a new profile for the owner
-							const { data: newProfile, error: createError } =
-								await supabase
-									.from("resume_profiles")
-									.insert({
-										user_id: userId,
-										name:
-											session?.user?.email || "Your Name",
-									})
-									.select()
-									.single();
-
-							if (createError) throw createError;
-							currentProfile = newProfile;
-							setProfile(newProfile);
-						} else {
-							setNotFound(true);
-							setLoading(false);
-							return;
-						}
-					} else {
-						throw profileError;
-					}
-				} else {
-					setProfile(profileData);
-				}
-
-				// Get the resume_id from the current profile
-				const resumeId = currentProfile?.id;
-				if (!resumeId) {
+				if (profileError || !profileData) {
+					setNotFound(true);
 					setLoading(false);
 					return;
 				}
+
+				setProfile(profileData);
+
+				// Get the resume_id from the current profile
+				const resumeId = profileData.id;
 
 				// Fetch related data
 				const [workRes, eduRes, projRes, contactRes] =
@@ -152,9 +124,9 @@ export function ResumeView({ userId }: ResumeViewProps) {
 
 		return () => reset();
 	}, [
-		userId,
-		isOwner,
-		session?.user?.email,
+		username,
+		// isOwner removed from dep array as it depends on profile which is set here
+		// session?.user?.email removed as we don't auto-create anymore
 		supabase,
 		setProfile,
 		setWorkExperience,
