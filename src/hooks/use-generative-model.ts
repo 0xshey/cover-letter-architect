@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useAuthStore } from "@/store/useAuthStore";
+import { createClient } from "@/lib/supabase/client";
 import { useGenerativeStore } from "@/store/useGenerativeStore";
 
 export function useGenerativeModel() {
@@ -39,12 +40,38 @@ export function useGenerativeModel() {
 	const fetchModels = async () => {
 		setIsLoadingModels(true);
 		try {
-			const res = await fetch("/api/models");
+			let res = await fetch("/api/models");
+
+			if (res.status === 401) {
+				console.log(
+					"Model fetch unauthorized, attempting session refresh..."
+				);
+				const supabase = createClient();
+				const { data, error } = await supabase.auth.refreshSession();
+
+				if (!error && data.session) {
+					console.log("Session refreshed, retrying fetch...");
+					// Give a small delay to ensure cookies are propagated if needed
+					await new Promise((resolve) => setTimeout(resolve, 500));
+					res = await fetch("/api/models");
+				} else {
+					console.error(
+						"Failed to refresh session or no session returned"
+					);
+				}
+			}
+
 			if (res.ok) {
 				const data = await res.json();
 				if (data.models && data.models.length > 0) {
 					setAvailableModels(data.models);
 				}
+			} else {
+				console.error(
+					"Failed to fetch models",
+					res.status,
+					res.statusText
+				);
 			}
 		} catch (error) {
 			console.error("Failed to fetch models", error);
