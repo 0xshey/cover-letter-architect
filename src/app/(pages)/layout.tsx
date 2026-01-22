@@ -18,7 +18,7 @@ export default function PagesLayout({
 				{/* Top: Logo */}
 				<div className="p-4 shrink-0 mt-4">
 					<Link
-						href="/dashboard"
+						href="/letters"
 						className="flex items-center justify-center hover:opacity-80 transition-opacity"
 					>
 						<span className="text-2xl font-bold font-mono tracking-tighter">

@@ -2,11 +2,30 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { User } from "lucide-react";
+import { Folder, Form, LayoutPanelTop } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { NAVIGATION_ITEMS } from "@/lib/navigation";
 import { UserMenu } from "@/components/user-menu";
-import { useAuthStore } from "@/store/useAuthStore";
+
+const NAVIGATION_ITEMS = [
+	{
+		icon: Folder,
+		label: "Home",
+		path: "/letters",
+		match: (pathname: string) => pathname === "/letters",
+	},
+	{
+		icon: LayoutPanelTop,
+		label: "Create",
+		path: "/editor",
+		match: (pathname: string) => pathname === "/editor",
+	},
+	{
+		icon: Form,
+		label: "Resume",
+		path: "/resume",
+		match: (pathname: string) => pathname.startsWith("/resume"),
+	},
+];
 
 interface NavigatorProps {
 	mode: "desktop" | "mobile";
@@ -14,18 +33,6 @@ interface NavigatorProps {
 
 export function Navigator({ mode }: NavigatorProps) {
 	const pathname = usePathname();
-	const { session } = useAuthStore();
-	const userId = session?.user?.id;
-
-	// Resume link (dynamic based on user)
-	const resumeLink = userId
-		? {
-				icon: User,
-				label: "Resume",
-				path: `/resume/${userId}`,
-				match: (path: string) => path.startsWith("/resume"),
-		  }
-		: null;
 
 	if (mode === "desktop") {
 		return (
@@ -55,28 +62,6 @@ export function Navigator({ mode }: NavigatorProps) {
 						</Link>
 					);
 				})}
-
-				{/* Resume Link */}
-				{resumeLink && (
-					<Link
-						href={resumeLink.path}
-						className={cn(
-							"flex items-center p-3 rounded-2xl transition-all duration-200 group w-full",
-							resumeLink.match(pathname)
-								? "text-foreground font-semibold"
-								: "text-muted-foreground hover:bg-muted/40 hover:text-foreground"
-						)}
-					>
-						<div className="flex items-center justify-center w-10 h-10">
-							<User
-								className="h-7 w-7 transition-transform group-hover:scale-105"
-								strokeWidth={
-									resumeLink.match(pathname) ? 2.5 : 2
-								}
-							/>
-						</div>
-					</Link>
-				)}
 			</nav>
 		);
 	}
@@ -108,27 +93,6 @@ export function Navigator({ mode }: NavigatorProps) {
 					</Link>
 				);
 			})}
-
-			{/* Resume Link (Mobile) */}
-			{resumeLink && (
-				<Link
-					href={resumeLink.path}
-					className={cn(
-						"flex-1 flex flex-col items-center justify-center h-full gap-1 p-1 transition-colors",
-						resumeLink.match(pathname)
-							? "text-foreground"
-							: "text-muted-foreground hover:text-foreground"
-					)}
-				>
-					<User
-						className={cn(
-							"h-6 w-6",
-							resumeLink.match(pathname) ? "fill-foreground" : ""
-						)}
-						strokeWidth={resumeLink.match(pathname) ? 2.5 : 2}
-					/>
-				</Link>
-			)}
 
 			<UserMenu
 				side="top"

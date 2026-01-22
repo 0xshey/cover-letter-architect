@@ -43,9 +43,9 @@ export default function LandingPage() {
 				</Link>
 				<nav className="ml-auto flex gap-4 sm:gap-6">
 					{user ? (
-						<Link href="/dashboard">
+						<Link href="/letters">
 							<Button variant="ghost" size="sm">
-								Go to Dashboard
+								Go to Letters
 							</Button>
 						</Link>
 					) : (
@@ -75,10 +75,10 @@ export default function LandingPage() {
 							</div>
 							<div className="space-x-4">
 								{user ? (
-									<Link href="/dashboard">
+									<Link href="/letters">
 										<Button size="lg">
 											<Wand2 className="mr-2 h-4 w-4" />
-											Go to Dashboard
+											Go to Letters
 										</Button>
 									</Link>
 								) : (

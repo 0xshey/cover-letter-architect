@@ -9,7 +9,7 @@ export async function middleware(request: NextRequest) {
 	});
 
 	// Check if the route is protected
-	const protectedRoutes = ["/dashboard", "/editor"];
+	const protectedRoutes = ["/letters", "/editor"];
 	const isProtectedRoute = protectedRoutes.some((route) =>
 		request.nextUrl.pathname.startsWith(route)
 	);

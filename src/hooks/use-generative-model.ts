@@ -67,11 +67,15 @@ export function useGenerativeModel() {
 					setAvailableModels(data.models);
 				}
 			} else {
-				console.error(
-					"Failed to fetch models",
-					res.status,
-					res.statusText
-				);
+				// Suppress 401 errors as they are expected when session expires
+				// and are handled by the session refresh logic above
+				if (res.status !== 401) {
+					console.error(
+						"Failed to fetch models",
+						res.status,
+						res.statusText
+					);
+				}
 			}
 		} catch (error) {
 			console.error("Failed to fetch models", error);
