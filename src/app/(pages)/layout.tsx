@@ -1,9 +1,7 @@
 import { Navigator } from "@/components/navigator";
 import { AuthListener } from "@/components/auth/auth-listener";
-import { FileText, LogOut } from "lucide-react"; // Add LogOut
 import Link from "next/link";
-import { Button } from "@/components/ui/button"; // Add Button
-import { ThemeToggle } from "@/components/ui/theme-toggle"; // Add ThemeToggle
+import { UserMenu } from "@/components/user-menu";
 
 export default function PagesLayout({
 	children,
@@ -35,25 +33,8 @@ export default function PagesLayout({
 				</div>
 
 				{/* Bottom: Logout / Menu */}
-				<div className="p-4 mb-4 shrink-0 mt-auto flex flex-col gap-4">
-					<div className="flex justify-center">
-						<ThemeToggle
-							size={24}
-							className="w-full h-auto py-3 justify-center text-muted-foreground hover:bg-muted group rounded-2xl"
-						/>
-					</div>
-					<div className="relative">
-						<form action="/auth/signout" method="post">
-							<Button
-								variant="ghost"
-								className="w-full h-auto py-3 justify-center text-muted-foreground hover:text-destructive hover:bg-destructive/10 group rounded-2xl"
-								type="submit"
-								title="Sign Out"
-							>
-								<LogOut className="h-6 w-6" />
-							</Button>
-						</form>
-					</div>
+				<div className="p-4 mb-4 shrink-0 mt-auto w-full">
+					<UserMenu />
 				</div>
 			</aside>
 
