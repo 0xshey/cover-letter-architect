@@ -4,9 +4,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { NAVIGATION_ITEMS } from "@/lib/navigation";
-import { createClient } from "@/lib/supabase/client";
-import { LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { UserMenu } from "@/components/user-menu";
 
 interface NavigatorProps {
 	mode: "desktop" | "mobile";
@@ -14,12 +13,6 @@ interface NavigatorProps {
 
 export function Navigator({ mode }: NavigatorProps) {
 	const pathname = usePathname();
-	const supabase = createClient();
-
-	const handleSignOut = async () => {
-		await supabase.auth.signOut();
-		window.location.href = "/";
-	};
 
 	if (mode === "desktop") {
 		return (
@@ -80,12 +73,11 @@ export function Navigator({ mode }: NavigatorProps) {
 					</Link>
 				);
 			})}
-			<button
-				onClick={handleSignOut}
-				className="flex-1 flex flex-col items-center justify-center h-full text-muted-foreground hover:text-destructive"
-			>
-				<LogOut className="h-6 w-6" />
-			</button>
+			<UserMenu
+				side="top"
+				align="end"
+				className="flex-1 flex flex-col items-center justify-center h-full gap-1 p-1 rounded-none hover:bg-transparent hover:text-foreground text-muted-foreground w-auto py-0"
+			/>
 		</nav>
 	);
 }

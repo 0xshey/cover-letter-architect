@@ -7,6 +7,7 @@ import { createClient } from "@/lib/supabase/client";
 import { useAuthStore } from "@/store/useAuthStore";
 import { toast } from "sonner";
 
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
 	DropdownMenu,
@@ -21,7 +22,19 @@ import {
 	DropdownMenuPortal,
 } from "@/components/ui/dropdown-menu";
 
-export function UserMenu() {
+interface UserMenuProps {
+	className?: string;
+	side?: "top" | "right" | "bottom" | "left";
+	align?: "start" | "center" | "end";
+	sideOffset?: number;
+}
+
+export function UserMenu({
+	className,
+	side = "right",
+	align = "end",
+	sideOffset = 10,
+}: UserMenuProps) {
 	const { session } = useAuthStore();
 	const { setTheme } = useTheme();
 	const supabase = createClient();
@@ -42,7 +55,10 @@ export function UserMenu() {
 			<DropdownMenuTrigger asChild>
 				<Button
 					variant="ghost"
-					className="w-full h-auto py-3 justify-center text-muted-foreground hover:bg-muted group rounded-2xl"
+					className={cn(
+						"w-full h-auto py-3 justify-center text-muted-foreground hover:bg-muted group rounded-2xl",
+						className
+					)}
 					title="Menu"
 				>
 					<MoreHorizontal className="h-6 w-6" />
@@ -50,10 +66,10 @@ export function UserMenu() {
 				</Button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent
-				align="end"
-				side="right"
+				align={align}
+				side={side}
 				className="w-56"
-				sideOffset={10}
+				sideOffset={sideOffset}
 			>
 				{session?.user?.email && (
 					<>
