@@ -1,0 +1,9 @@
+// Barrel export for resume components
+export { ResumeHeader } from "./resume-header";
+export { ResumeAbout } from "./resume-about";
+export { ResumeWork } from "./resume-work";
+export { ResumeEducation } from "./resume-education";
+export { ResumeProjects } from "./resume-projects";
+export { ResumeContact } from "./resume-contact";
+export { ResumeSection } from "./resume-section";
+export { EditableField } from "./editable-field";
