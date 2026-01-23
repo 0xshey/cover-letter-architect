@@ -1,11 +1,7 @@
-"use client";
-
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { ResumePublication } from "@/types/resume";
 import { ArrayFormSection } from "./array-form-section";
 import { cn } from "@/lib/utils";
+import { ResumeField } from "./resume-field";
 
 interface PublicationsFormProps {
 	items: ResumePublication[] | undefined;
@@ -63,93 +59,52 @@ export function PublicationsForm({
 			renderItem={(item, index) => (
 				<div className={cn("space-y-4", isOwner && "space-y-6")}>
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-						<div className="space-y-1">
-							<Label className="text-muted-foreground uppercase tracking-wider">
-								Name
-							</Label>
-							<Input
-								value={item.name || ""}
-								onChange={(e) =>
-									handleUpdate(index, "name", e.target.value)
-								}
-								variant="ghost"
-								className="font-medium px-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary transition-colors"
-								placeholder="Publication Title"
-								disabled={!isOwner}
-							/>
-						</div>
-						<div className="space-y-1">
-							<Label className="text-muted-foreground uppercase tracking-wider">
-								Publisher
-							</Label>
-							<Input
-								value={item.publisher || ""}
-								onChange={(e) =>
-									handleUpdate(
-										index,
-										"publisher",
-										e.target.value
-									)
-								}
-								variant="ghost"
-								className="font-medium px-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary transition-colors"
-								placeholder="Publisher"
-								disabled={!isOwner}
-							/>
-						</div>
+						<ResumeField
+							label="Name"
+							value={item.name || ""}
+							onChange={(v) => handleUpdate(index, "name", v)}
+							isOwner={isOwner}
+							variant="primary"
+							placeholder="Publication Title"
+						/>
+						<ResumeField
+							label="Publisher"
+							value={item.publisher || ""}
+							onChange={(v) =>
+								handleUpdate(index, "publisher", v)
+							}
+							isOwner={isOwner}
+							placeholder="Publisher"
+						/>
 					</div>
 
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-						<div className="space-y-1">
-							<Label className="text-muted-foreground uppercase tracking-wider">
-								Release Date
-							</Label>
-							<Input
-								value={item.releaseDate || ""}
-								onChange={(e) =>
-									handleUpdate(
-										index,
-										"releaseDate",
-										e.target.value
-									)
-								}
-								variant="ghost"
-								className="px-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary transition-colors"
-								placeholder="YYYY-MM-DD"
-								disabled={!isOwner}
-							/>
-						</div>
-						<div className="space-y-1">
-							<Label className="text-muted-foreground uppercase tracking-wider">
-								URL
-							</Label>
-							<Input
-								value={item.url || ""}
-								onChange={(e) =>
-									handleUpdate(index, "url", e.target.value)
-								}
-								variant="ghost"
-								className="px-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary transition-colors"
-								placeholder="https://publication.com"
-								disabled={!isOwner}
-							/>
-						</div>
-					</div>
-
-					<div className="space-y-1">
-						<Label className="text-muted-foreground uppercase tracking-wider">
-							Summary
-						</Label>
-						<Textarea
-							value={item.summary || ""}
-							onChange={(e) =>
-								handleUpdate(index, "summary", e.target.value)
+						<ResumeField
+							label="Release Date"
+							value={item.releaseDate || ""}
+							onChange={(v) =>
+								handleUpdate(index, "releaseDate", v)
 							}
-							className="bg-transparent border-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary resize-none min-h-[60px] px-0"
-							placeholder="Description..."
-							disabled={!isOwner}
+							isOwner={isOwner}
+							placeholder="YYYY-MM-DD"
+						/>
+						<ResumeField
+							label="URL"
+							value={item.url || ""}
+							onChange={(v) => handleUpdate(index, "url", v)}
+							isOwner={isOwner}
+							placeholder="https://publication.com"
 						/>
 					</div>
+
+					<ResumeField
+						label="Summary"
+						value={item.summary || ""}
+						onChange={(v) => handleUpdate(index, "summary", v)}
+						isOwner={isOwner}
+						variant="textarea"
+						placeholder="Description..."
+					/>
 				</div>
 			)}
 		/>

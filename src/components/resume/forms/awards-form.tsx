@@ -1,11 +1,7 @@
-"use client";
-
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { ResumeAward } from "@/types/resume";
 import { ArrayFormSection } from "./array-form-section";
 import { cn } from "@/lib/utils";
+import { ResumeField } from "./resume-field";
 
 interface AwardsFormProps {
 	items: ResumeAward[] | undefined;
@@ -62,74 +58,41 @@ export function AwardsForm({
 			renderItem={(item, index) => (
 				<div className={cn("space-y-4", isOwner && "space-y-6")}>
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-						<div className="space-y-1">
-							<Label className="text-muted-foreground uppercase tracking-wider">
-								Title
-							</Label>
-							<Input
-								value={item.title || ""}
-								onChange={(e) =>
-									handleUpdate(index, "title", e.target.value)
-								}
-								variant="ghost"
-								className="font-medium px-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary transition-colors"
-								placeholder="Award Title"
-								disabled={!isOwner}
-							/>
-						</div>
-						<div className="space-y-1">
-							<Label className="text-muted-foreground uppercase tracking-wider">
-								Awarder
-							</Label>
-							<Input
-								value={item.awarder || ""}
-								onChange={(e) =>
-									handleUpdate(
-										index,
-										"awarder",
-										e.target.value
-									)
-								}
-								variant="ghost"
-								className="font-medium px-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary transition-colors"
-								placeholder="Organization"
-								disabled={!isOwner}
-							/>
-						</div>
+						<ResumeField
+							label="Title"
+							value={item.title || ""}
+							onChange={(v) => handleUpdate(index, "title", v)}
+							isOwner={isOwner}
+							variant="primary"
+							placeholder="Award Title"
+						/>
+						<ResumeField
+							label="Awarder"
+							value={item.awarder || ""}
+							onChange={(v) => handleUpdate(index, "awarder", v)}
+							isOwner={isOwner}
+							placeholder="Organization"
+						/>
 					</div>
 
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-						<div className="space-y-1">
-							<Label className="text-muted-foreground uppercase tracking-wider">
-								Date
-							</Label>
-							<Input
-								value={item.date || ""}
-								onChange={(e) =>
-									handleUpdate(index, "date", e.target.value)
-								}
-								variant="ghost"
-								className="px-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary transition-colors"
-								placeholder="YYYY-MM-DD"
-								disabled={!isOwner}
-							/>
-						</div>
-					</div>
-
-					<div className="space-y-1">
-						<Label className="text-muted-foreground uppercase tracking-wider">
-							Summary
-						</Label>
-						<Textarea
-							value={item.summary || ""}
-							onChange={(e) =>
-								handleUpdate(index, "summary", e.target.value)
-							}
-							className="bg-transparent border-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary resize-none min-h-[60px] px-0"
-							placeholder="Description..."
-							disabled={!isOwner}
+						<ResumeField
+							label="Date"
+							value={item.date || ""}
+							onChange={(v) => handleUpdate(index, "date", v)}
+							isOwner={isOwner}
+							placeholder="YYYY-MM-DD"
 						/>
 					</div>
+
+					<ResumeField
+						label="Summary"
+						value={item.summary || ""}
+						onChange={(v) => handleUpdate(index, "summary", v)}
+						isOwner={isOwner}
+						variant="textarea"
+						placeholder="Description..."
+					/>
 				</div>
 			)}
 		/>

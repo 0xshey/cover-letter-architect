@@ -1,10 +1,7 @@
-"use client";
-
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { ResumeCertificate } from "@/types/resume";
 import { ArrayFormSection } from "./array-form-section";
 import { cn } from "@/lib/utils";
+import { ResumeField } from "./resume-field";
 
 interface CertificatesFormProps {
 	items: ResumeCertificate[] | undefined;
@@ -61,73 +58,38 @@ export function CertificatesForm({
 			renderItem={(item, index) => (
 				<div className={cn("space-y-4", isOwner && "space-y-6")}>
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-						<div className="space-y-1">
-							<Label className="text-muted-foreground uppercase tracking-wider">
-								Name
-							</Label>
-							<Input
-								value={item.name || ""}
-								onChange={(e) =>
-									handleUpdate(index, "name", e.target.value)
-								}
-								variant="ghost"
-								className="font-medium px-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary transition-colors"
-								placeholder="Certificate Name"
-								disabled={!isOwner}
-							/>
-						</div>
-						<div className="space-y-1">
-							<Label className="text-muted-foreground uppercase tracking-wider">
-								Issuer
-							</Label>
-							<Input
-								value={item.issuer || ""}
-								onChange={(e) =>
-									handleUpdate(
-										index,
-										"issuer",
-										e.target.value
-									)
-								}
-								variant="ghost"
-								className="font-medium px-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary transition-colors"
-								placeholder="Issuer"
-								disabled={!isOwner}
-							/>
-						</div>
+						<ResumeField
+							label="Name"
+							value={item.name || ""}
+							onChange={(v) => handleUpdate(index, "name", v)}
+							isOwner={isOwner}
+							variant="primary"
+							placeholder="Certificate Name"
+						/>
+						<ResumeField
+							label="Issuer"
+							value={item.issuer || ""}
+							onChange={(v) => handleUpdate(index, "issuer", v)}
+							isOwner={isOwner}
+							placeholder="Issuer"
+						/>
 					</div>
 
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-						<div className="space-y-1">
-							<Label className="text-muted-foreground uppercase tracking-wider">
-								Date
-							</Label>
-							<Input
-								value={item.date || ""}
-								onChange={(e) =>
-									handleUpdate(index, "date", e.target.value)
-								}
-								variant="ghost"
-								className="px-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary transition-colors"
-								placeholder="YYYY-MM-DD"
-								disabled={!isOwner}
-							/>
-						</div>
-						<div className="space-y-1">
-							<Label className="text-muted-foreground uppercase tracking-wider">
-								URL
-							</Label>
-							<Input
-								value={item.url || ""}
-								onChange={(e) =>
-									handleUpdate(index, "url", e.target.value)
-								}
-								variant="ghost"
-								className="px-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary transition-colors"
-								placeholder="https://certificate.com"
-								disabled={!isOwner}
-							/>
-						</div>
+						<ResumeField
+							label="Date"
+							value={item.date || ""}
+							onChange={(v) => handleUpdate(index, "date", v)}
+							isOwner={isOwner}
+							placeholder="YYYY-MM-DD"
+						/>
+						<ResumeField
+							label="URL"
+							value={item.url || ""}
+							onChange={(v) => handleUpdate(index, "url", v)}
+							isOwner={isOwner}
+							placeholder="https://certificate.com"
+						/>
 					</div>
 				</div>
 			)}

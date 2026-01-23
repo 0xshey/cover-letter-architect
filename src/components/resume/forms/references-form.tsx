@@ -1,11 +1,7 @@
-"use client";
-
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { ResumeReference } from "@/types/resume";
 import { ArrayFormSection } from "./array-form-section";
 import { cn } from "@/lib/utils";
+import { ResumeField } from "./resume-field";
 
 interface ReferencesFormProps {
 	items: ResumeReference[] | undefined;
@@ -60,32 +56,25 @@ export function ReferencesForm({
 			renderItem={(item, index) => (
 				<div className={cn("space-y-4", isOwner && "space-y-6")}>
 					<div className="space-y-1">
-						<Label className="text-muted-foreground uppercase tracking-wider">
-							Name
-						</Label>
-						<Input
+						<ResumeField
+							label="Name"
 							value={item.name || ""}
-							onChange={(e) =>
-								handleUpdate(index, "name", e.target.value)
-							}
-							variant="ghost"
-							className="font-medium px-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary transition-colors"
+							onChange={(v) => handleUpdate(index, "name", v)}
+							isOwner={isOwner}
+							variant="primary"
 							placeholder="Reference Name"
-							disabled={!isOwner}
 						/>
 					</div>
 					<div className="space-y-1">
-						<Label className="text-muted-foreground uppercase tracking-wider">
-							Reference
-						</Label>
-						<Textarea
+						<ResumeField
+							label="Reference"
 							value={item.reference || ""}
-							onChange={(e) =>
-								handleUpdate(index, "reference", e.target.value)
+							onChange={(v) =>
+								handleUpdate(index, "reference", v)
 							}
-							className="bg-transparent border-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary resize-none min-h-[80px] px-0"
+							isOwner={isOwner}
+							variant="textarea"
 							placeholder="Reference text..."
-							disabled={!isOwner}
 						/>
 					</div>
 				</div>

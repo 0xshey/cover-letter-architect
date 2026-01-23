@@ -1,11 +1,7 @@
-"use client";
-
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { ResumeSkill } from "@/types/resume";
 import { ArrayFormSection } from "./array-form-section";
 import { cn } from "@/lib/utils";
+import { ResumeField } from "./resume-field";
 
 interface SkillsFormProps {
 	items: ResumeSkill[] | undefined;
@@ -61,56 +57,37 @@ export function SkillsForm({
 			renderItem={(item, index) => (
 				<div className={cn("space-y-4", isOwner && "space-y-6")}>
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-						<div className="space-y-1">
-							<Label className="text-muted-foreground uppercase tracking-wider">
-								Name
-							</Label>
-							<Input
-								value={item.name || ""}
-								onChange={(e) =>
-									handleUpdate(index, "name", e.target.value)
-								}
-								variant="ghost"
-								className="font-medium px-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary transition-colors"
-								placeholder="Skill Name (e.g. Web Development)"
-								disabled={!isOwner}
-							/>
-						</div>
-						<div className="space-y-1">
-							<Label className="text-muted-foreground uppercase tracking-wider">
-								Level
-							</Label>
-							<Input
-								value={item.level || ""}
-								onChange={(e) =>
-									handleUpdate(index, "level", e.target.value)
-								}
-								variant="ghost"
-								className="font-medium px-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary transition-colors"
-								placeholder="Master, Beginner"
-								disabled={!isOwner}
-							/>
-						</div>
-					</div>
-
-					<div className="space-y-1">
-						<Label className="text-muted-foreground uppercase tracking-wider">
-							Keywords (comma separated)
-						</Label>
-						<Textarea
-							value={item.keywords?.join(", ") || ""}
-							onChange={(e) => {
-								const keywords = e.target.value
-									.split(",")
-									.map((k) => k.trim())
-									.filter((k) => k);
-								handleUpdate(index, "keywords", keywords);
-							}}
-							className="bg-transparent border-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary resize-none min-h-[60px] px-0"
-							placeholder="HTML, CSS, JavaScript"
-							disabled={!isOwner}
+						<ResumeField
+							label="Name"
+							value={item.name || ""}
+							onChange={(v) => handleUpdate(index, "name", v)}
+							isOwner={isOwner}
+							variant="primary"
+							placeholder="Skill Name (e.g. Web Development)"
+						/>
+						<ResumeField
+							label="Level"
+							value={item.level || ""}
+							onChange={(v) => handleUpdate(index, "level", v)}
+							isOwner={isOwner}
+							placeholder="Master, Beginner"
 						/>
 					</div>
+
+					<ResumeField
+						label="Keywords (comma separated)"
+						value={item.keywords?.join(", ") || ""}
+						onChange={(v) => {
+							const keywords = v
+								.split(",")
+								.map((k) => k.trim())
+								.filter((k) => k);
+							handleUpdate(index, "keywords", keywords);
+						}}
+						isOwner={isOwner}
+						variant="textarea"
+						placeholder="HTML, CSS, JavaScript"
+					/>
 				</div>
 			)}
 		/>

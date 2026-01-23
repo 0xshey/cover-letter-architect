@@ -35,12 +35,6 @@ export default async function ResumePage({
 
 	return (
 		<div className="w-full h-full flex flex-col gap-8 p-8 max-w-4xl mx-auto mt-20">
-			<div className="flex items-center justify-between">
-				<h1 className="text-4xl font-bold tracking-tighter">
-					{profile.full_name || profile.username}'s Resume
-				</h1>
-			</div>
-
 			{resume ? (
 				<ResumeForm
 					initialData={resume.data}

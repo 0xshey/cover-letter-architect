@@ -1,10 +1,7 @@
-"use client";
-
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { ResumeProfileSocial } from "@/types/resume";
 import { ArrayFormSection } from "./array-form-section";
 import { cn } from "@/lib/utils";
+import { ResumeField } from "./resume-field";
 
 interface ProfilesFormProps {
 	items: ResumeProfileSocial[] | undefined;
@@ -60,53 +57,27 @@ export function ProfilesForm({
 			renderItem={(item, index) => (
 				<div className={cn("space-y-4", isOwner && "space-y-6")}>
 					<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-						<div className="space-y-1">
-							<Label>Network</Label>
-							<Input
-								value={item.network || ""}
-								onChange={(e) =>
-									handleUpdate(
-										index,
-										"network",
-										e.target.value
-									)
-								}
-								variant="ghost"
-								className="font-medium px-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary transition-colors"
-								placeholder="Twitter, GitHub"
-								disabled={!isOwner}
-							/>
-						</div>
-						<div className="space-y-1">
-							<Label>Username</Label>
-							<Input
-								value={item.username || ""}
-								onChange={(e) =>
-									handleUpdate(
-										index,
-										"username",
-										e.target.value
-									)
-								}
-								variant="ghost"
-								className="font-medium px-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary transition-colors"
-								placeholder="username"
-								disabled={!isOwner}
-							/>
-						</div>
-						<div className="space-y-1">
-							<Label>URL</Label>
-							<Input
-								value={item.url || ""}
-								onChange={(e) =>
-									handleUpdate(index, "url", e.target.value)
-								}
-								variant="ghost"
-								className="font-medium px-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary transition-colors"
-								placeholder="https://..."
-								disabled={!isOwner}
-							/>
-						</div>
+						<ResumeField
+							label="Network"
+							value={item.network || ""}
+							onChange={(v) => handleUpdate(index, "network", v)}
+							isOwner={isOwner}
+							placeholder="Twitter, GitHub"
+						/>
+						<ResumeField
+							label="Username"
+							value={item.username || ""}
+							onChange={(v) => handleUpdate(index, "username", v)}
+							isOwner={isOwner}
+							placeholder="username"
+						/>
+						<ResumeField
+							label="URL"
+							value={item.url || ""}
+							onChange={(v) => handleUpdate(index, "url", v)}
+							isOwner={isOwner}
+							placeholder="https://..."
+						/>
 					</div>
 				</div>
 			)}

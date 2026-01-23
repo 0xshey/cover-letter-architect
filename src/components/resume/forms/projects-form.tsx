@@ -1,11 +1,7 @@
-"use client";
-
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { ResumeProject } from "@/types/resume";
 import { ArrayFormSection } from "./array-form-section";
 import { cn } from "@/lib/utils";
+import { ResumeField } from "./resume-field";
 
 interface ProjectsFormProps {
 	items: ResumeProject[] | undefined;
@@ -64,97 +60,50 @@ export function ProjectsForm({
 			renderItem={(item, index) => (
 				<div className={cn("space-y-4", isOwner && "space-y-6")}>
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-						<div className="space-y-1">
-							<Label className="text-muted-foreground uppercase tracking-wider">
-								Project Name
-							</Label>
-							<Input
-								value={item.name || ""}
-								onChange={(e) =>
-									handleUpdate(index, "name", e.target.value)
-								}
-								variant="ghost"
-								className="font-medium px-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary transition-colors"
-								placeholder="Project Name"
-								disabled={!isOwner}
-							/>
-						</div>
-						<div className="space-y-1">
-							<Label className="text-muted-foreground uppercase tracking-wider">
-								URL
-							</Label>
-							<Input
-								value={item.url || ""}
-								onChange={(e) =>
-									handleUpdate(index, "url", e.target.value)
-								}
-								variant="ghost"
-								className="font-medium px-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary transition-colors"
-								placeholder="https://project.com"
-								disabled={!isOwner}
-							/>
-						</div>
+						<ResumeField
+							label="Project Name"
+							value={item.name || ""}
+							onChange={(v) => handleUpdate(index, "name", v)}
+							isOwner={isOwner}
+							variant="primary"
+							placeholder="Project Name"
+						/>
+						<ResumeField
+							label="URL"
+							value={item.url || ""}
+							onChange={(v) => handleUpdate(index, "url", v)}
+							isOwner={isOwner}
+							placeholder="https://project.com"
+						/>
 					</div>
 
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-						<div className="space-y-1">
-							<Label className="text-muted-foreground uppercase tracking-wider">
-								Start Date
-							</Label>
-							<Input
-								value={item.startDate || ""}
-								onChange={(e) =>
-									handleUpdate(
-										index,
-										"startDate",
-										e.target.value
-									)
-								}
-								variant="ghost"
-								className="px-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary transition-colors"
-								placeholder="YYYY-MM"
-								disabled={!isOwner}
-							/>
-						</div>
-						<div className="space-y-1">
-							<Label className="text-muted-foreground uppercase tracking-wider">
-								End Date
-							</Label>
-							<Input
-								value={item.endDate || ""}
-								onChange={(e) =>
-									handleUpdate(
-										index,
-										"endDate",
-										e.target.value
-									)
-								}
-								variant="ghost"
-								className="px-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary transition-colors"
-								placeholder="YYYY-MM or Present"
-								disabled={!isOwner}
-							/>
-						</div>
-					</div>
-
-					<div className="space-y-1">
-						<Label className="text-muted-foreground uppercase tracking-wider">
-							Description
-						</Label>
-						<Textarea
-							value={item.description || ""}
-							onChange={(e) =>
-								handleUpdate(
-									index,
-									"description",
-									e.target.value
-								)
+						<ResumeField
+							label="Start Date"
+							value={item.startDate || ""}
+							onChange={(v) =>
+								handleUpdate(index, "startDate", v)
 							}
-							className="bg-transparent border-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary resize-none min-h-[80px] px-0"
-							placeholder="Project description..."
-							disabled={!isOwner}
+							isOwner={isOwner}
+							placeholder="YYYY-MM"
+						/>
+						<ResumeField
+							label="End Date"
+							value={item.endDate || ""}
+							onChange={(v) => handleUpdate(index, "endDate", v)}
+							isOwner={isOwner}
+							placeholder="YYYY-MM or Present"
 						/>
 					</div>
+
+					<ResumeField
+						label="Description"
+						value={item.description || ""}
+						onChange={(v) => handleUpdate(index, "description", v)}
+						isOwner={isOwner}
+						variant="textarea"
+						placeholder="Project description..."
+					/>
 				</div>
 			)}
 		/>

@@ -148,7 +148,11 @@ export function ResumeForm({
 	});
 
 	return (
-		<div className="w-full space-y-16 animate-in fade-in duration-500 pb-20">
+		<div
+			className={`w-full ${
+				!isModeEditing ? "space-y-24" : "space-y-8"
+			} animate-in fade-in duration-300 pb-20`}
+		>
 			{/* Edit Toggle - Top Right */}
 			{isOwner && (
 				<div className="flex justify-end mb-4">
@@ -190,24 +194,10 @@ export function ResumeForm({
 				{...getSectionProps("basics")}
 			/>
 
-			<ProfilesForm
-				items={data.basics?.profiles}
-				onChange={(items) => handleBasicsChange("profiles", items)}
-				{...getSectionProps("profiles")}
-			/>
-
 			<WorkForm
 				items={data.work}
 				onChange={(items) => handleUpdate({ ...data, work: items })}
 				{...getSectionProps("work")}
-			/>
-
-			<EducationForm
-				items={data.education}
-				onChange={(items) =>
-					handleUpdate({ ...data, education: items })
-				}
-				{...getSectionProps("education")}
 			/>
 
 			<ProjectsForm
@@ -216,18 +206,18 @@ export function ResumeForm({
 				{...getSectionProps("projects")}
 			/>
 
-			<VolunteerForm
-				items={data.volunteer}
-				onChange={(items) =>
-					handleUpdate({ ...data, volunteer: items })
-				}
-				{...getSectionProps("volunteer")}
+			<SkillsForm
+				items={data.skills}
+				onChange={(items) => handleUpdate({ ...data, skills: items })}
+				{...getSectionProps("skills")}
 			/>
 
-			<AwardsForm
-				items={data.awards}
-				onChange={(items) => handleUpdate({ ...data, awards: items })}
-				{...getSectionProps("awards")}
+			<EducationForm
+				items={data.education}
+				onChange={(items) =>
+					handleUpdate({ ...data, education: items })
+				}
+				{...getSectionProps("education")}
 			/>
 
 			<CertificatesForm
@@ -246,10 +236,18 @@ export function ResumeForm({
 				{...getSectionProps("publications")}
 			/>
 
-			<SkillsForm
-				items={data.skills}
-				onChange={(items) => handleUpdate({ ...data, skills: items })}
-				{...getSectionProps("skills")}
+			<AwardsForm
+				items={data.awards}
+				onChange={(items) => handleUpdate({ ...data, awards: items })}
+				{...getSectionProps("awards")}
+			/>
+
+			<VolunteerForm
+				items={data.volunteer}
+				onChange={(items) =>
+					handleUpdate({ ...data, volunteer: items })
+				}
+				{...getSectionProps("volunteer")}
 			/>
 
 			<LanguagesForm
@@ -274,6 +272,12 @@ export function ResumeForm({
 					handleUpdate({ ...data, references: items })
 				}
 				{...getSectionProps("references")}
+			/>
+
+			<ProfilesForm
+				items={data.basics?.profiles}
+				onChange={(items) => handleBasicsChange("profiles", items)}
+				{...getSectionProps("profiles")}
 			/>
 		</div>
 	);
