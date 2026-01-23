@@ -65,7 +65,7 @@ export function VolunteerForm({
 				<div className="space-y-4">
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 						<div className="space-y-1">
-							<Label className="text-xs text-muted-foreground uppercase tracking-wider">
+							<Label className="text-muted-foreground uppercase tracking-wider">
 								Organization
 							</Label>
 							<Input
@@ -78,13 +78,13 @@ export function VolunteerForm({
 									)
 								}
 								variant="ghost"
-								className="text-lg font-medium px-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary transition-colors"
+								className="font-medium px-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary transition-colors"
 								placeholder="Organization Name"
 								disabled={!isOwner}
 							/>
 						</div>
 						<div className="space-y-1">
-							<Label className="text-xs text-muted-foreground uppercase tracking-wider">
+							<Label className="text-muted-foreground uppercase tracking-wider">
 								Position
 							</Label>
 							<Input
@@ -97,7 +97,7 @@ export function VolunteerForm({
 									)
 								}
 								variant="ghost"
-								className="text-lg font-medium px-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary transition-colors"
+								className="font-medium px-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary transition-colors"
 								placeholder="Role"
 								disabled={!isOwner}
 							/>
@@ -106,7 +106,7 @@ export function VolunteerForm({
 
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 						<div className="space-y-1">
-							<Label className="text-xs text-muted-foreground uppercase tracking-wider">
+							<Label className="text-muted-foreground uppercase tracking-wider">
 								Start Date
 							</Label>
 							<Input
@@ -125,7 +125,7 @@ export function VolunteerForm({
 							/>
 						</div>
 						<div className="space-y-1">
-							<Label className="text-xs text-muted-foreground uppercase tracking-wider">
+							<Label className="text-muted-foreground uppercase tracking-wider">
 								End Date
 							</Label>
 							<Input
@@ -146,7 +146,7 @@ export function VolunteerForm({
 					</div>
 
 					<div className="space-y-1">
-						<Label className="text-xs text-muted-foreground uppercase tracking-wider">
+						<Label className="text-muted-foreground uppercase tracking-wider">
 							Summary
 						</Label>
 						<Textarea
@@ -160,7 +160,7 @@ export function VolunteerForm({
 						/>
 					</div>
 					<div className="space-y-1">
-						<Label className="text-xs text-muted-foreground uppercase tracking-wider">
+						<Label className="text-muted-foreground uppercase tracking-wider">
 							Website
 						</Label>
 						<Input

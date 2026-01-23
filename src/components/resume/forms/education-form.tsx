@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ResumeEducation } from "@/types/resume";
 import { ArrayFormSection } from "./array-form-section";
+import { cn } from "@/lib/utils";
 
 interface EducationFormProps {
 	items: ResumeEducation[] | undefined;
@@ -62,10 +63,10 @@ export function EducationForm({
 			isVisible={isVisible}
 			onToggleVisibility={onToggleVisibility}
 			renderItem={(item, index) => (
-				<div className="space-y-4">
+				<div className={cn("space-y-4", isOwner && "space-y-6")}>
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 						<div className="space-y-1">
-							<Label className="text-xs text-muted-foreground uppercase tracking-wider">
+							<Label className="text-muted-foreground uppercase tracking-wider">
 								Institution
 							</Label>
 							<Input
@@ -78,13 +79,13 @@ export function EducationForm({
 									)
 								}
 								variant="ghost"
-								className="text-lg font-medium px-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary transition-colors"
+								className="font-medium px-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary transition-colors"
 								placeholder="University / School"
 								disabled={!isOwner}
 							/>
 						</div>
 						<div className="space-y-1">
-							<Label className="text-xs text-muted-foreground uppercase tracking-wider">
+							<Label className="text-muted-foreground uppercase tracking-wider">
 								Area of Study
 							</Label>
 							<Input
@@ -93,7 +94,7 @@ export function EducationForm({
 									handleUpdate(index, "area", e.target.value)
 								}
 								variant="ghost"
-								className="text-lg font-medium px-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary transition-colors"
+								className="font-medium px-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary transition-colors"
 								placeholder="Major / Field"
 								disabled={!isOwner}
 							/>
@@ -102,7 +103,7 @@ export function EducationForm({
 
 					<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 						<div className="space-y-1">
-							<Label className="text-xs text-muted-foreground uppercase tracking-wider">
+							<Label className="text-muted-foreground uppercase tracking-wider">
 								Degree
 							</Label>
 							<Input
@@ -121,7 +122,7 @@ export function EducationForm({
 							/>
 						</div>
 						<div className="space-y-1">
-							<Label className="text-xs text-muted-foreground uppercase tracking-wider">
+							<Label className="text-muted-foreground uppercase tracking-wider">
 								Start Date
 							</Label>
 							<Input
@@ -140,7 +141,7 @@ export function EducationForm({
 							/>
 						</div>
 						<div className="space-y-1">
-							<Label className="text-xs text-muted-foreground uppercase tracking-wider">
+							<Label className="text-muted-foreground uppercase tracking-wider">
 								End Date
 							</Label>
 							<Input
@@ -162,7 +163,7 @@ export function EducationForm({
 
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 						<div className="space-y-1">
-							<Label className="text-xs text-muted-foreground uppercase tracking-wider">
+							<Label className="text-muted-foreground uppercase tracking-wider">
 								Score / GPA
 							</Label>
 							<Input
@@ -177,7 +178,7 @@ export function EducationForm({
 							/>
 						</div>
 						<div className="space-y-1">
-							<Label className="text-xs text-muted-foreground uppercase tracking-wider">
+							<Label className="text-muted-foreground uppercase tracking-wider">
 								Website
 							</Label>
 							<Input

@@ -1,10 +1,9 @@
 "use client";
 
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { ResumeWork } from "@/types/resume";
 import { ArrayFormSection } from "./array-form-section";
+import { ResumeField } from "./resume-field";
+import { cn } from "@/lib/utils";
 
 interface WorkFormProps {
 	items: ResumeWork[] | undefined;
@@ -61,112 +60,65 @@ export function WorkForm({
 			isVisible={isVisible}
 			onToggleVisibility={onToggleVisibility}
 			renderItem={(item, index) => (
-				<div className="space-y-4">
-					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-						<div className="space-y-1">
-							<Label className="text-xs text-muted-foreground uppercase tracking-wider">
-								Company
-							</Label>
-							<Input
-								value={item.name || ""}
-								onChange={(e) =>
-									handleUpdate(index, "name", e.target.value)
-								}
-								variant="ghost"
-								className="text-lg font-medium px-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary transition-colors"
-								placeholder="Company Name"
-								disabled={!isOwner}
-							/>
-						</div>
-						<div className="space-y-1">
-							<Label className="text-xs text-muted-foreground uppercase tracking-wider">
-								Position
-							</Label>
-							<Input
-								value={item.position || ""}
-								onChange={(e) =>
-									handleUpdate(
-										index,
-										"position",
-										e.target.value
-									)
-								}
-								variant="ghost"
-								className="text-lg font-medium px-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary transition-colors"
-								placeholder="Job Title"
-								disabled={!isOwner}
-							/>
-						</div>
-					</div>
-
-					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-						<div className="space-y-1">
-							<Label className="text-xs text-muted-foreground uppercase tracking-wider">
-								Start Date
-							</Label>
-							<Input
-								value={item.startDate || ""}
-								onChange={(e) =>
-									handleUpdate(
-										index,
-										"startDate",
-										e.target.value
-									)
-								}
-								variant="ghost"
-								className="px-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary transition-colors"
-								placeholder="YYYY-MM"
-								disabled={!isOwner}
-							/>
-						</div>
-						<div className="space-y-1">
-							<Label className="text-xs text-muted-foreground uppercase tracking-wider">
-								End Date
-							</Label>
-							<Input
-								value={item.endDate || ""}
-								onChange={(e) =>
-									handleUpdate(
-										index,
-										"endDate",
-										e.target.value
-									)
-								}
-								variant="ghost"
-								className="px-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary transition-colors"
-								placeholder="YYYY-MM or Present"
-								disabled={!isOwner}
-							/>
-						</div>
-					</div>
-
-					<div className="space-y-1">
-						<Label className="text-xs text-muted-foreground uppercase tracking-wider">
-							Summary
-						</Label>
-						<Textarea
-							value={item.summary || ""}
-							onChange={(e) =>
-								handleUpdate(index, "summary", e.target.value)
+				<div className="grid grid-cols-3">
+					<div className="col-span-1 flex">
+						<ResumeField
+							label="Start Date"
+							value={item.startDate || ""}
+							onChange={(v) =>
+								handleUpdate(index, "startDate", v)
 							}
-							className="bg-transparent border-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary resize-none min-h-[80px] px-0"
-							placeholder="Describe your responsibilities and achievements..."
-							disabled={!isOwner}
+							isOwner={isOwner}
+							placeholder="YYYY-MM"
+							className=""
+						/>
+						<ResumeField
+							label="End Date"
+							value={item.endDate || ""}
+							onChange={(v) => handleUpdate(index, "endDate", v)}
+							isOwner={isOwner}
+							placeholder="YYYY-MM or Present"
 						/>
 					</div>
-					<div className="space-y-1">
-						<Label className="text-xs text-muted-foreground uppercase tracking-wider">
-							Website
-						</Label>
-						<Input
+
+					<div
+						className={cn(
+							"col-span-2 flex flex-col",
+							isOwner && "gap-6"
+						)}
+					>
+						<ResumeField
+							label="Position"
+							value={item.position || ""}
+							onChange={(v) => handleUpdate(index, "position", v)}
+							isOwner={isOwner}
+							variant="primary"
+							placeholder="Job Title"
+							InputClassName="font-bold"
+						/>
+						<ResumeField
+							label="Company"
+							value={item.name || ""}
+							onChange={(v) => handleUpdate(index, "name", v)}
+							isOwner={isOwner}
+							variant="primary"
+							placeholder="Company Name"
+							InputClassName="text-foreground"
+						/>
+						<ResumeField
+							label="Summary"
+							value={item.summary || ""}
+							onChange={(v) => handleUpdate(index, "summary", v)}
+							isOwner={isOwner}
+							variant="textarea"
+							placeholder="Describe your responsibilities and achievements..."
+						/>
+						<ResumeField
+							label="Website"
 							value={item.url || ""}
-							onChange={(e) =>
-								handleUpdate(index, "url", e.target.value)
-							}
-							variant="ghost"
-							className="px-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary transition-colors"
+							onChange={(v) => handleUpdate(index, "url", v)}
+							isOwner={isOwner}
 							placeholder="https://company.com"
-							disabled={!isOwner}
 						/>
 					</div>
 				</div>

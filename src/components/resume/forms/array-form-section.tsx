@@ -68,7 +68,7 @@ export function ArrayFormSection<T>({
 				))}
 
 				{(!items || items.length === 0) && (
-					<div className="text-center py-4 text-muted-foreground italic">
+					<div className="text-left py-2 text-muted-foreground italic">
 						{emptyMessage}
 					</div>
 				)}

@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ResumeProfileSocial } from "@/types/resume";
 import { ArrayFormSection } from "./array-form-section";
+import { cn } from "@/lib/utils";
 
 interface ProfilesFormProps {
 	items: ResumeProfileSocial[] | undefined;
@@ -57,12 +58,10 @@ export function ProfilesForm({
 			isVisible={isVisible}
 			onToggleVisibility={onToggleVisibility}
 			renderItem={(item, index) => (
-				<div className="space-y-4">
+				<div className={cn("space-y-4", isOwner && "space-y-6")}>
 					<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 						<div className="space-y-1">
-							<Label className="text-xs text-muted-foreground uppercase tracking-wider">
-								Network
-							</Label>
+							<Label>Network</Label>
 							<Input
 								value={item.network || ""}
 								onChange={(e) =>
@@ -73,15 +72,13 @@ export function ProfilesForm({
 									)
 								}
 								variant="ghost"
-								className="text-lg font-medium px-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary transition-colors"
+								className="font-medium px-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary transition-colors"
 								placeholder="Twitter, GitHub"
 								disabled={!isOwner}
 							/>
 						</div>
 						<div className="space-y-1">
-							<Label className="text-xs text-muted-foreground uppercase tracking-wider">
-								Username
-							</Label>
+							<Label>Username</Label>
 							<Input
 								value={item.username || ""}
 								onChange={(e) =>
@@ -92,22 +89,20 @@ export function ProfilesForm({
 									)
 								}
 								variant="ghost"
-								className="text-lg font-medium px-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary transition-colors"
+								className="font-medium px-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary transition-colors"
 								placeholder="username"
 								disabled={!isOwner}
 							/>
 						</div>
 						<div className="space-y-1">
-							<Label className="text-xs text-muted-foreground uppercase tracking-wider">
-								URL
-							</Label>
+							<Label>URL</Label>
 							<Input
 								value={item.url || ""}
 								onChange={(e) =>
 									handleUpdate(index, "url", e.target.value)
 								}
 								variant="ghost"
-								className="text-lg font-medium px-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary transition-colors"
+								className="font-medium px-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary transition-colors"
 								placeholder="https://..."
 								disabled={!isOwner}
 							/>

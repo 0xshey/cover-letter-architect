@@ -1,10 +1,7 @@
-"use client";
-
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/utils";
 import { ResumeBasics } from "@/types/resume";
 import { FormSection } from "./form-section";
+import { ResumeField } from "./resume-field";
 
 interface BasicsFormProps {
 	basics: ResumeBasics;
@@ -28,133 +25,98 @@ export function BasicsForm({
 }: BasicsFormProps) {
 	return (
 		<FormSection
-			title="Basic Information"
+			title="" // Basic Information (hidden)
 			isOwner={isOwner}
 			isVisible={isVisible}
 			onToggleVisibility={onToggleVisibility}
 		>
-			<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-				<div className="space-y-2">
-					<Label className="text-xs text-muted-foreground uppercase tracking-wider">
-						Full Name
-					</Label>
-					<Input
-						value={basics.name || ""}
-						onChange={(e) => onChange("name", e.target.value)}
-						variant="ghost"
-						className="text-lg font-medium px-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary transition-colors"
-						placeholder="Your Name"
-						disabled={!isOwner}
-					/>
-				</div>
+			<div className={cn("flex flex-col", isOwner && "gap-6")}>
+				<ResumeField
+					label="Full Name"
+					value={basics.name || ""}
+					onChange={(v) => onChange("name", v)}
+					isOwner={isOwner}
+					variant="primary"
+					placeholder="Your Name"
+					InputClassName="text-2xl font-semibold tracking-tight"
+				/>
+
+				<ResumeField
+					label="Headline / Label"
+					value={basics.label || ""}
+					onChange={(v) => onChange("label", v)}
+					isOwner={isOwner}
+					variant="primary"
+					placeholder="Software Engineer"
+				/>
+
+				<ResumeField
+					label="Email"
+					value={basics.email || ""}
+					onChange={(v) => onChange("email", v)}
+					isOwner={isOwner}
+					placeholder="you@example.com"
+				/>
+
+				<ResumeField
+					label="Phone"
+					value={basics.phone || ""}
+					onChange={(v) => onChange("phone", v)}
+					isOwner={isOwner}
+					placeholder="+1 (555) 000-0000"
+				/>
+
+				<ResumeField
+					label="Website"
+					value={basics.url || ""}
+					onChange={(v) => onChange("url", v)}
+					isOwner={isOwner}
+					placeholder="https://yourwebsite.com"
+				/>
 
 				<div className="space-y-2">
-					<Label className="text-xs text-muted-foreground uppercase tracking-wider">
-						Headline / Label
-					</Label>
-					<Input
-						value={basics.label || ""}
-						onChange={(e) => onChange("label", e.target.value)}
-						variant="ghost"
-						className="text-lg font-medium px-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary transition-colors"
-						placeholder="Software Engineer"
-						disabled={!isOwner}
-					/>
-				</div>
-
-				<div className="space-y-2">
-					<Label className="text-xs text-muted-foreground uppercase tracking-wider">
-						Email
-					</Label>
-					<Input
-						value={basics.email || ""}
-						onChange={(e) => onChange("email", e.target.value)}
-						variant="ghost"
-						className="px-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary transition-colors"
-						placeholder="you@example.com"
-						disabled={!isOwner}
-					/>
-				</div>
-
-				<div className="space-y-2">
-					<Label className="text-xs text-muted-foreground uppercase tracking-wider">
-						Phone
-					</Label>
-					<Input
-						value={basics.phone || ""}
-						onChange={(e) => onChange("phone", e.target.value)}
-						variant="ghost"
-						className="px-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary transition-colors"
-						placeholder="+1 (555) 000-0000"
-						disabled={!isOwner}
-					/>
-				</div>
-
-				<div className="space-y-2">
-					<Label className="text-xs text-muted-foreground uppercase tracking-wider">
-						Website
-					</Label>
-					<Input
-						value={basics.url || ""}
-						onChange={(e) => onChange("url", e.target.value)}
-						variant="ghost"
-						className="px-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary transition-colors"
-						placeholder="https://yourwebsite.com"
-						disabled={!isOwner}
-					/>
-				</div>
-
-				<div className="space-y-2">
-					<Label className="text-xs text-muted-foreground uppercase tracking-wider">
-						Location (City, Region, Country)
-					</Label>
+					{/* Location fields need to be handled carefully as they are a group. 
+                        We can use ResumeField for each, but maybe grouping them looks better?
+                        Actually, individual fields are fine. Labels only show in edit mode.
+                    */}
 					<div className="flex gap-2">
-						<Input
+						<ResumeField
+							label="City"
 							value={basics.location?.city || ""}
-							onChange={(e) =>
-								onLocationChange("city", e.target.value)
-							}
-							variant="ghost"
-							className="px-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary transition-colors"
+							onChange={(v) => onLocationChange("city", v)}
+							isOwner={isOwner}
 							placeholder="City"
-							disabled={!isOwner}
+							className="flex-1"
 						/>
-						<Input
+						<ResumeField
+							label="Region"
 							value={basics.location?.region || ""}
-							onChange={(e) =>
-								onLocationChange("region", e.target.value)
-							}
-							variant="ghost"
-							className="px-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary transition-colors"
+							onChange={(v) => onLocationChange("region", v)}
+							isOwner={isOwner}
 							placeholder="Region"
-							disabled={!isOwner}
+							className="flex-1"
 						/>
-						<Input
+						<ResumeField
+							label="Country"
 							value={basics.location?.countryCode || ""}
-							onChange={(e) =>
-								onLocationChange("countryCode", e.target.value)
-							}
-							variant="ghost"
-							className="px-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary transition-colors w-20"
+							onChange={(v) => onLocationChange("countryCode", v)}
+							isOwner={isOwner}
 							placeholder="US"
-							disabled={!isOwner}
+							className="w-20"
 						/>
 					</div>
 				</div>
 			</div>
 
-			<div className="space-y-2">
-				<Label className="text-xs text-muted-foreground uppercase tracking-wider">
-					Summary
-				</Label>
-				<Textarea
-					value={basics.summary || ""}
-					onChange={(e) => onChange("summary", e.target.value)}
-					className="bg-transparent border-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary resize-none min-h-[100px] px-0"
-					placeholder="A brief summary about yourself..."
-					disabled={!isOwner}
-				/>
-			</div>
+			<ResumeField
+				label="Summary"
+				value={basics.summary || ""}
+				onChange={(v) => onChange("summary", v)}
+				isOwner={isOwner}
+				variant="textarea"
+				placeholder="A brief summary about yourself..."
+				className="mt-6"
+			/>
 		</FormSection>
 	);
 }

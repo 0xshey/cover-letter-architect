@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ResumeSkill } from "@/types/resume";
 import { ArrayFormSection } from "./array-form-section";
+import { cn } from "@/lib/utils";
 
 interface SkillsFormProps {
 	items: ResumeSkill[] | undefined;
@@ -58,10 +59,10 @@ export function SkillsForm({
 			isVisible={isVisible}
 			onToggleVisibility={onToggleVisibility}
 			renderItem={(item, index) => (
-				<div className="space-y-4">
+				<div className={cn("space-y-4", isOwner && "space-y-6")}>
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 						<div className="space-y-1">
-							<Label className="text-xs text-muted-foreground uppercase tracking-wider">
+							<Label className="text-muted-foreground uppercase tracking-wider">
 								Name
 							</Label>
 							<Input
@@ -70,13 +71,13 @@ export function SkillsForm({
 									handleUpdate(index, "name", e.target.value)
 								}
 								variant="ghost"
-								className="text-lg font-medium px-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary transition-colors"
+								className="font-medium px-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary transition-colors"
 								placeholder="Skill Name (e.g. Web Development)"
 								disabled={!isOwner}
 							/>
 						</div>
 						<div className="space-y-1">
-							<Label className="text-xs text-muted-foreground uppercase tracking-wider">
+							<Label className="text-muted-foreground uppercase tracking-wider">
 								Level
 							</Label>
 							<Input
@@ -85,7 +86,7 @@ export function SkillsForm({
 									handleUpdate(index, "level", e.target.value)
 								}
 								variant="ghost"
-								className="text-lg font-medium px-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary transition-colors"
+								className="font-medium px-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary transition-colors"
 								placeholder="Master, Beginner"
 								disabled={!isOwner}
 							/>
@@ -93,7 +94,7 @@ export function SkillsForm({
 					</div>
 
 					<div className="space-y-1">
-						<Label className="text-xs text-muted-foreground uppercase tracking-wider">
+						<Label className="text-muted-foreground uppercase tracking-wider">
 							Keywords (comma separated)
 						</Label>
 						<Textarea

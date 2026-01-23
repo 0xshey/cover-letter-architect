@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ResumeProject } from "@/types/resume";
 import { ArrayFormSection } from "./array-form-section";
+import { cn } from "@/lib/utils";
 
 interface ProjectsFormProps {
 	items: ResumeProject[] | undefined;
@@ -61,10 +62,10 @@ export function ProjectsForm({
 			isVisible={isVisible}
 			onToggleVisibility={onToggleVisibility}
 			renderItem={(item, index) => (
-				<div className="space-y-4">
+				<div className={cn("space-y-4", isOwner && "space-y-6")}>
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 						<div className="space-y-1">
-							<Label className="text-xs text-muted-foreground uppercase tracking-wider">
+							<Label className="text-muted-foreground uppercase tracking-wider">
 								Project Name
 							</Label>
 							<Input
@@ -73,13 +74,13 @@ export function ProjectsForm({
 									handleUpdate(index, "name", e.target.value)
 								}
 								variant="ghost"
-								className="text-lg font-medium px-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary transition-colors"
+								className="font-medium px-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary transition-colors"
 								placeholder="Project Name"
 								disabled={!isOwner}
 							/>
 						</div>
 						<div className="space-y-1">
-							<Label className="text-xs text-muted-foreground uppercase tracking-wider">
+							<Label className="text-muted-foreground uppercase tracking-wider">
 								URL
 							</Label>
 							<Input
@@ -88,7 +89,7 @@ export function ProjectsForm({
 									handleUpdate(index, "url", e.target.value)
 								}
 								variant="ghost"
-								className="text-lg font-medium px-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary transition-colors"
+								className="font-medium px-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary transition-colors"
 								placeholder="https://project.com"
 								disabled={!isOwner}
 							/>
@@ -97,7 +98,7 @@ export function ProjectsForm({
 
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 						<div className="space-y-1">
-							<Label className="text-xs text-muted-foreground uppercase tracking-wider">
+							<Label className="text-muted-foreground uppercase tracking-wider">
 								Start Date
 							</Label>
 							<Input
@@ -116,7 +117,7 @@ export function ProjectsForm({
 							/>
 						</div>
 						<div className="space-y-1">
-							<Label className="text-xs text-muted-foreground uppercase tracking-wider">
+							<Label className="text-muted-foreground uppercase tracking-wider">
 								End Date
 							</Label>
 							<Input
@@ -137,7 +138,7 @@ export function ProjectsForm({
 					</div>
 
 					<div className="space-y-1">
-						<Label className="text-xs text-muted-foreground uppercase tracking-wider">
+						<Label className="text-muted-foreground uppercase tracking-wider">
 							Description
 						</Label>
 						<Textarea

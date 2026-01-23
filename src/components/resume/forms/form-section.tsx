@@ -34,22 +34,23 @@ export function FormSection({
 	return (
 		<section
 			className={cn(
-				"w-full bg-muted/30 p-4 rounded-xl border space-y-2 transition-all",
-				!isVisible && "opacity-50 grayscale border-dashed",
+				"w-full rounded-xl transition-all space-y-2",
+				isOwner
+					? "bg-muted/30 p-4 border border-dashed hover:border-solid"
+					: "bg-transparent p-0 border-0",
+				!isVisible && "opacity-50 grayscale",
 				className
 			)}
 		>
 			<div className="flex items-center justify-between">
 				<div className="flex flex-col gap-1">
 					<div className="flex items-center gap-2">
-						<h2 className="text-md font-semibold tracking-tight">
+						<h2 className="font-semibold tracking-tight">
 							{title}
 						</h2>
 					</div>
 					{description && (
-						<p className="text-sm text-muted-foreground">
-							{description}
-						</p>
+						<p className="text-muted-foreground">{description}</p>
 					)}
 				</div>
 				<div className="flex items-center gap-2">

@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ResumeReference } from "@/types/resume";
 import { ArrayFormSection } from "./array-form-section";
+import { cn } from "@/lib/utils";
 
 interface ReferencesFormProps {
 	items: ResumeReference[] | undefined;
@@ -57,9 +58,9 @@ export function ReferencesForm({
 			isVisible={isVisible}
 			onToggleVisibility={onToggleVisibility}
 			renderItem={(item, index) => (
-				<div className="space-y-4">
+				<div className={cn("space-y-4", isOwner && "space-y-6")}>
 					<div className="space-y-1">
-						<Label className="text-xs text-muted-foreground uppercase tracking-wider">
+						<Label className="text-muted-foreground uppercase tracking-wider">
 							Name
 						</Label>
 						<Input
@@ -68,13 +69,13 @@ export function ReferencesForm({
 								handleUpdate(index, "name", e.target.value)
 							}
 							variant="ghost"
-							className="text-lg font-medium px-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary transition-colors"
+							className="font-medium px-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary transition-colors"
 							placeholder="Reference Name"
 							disabled={!isOwner}
 						/>
 					</div>
 					<div className="space-y-1">
-						<Label className="text-xs text-muted-foreground uppercase tracking-wider">
+						<Label className="text-muted-foreground uppercase tracking-wider">
 							Reference
 						</Label>
 						<Textarea

@@ -148,7 +148,7 @@ export function ResumeForm({
 	});
 
 	return (
-		<div className="w-full space-y-8 animate-in fade-in duration-500 pb-20">
+		<div className="w-full space-y-16 animate-in fade-in duration-500 pb-20">
 			{/* Edit Toggle - Top Right */}
 			{isOwner && (
 				<div className="flex justify-end mb-4">
