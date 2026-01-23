@@ -4,9 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ResumeBasics } from "@/types/resume";
-import { Button } from "@/components/ui/button";
-import { Eye, EyeOff } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { FormSection } from "./form-section";
 
 interface BasicsFormProps {
 	basics: ResumeBasics;
@@ -28,35 +26,13 @@ export function BasicsForm({
 	isVisible = true,
 	onToggleVisibility,
 }: BasicsFormProps) {
-	if (!isOwner && !isVisible) return null;
-
 	return (
-		<section
-			className={cn(
-				"w-full bg-muted/30 p-6 rounded-xl border space-y-6",
-				!isVisible && "opacity-50 grayscale border-dashed"
-			)}
+		<FormSection
+			title="Basic Information"
+			isOwner={isOwner}
+			isVisible={isVisible}
+			onToggleVisibility={onToggleVisibility}
 		>
-			<div className="flex items-center justify-between">
-				<h2 className="text-xl font-semibold tracking-tight">
-					Basic Information
-				</h2>
-				{isOwner && onToggleVisibility && (
-					<Button
-						variant="ghost"
-						size="icon"
-						onClick={() => onToggleVisibility(!isVisible)}
-						className="h-8 w-8 text-muted-foreground hover:text-foreground"
-					>
-						{isVisible ? (
-							<Eye className="w-4 h-4" />
-						) : (
-							<EyeOff className="w-4 h-4" />
-						)}
-					</Button>
-				)}
-			</div>
-
 			<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 				<div className="space-y-2">
 					<Label className="text-xs text-muted-foreground uppercase tracking-wider">
@@ -179,6 +155,6 @@ export function BasicsForm({
 					disabled={!isOwner}
 				/>
 			</div>
-		</section>
+		</FormSection>
 	);
 }
