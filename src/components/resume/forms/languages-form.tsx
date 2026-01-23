@@ -9,12 +9,16 @@ interface LanguagesFormProps {
 	items: ResumeLanguage[] | undefined;
 	onChange: (items: ResumeLanguage[]) => void;
 	isOwner: boolean;
+	isVisible?: boolean;
+	onToggleVisibility?: (visible: boolean) => void;
 }
 
 export function LanguagesForm({
 	items,
 	onChange,
 	isOwner,
+	isVisible,
+	onToggleVisibility,
 }: LanguagesFormProps) {
 	const handleAdd = () => {
 		const newItem: ResumeLanguage = {
@@ -49,6 +53,8 @@ export function LanguagesForm({
 			addItem={handleAdd}
 			removeItem={handleRemove}
 			isOwner={isOwner}
+			isVisible={isVisible}
+			onToggleVisibility={onToggleVisibility}
 			renderItem={(item, index) => (
 				<div className="space-y-4">
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">

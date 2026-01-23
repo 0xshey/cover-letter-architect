@@ -10,9 +10,17 @@ interface SkillsFormProps {
 	items: ResumeSkill[] | undefined;
 	onChange: (items: ResumeSkill[]) => void;
 	isOwner: boolean;
+	isVisible?: boolean;
+	onToggleVisibility?: (visible: boolean) => void;
 }
 
-export function SkillsForm({ items, onChange, isOwner }: SkillsFormProps) {
+export function SkillsForm({
+	items,
+	onChange,
+	isOwner,
+	isVisible,
+	onToggleVisibility,
+}: SkillsFormProps) {
 	const handleAdd = () => {
 		const newItem: ResumeSkill = {
 			name: "",
@@ -47,6 +55,8 @@ export function SkillsForm({ items, onChange, isOwner }: SkillsFormProps) {
 			addItem={handleAdd}
 			removeItem={handleRemove}
 			isOwner={isOwner}
+			isVisible={isVisible}
+			onToggleVisibility={onToggleVisibility}
 			renderItem={(item, index) => (
 				<div className="space-y-4">
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">

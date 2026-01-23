@@ -144,6 +144,7 @@ export interface ResumeRow {
 	user_id: string; // References profiles(id)
 	title: string;
 	data: ResumeData;
+	visible_sections: Record<string, boolean>;
 	created_at: string;
 	updated_at: string;
 }

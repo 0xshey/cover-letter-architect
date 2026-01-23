@@ -10,9 +10,17 @@ interface ProjectsFormProps {
 	items: ResumeProject[] | undefined;
 	onChange: (items: ResumeProject[]) => void;
 	isOwner: boolean;
+	isVisible?: boolean;
+	onToggleVisibility?: (visible: boolean) => void;
 }
 
-export function ProjectsForm({ items, onChange, isOwner }: ProjectsFormProps) {
+export function ProjectsForm({
+	items,
+	onChange,
+	isOwner,
+	isVisible,
+	onToggleVisibility,
+}: ProjectsFormProps) {
 	const handleAdd = () => {
 		const newItem: ResumeProject = {
 			name: "",
@@ -50,6 +58,8 @@ export function ProjectsForm({ items, onChange, isOwner }: ProjectsFormProps) {
 			addItem={handleAdd}
 			removeItem={handleRemove}
 			isOwner={isOwner}
+			isVisible={isVisible}
+			onToggleVisibility={onToggleVisibility}
 			renderItem={(item, index) => (
 				<div className="space-y-4">
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">

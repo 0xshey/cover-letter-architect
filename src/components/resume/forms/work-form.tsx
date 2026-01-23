@@ -10,9 +10,17 @@ interface WorkFormProps {
 	items: ResumeWork[] | undefined;
 	onChange: (items: ResumeWork[]) => void;
 	isOwner: boolean;
+	isVisible?: boolean;
+	onToggleVisibility?: (visible: boolean) => void;
 }
 
-export function WorkForm({ items, onChange, isOwner }: WorkFormProps) {
+export function WorkForm({
+	items,
+	onChange,
+	isOwner,
+	isVisible,
+	onToggleVisibility,
+}: WorkFormProps) {
 	const handleAdd = () => {
 		const newItem: ResumeWork = {
 			name: "",
@@ -50,6 +58,8 @@ export function WorkForm({ items, onChange, isOwner }: WorkFormProps) {
 			addItem={handleAdd}
 			removeItem={handleRemove}
 			isOwner={isOwner}
+			isVisible={isVisible}
+			onToggleVisibility={onToggleVisibility}
 			renderItem={(item, index) => (
 				<div className="space-y-4">
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">

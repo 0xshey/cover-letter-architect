@@ -10,12 +10,16 @@ interface VolunteerFormProps {
 	items: ResumeVolunteer[] | undefined;
 	onChange: (items: ResumeVolunteer[]) => void;
 	isOwner: boolean;
+	isVisible?: boolean;
+	onToggleVisibility?: (visible: boolean) => void;
 }
 
 export function VolunteerForm({
 	items,
 	onChange,
 	isOwner,
+	isVisible,
+	onToggleVisibility,
 }: VolunteerFormProps) {
 	const handleAdd = () => {
 		const newItem: ResumeVolunteer = {
@@ -55,6 +59,8 @@ export function VolunteerForm({
 			addItem={handleAdd}
 			removeItem={handleRemove}
 			isOwner={isOwner}
+			isVisible={isVisible}
+			onToggleVisibility={onToggleVisibility}
 			renderItem={(item, index) => (
 				<div className="space-y-4">
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">

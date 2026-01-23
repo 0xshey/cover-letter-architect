@@ -9,9 +9,17 @@ interface ProfilesFormProps {
 	items: ResumeProfileSocial[] | undefined;
 	onChange: (items: ResumeProfileSocial[]) => void;
 	isOwner: boolean;
+	isVisible?: boolean;
+	onToggleVisibility?: (visible: boolean) => void;
 }
 
-export function ProfilesForm({ items, onChange, isOwner }: ProfilesFormProps) {
+export function ProfilesForm({
+	items,
+	onChange,
+	isOwner,
+	isVisible,
+	onToggleVisibility,
+}: ProfilesFormProps) {
 	const handleAdd = () => {
 		const newItem: ResumeProfileSocial = {
 			network: "",
@@ -46,6 +54,8 @@ export function ProfilesForm({ items, onChange, isOwner }: ProfilesFormProps) {
 			addItem={handleAdd}
 			removeItem={handleRemove}
 			isOwner={isOwner}
+			isVisible={isVisible}
+			onToggleVisibility={onToggleVisibility}
 			renderItem={(item, index) => (
 				<div className="space-y-4">
 					<div className="grid grid-cols-1 md:grid-cols-3 gap-4">

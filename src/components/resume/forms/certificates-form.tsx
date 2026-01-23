@@ -9,12 +9,16 @@ interface CertificatesFormProps {
 	items: ResumeCertificate[] | undefined;
 	onChange: (items: ResumeCertificate[]) => void;
 	isOwner: boolean;
+	isVisible?: boolean;
+	onToggleVisibility?: (visible: boolean) => void;
 }
 
 export function CertificatesForm({
 	items,
 	onChange,
 	isOwner,
+	isVisible,
+	onToggleVisibility,
 }: CertificatesFormProps) {
 	const handleAdd = () => {
 		const newItem: ResumeCertificate = {
@@ -51,6 +55,8 @@ export function CertificatesForm({
 			addItem={handleAdd}
 			removeItem={handleRemove}
 			isOwner={isOwner}
+			isVisible={isVisible}
+			onToggleVisibility={onToggleVisibility}
 			renderItem={(item, index) => (
 				<div className="space-y-4">
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">

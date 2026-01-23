@@ -44,6 +44,7 @@ export default async function ResumePage({
 			{resume ? (
 				<ResumeForm
 					initialData={resume.data}
+					initialVisibleSections={resume.visible_sections || {}}
 					resumeId={resume.id}
 					isOwner={currentUser?.id === profile.id}
 				/>

@@ -10,12 +10,16 @@ interface ReferencesFormProps {
 	items: ResumeReference[] | undefined;
 	onChange: (items: ResumeReference[]) => void;
 	isOwner: boolean;
+	isVisible?: boolean;
+	onToggleVisibility?: (visible: boolean) => void;
 }
 
 export function ReferencesForm({
 	items,
 	onChange,
 	isOwner,
+	isVisible,
+	onToggleVisibility,
 }: ReferencesFormProps) {
 	const handleAdd = () => {
 		const newItem: ResumeReference = {
@@ -50,6 +54,8 @@ export function ReferencesForm({
 			addItem={handleAdd}
 			removeItem={handleRemove}
 			isOwner={isOwner}
+			isVisible={isVisible}
+			onToggleVisibility={onToggleVisibility}
 			renderItem={(item, index) => (
 				<div className="space-y-4">
 					<div className="space-y-1">

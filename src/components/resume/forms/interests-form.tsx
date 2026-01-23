@@ -10,12 +10,16 @@ interface InterestsFormProps {
 	items: ResumeInterest[] | undefined;
 	onChange: (items: ResumeInterest[]) => void;
 	isOwner: boolean;
+	isVisible?: boolean;
+	onToggleVisibility?: (visible: boolean) => void;
 }
 
 export function InterestsForm({
 	items,
 	onChange,
 	isOwner,
+	isVisible,
+	onToggleVisibility,
 }: InterestsFormProps) {
 	const handleAdd = () => {
 		const newItem: ResumeInterest = {
@@ -50,6 +54,8 @@ export function InterestsForm({
 			addItem={handleAdd}
 			removeItem={handleRemove}
 			isOwner={isOwner}
+			isVisible={isVisible}
+			onToggleVisibility={onToggleVisibility}
 			renderItem={(item, index) => (
 				<div className="space-y-4">
 					<div className="space-y-1">
