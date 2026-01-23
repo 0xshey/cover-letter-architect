@@ -6,6 +6,9 @@ import { ResumeData } from "@/types/resume";
 import { Loader2, Save } from "lucide-react";
 import { toast } from "sonner";
 import { debounce } from "lodash";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+
 import { BasicsForm } from "./forms/basics-form";
 import { WorkForm } from "./forms/work-form";
 import { EducationForm } from "./forms/education-form";
@@ -34,6 +37,7 @@ export function ResumeForm({
 	const [data, setData] = useState<ResumeData>(initialData || {});
 	const [isSaving, setIsSaving] = useState(false);
 	const [lastSaved, setLastSaved] = useState<Date | null>(null);
+	const [isEditing, setIsEditing] = useState(false);
 	const supabase = createClient();
 
 	const updateResume = async (newData: ResumeData) => {
@@ -99,9 +103,31 @@ export function ResumeForm({
 		handleUpdate(newData);
 	};
 
+	// Derived state: User can only edit if they are the owner AND edit mode is enabled.
+	const isModeEditing = isOwner && isEditing;
+
 	return (
 		<div className="w-full space-y-8 animate-in fade-in duration-500 pb-20">
-			{/* Status Indicator */}
+			{/* Edit Toggle - Top Right */}
+			{isOwner && (
+				<div className="flex justify-end mb-4">
+					<div className="flex items-center gap-2">
+						<Label
+							htmlFor="edit-mode"
+							className="cursor-pointer text-sm font-medium text-muted-foreground"
+						>
+							Edit Mode
+						</Label>
+						<Switch
+							id="edit-mode"
+							checked={isEditing}
+							onCheckedChange={setIsEditing}
+						/>
+					</div>
+				</div>
+			)}
+
+			{/* Status Indicator - Bottom Right */}
 			<div className="fixed bottom-4 right-4 z-50">
 				{isSaving ? (
 					<div className="bg-background/80 backdrop-blur border shadow-sm rounded-full px-4 py-2 flex items-center gap-2 text-xs text-muted-foreground">
@@ -120,19 +146,19 @@ export function ResumeForm({
 				basics={data.basics || {}}
 				onChange={handleBasicsChange}
 				onLocationChange={handleLocationChange}
-				isOwner={isOwner}
+				isOwner={isModeEditing}
 			/>
 
 			<ProfilesForm
 				items={data.basics?.profiles}
 				onChange={(items) => handleBasicsChange("profiles", items)}
-				isOwner={isOwner}
+				isOwner={isModeEditing}
 			/>
 
 			<WorkForm
 				items={data.work}
 				onChange={(items) => handleUpdate({ ...data, work: items })}
-				isOwner={isOwner}
+				isOwner={isModeEditing}
 			/>
 
 			<EducationForm
@@ -140,13 +166,13 @@ export function ResumeForm({
 				onChange={(items) =>
 					handleUpdate({ ...data, education: items })
 				}
-				isOwner={isOwner}
+				isOwner={isModeEditing}
 			/>
 
 			<ProjectsForm
 				items={data.projects}
 				onChange={(items) => handleUpdate({ ...data, projects: items })}
-				isOwner={isOwner}
+				isOwner={isModeEditing}
 			/>
 
 			<VolunteerForm
@@ -154,13 +180,13 @@ export function ResumeForm({
 				onChange={(items) =>
 					handleUpdate({ ...data, volunteer: items })
 				}
-				isOwner={isOwner}
+				isOwner={isModeEditing}
 			/>
 
 			<AwardsForm
 				items={data.awards}
 				onChange={(items) => handleUpdate({ ...data, awards: items })}
-				isOwner={isOwner}
+				isOwner={isModeEditing}
 			/>
 
 			<CertificatesForm
@@ -168,7 +194,7 @@ export function ResumeForm({
 				onChange={(items) =>
 					handleUpdate({ ...data, certificates: items })
 				}
-				isOwner={isOwner}
+				isOwner={isModeEditing}
 			/>
 
 			<PublicationsForm
@@ -176,13 +202,13 @@ export function ResumeForm({
 				onChange={(items) =>
 					handleUpdate({ ...data, publications: items })
 				}
-				isOwner={isOwner}
+				isOwner={isModeEditing}
 			/>
 
 			<SkillsForm
 				items={data.skills}
 				onChange={(items) => handleUpdate({ ...data, skills: items })}
-				isOwner={isOwner}
+				isOwner={isModeEditing}
 			/>
 
 			<LanguagesForm
@@ -190,7 +216,7 @@ export function ResumeForm({
 				onChange={(items) =>
 					handleUpdate({ ...data, languages: items })
 				}
-				isOwner={isOwner}
+				isOwner={isModeEditing}
 			/>
 
 			<InterestsForm
@@ -198,7 +224,7 @@ export function ResumeForm({
 				onChange={(items) =>
 					handleUpdate({ ...data, interests: items })
 				}
-				isOwner={isOwner}
+				isOwner={isModeEditing}
 			/>
 
 			<ReferencesForm
@@ -206,7 +232,7 @@ export function ResumeForm({
 				onChange={(items) =>
 					handleUpdate({ ...data, references: items })
 				}
-				isOwner={isOwner}
+				isOwner={isModeEditing}
 			/>
 		</div>
 	);

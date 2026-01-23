@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { ResumeRow, Profile } from "@/types/resume";
-
 import { ResumeForm } from "@/components/resume/resume-form";
 
 export default async function ResumePage({
