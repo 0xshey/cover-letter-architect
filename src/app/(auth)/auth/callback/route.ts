@@ -16,9 +16,9 @@ export async function GET(request: Request) {
 		if (!error && user) {
 			// Check if user has a username
 			const { data: profile } = await supabase
-				.from("resume_profiles")
+				.from("profiles")
 				.select("username")
-				.eq("user_id", user.id)
+				.eq("id", user.id)
 				.single();
 
 			if (!profile?.username) {

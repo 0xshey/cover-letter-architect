@@ -1,93 +1,167 @@
-// Resume profile types
+// JSON Resume Schema Types
+// https://jsonresume.org/schema/
 
-export interface ResumeProfile {
+export interface ResumeLocation {
+	address?: string;
+	postalCode?: string;
+	city?: string;
+	countryCode?: string;
+	region?: string;
+}
+
+export interface ResumeProfileSocial {
+	network: string;
+	username: string;
+	url?: string;
+}
+
+export interface ResumeBasics {
+	name?: string;
+	label?: string;
+	image?: string;
+	email?: string;
+	phone?: string;
+	url?: string;
+	summary?: string;
+	location?: ResumeLocation;
+	profiles?: ResumeProfileSocial[];
+}
+
+export interface ResumeWork {
+	name?: string;
+	position?: string;
+	url?: string;
+	startDate?: string;
+	endDate?: string;
+	summary?: string;
+	highlights?: string[];
+}
+
+export interface ResumeVolunteer {
+	organization?: string;
+	position?: string;
+	url?: string;
+	startDate?: string;
+	endDate?: string;
+	summary?: string;
+	highlights?: string[];
+}
+
+export interface ResumeEducation {
+	institution?: string;
+	url?: string;
+	area?: string;
+	studyType?: string;
+	startDate?: string;
+	endDate?: string;
+	score?: string;
+	courses?: string[];
+}
+
+export interface ResumeAward {
+	title?: string;
+	date?: string;
+	awarder?: string;
+	summary?: string;
+}
+
+export interface ResumeCertificate {
+	name?: string;
+	date?: string;
+	issuer?: string;
+	url?: string;
+}
+
+export interface ResumePublication {
+	name?: string;
+	publisher?: string;
+	releaseDate?: string;
+	url?: string;
+	summary?: string;
+}
+
+export interface ResumeSkill {
+	name?: string;
+	level?: string;
+	keywords?: string[];
+}
+
+export interface ResumeLanguage {
+	language?: string;
+	fluency?: string;
+}
+
+export interface ResumeInterest {
+	name?: string;
+	keywords?: string[];
+}
+
+export interface ResumeReference {
+	name?: string;
+	reference?: string;
+}
+
+export interface ResumeProject {
+	name?: string;
+	startDate?: string;
+	endDate?: string;
+	description?: string;
+	highlights?: string[];
+	url?: string;
+}
+
+export interface ResumeData {
+	basics?: ResumeBasics;
+	work?: ResumeWork[];
+	volunteer?: ResumeVolunteer[];
+	education?: ResumeEducation[];
+	awards?: ResumeAward[];
+	certificates?: ResumeCertificate[];
+	publications?: ResumePublication[];
+	skills?: ResumeSkill[];
+	languages?: ResumeLanguage[];
+	interests?: ResumeInterest[];
+	references?: ResumeReference[];
+	projects?: ResumeProject[];
+}
+
+export interface SectionConfig {
 	id: string;
-	user_id: string;
-	name: string;
-	job_title: string | null;
-	location: string | null;
-	primary_link: string | null;
-	profile_image_url: string | null;
+	visible: boolean;
+	title: string; // Display title
+}
+
+export interface Profile {
+	id: string; // References auth.users(id)
 	username: string | null;
-	about: string | null;
-	show_work_experience: boolean;
-	show_education: boolean;
-	show_projects: boolean;
-	show_contact: boolean;
+	full_name: string | null;
+	avatar_url?: string | null;
+	updated_at?: string;
+}
+
+export interface ResumeRow {
+	id: string;
+	user_id: string; // References profiles(id)
+	title: string;
+	data: ResumeData;
 	created_at: string;
 	updated_at: string;
 }
 
+// Deprecated interfaces (kept for temporary compatibility if needed)
 export interface WorkExperience {
 	id: string;
-	resume_id: string;
-	title: string;
-	company: string;
-	company_link: string | null;
-	location: string | null;
-	start_year: number;
-	end_year: number | null; // null means "Now"
-	achievements: string[] | null;
-	sort_order: number;
-	created_at: string;
+	[key: string]: any;
 }
-
 export interface Education {
 	id: string;
-	resume_id: string;
-	institution: string;
-	degree: string | null;
-	field: string | null;
-	start_year: number | null;
-	end_year: number | null;
-	sort_order: number;
-	created_at: string;
+	[key: string]: any;
 }
-
 export interface Project {
 	id: string;
-	resume_id: string;
-	title: string;
-	description: string | null;
-	link: string | null;
-	year: number | null;
-	sort_order: number;
-	created_at: string;
+	[key: string]: any;
 }
-
 export interface ContactInfo {
 	id: string;
-	resume_id: string;
-	email: string | null;
-	phone: string | null;
-	website: string | null;
-	linkedin: string | null;
-	github: string | null;
-	twitter: string | null;
-	created_at: string;
+	[key: string]: any;
 }
-
-// Combined resume data type
-export interface ResumeData {
-	profile: ResumeProfile;
-	workExperience: WorkExperience[];
-	education: Education[];
-	projects: Project[];
-	contact: ContactInfo | null;
-}
-
-// Form types for creating/editing
-export type ResumeProfileInput = Omit<
-	ResumeProfile,
-	"id" | "created_at" | "updated_at"
->;
-export type WorkExperienceInput = Omit<
-	WorkExperience,
-	"id" | "resume_id" | "created_at"
->;
-export type EducationInput = Omit<Education, "id" | "resume_id" | "created_at">;
-export type ProjectInput = Omit<Project, "id" | "resume_id" | "created_at">;
-export type ContactInfoInput = Omit<
-	ContactInfo,
-	"id" | "resume_id" | "created_at"
->;

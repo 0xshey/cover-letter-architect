@@ -3,8 +3,7 @@
 import { useEffect, useState, useMemo } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useAuthStore } from "@/store/useAuthStore";
-import { ResumeProfile, ContactInfo } from "@/types/resume";
-import { ResumeHeader, ResumeContact, ResumeAbout } from "@/components/resume";
+import { Profile } from "@/types/resume";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -17,8 +16,7 @@ export default function UserPage() {
 	const supabase = useMemo(() => createClient(), []);
 	const { session } = useAuthStore();
 
-	const [profile, setProfile] = useState<ResumeProfile | null>(null);
-	const [contact, setContact] = useState<ContactInfo | null>(null);
+	const [profile, setProfile] = useState<Profile | null>(null);
 	const [loading, setLoading] = useState(true);
 
 	// Username state
@@ -37,9 +35,9 @@ export default function UserPage() {
 			try {
 				const { data: profileData, error: profileError } =
 					await supabase
-						.from("resume_profiles")
+						.from("profiles")
 						.select("*")
-						.eq("user_id", session.user.id)
+						.eq("id", session.user.id) // profiles.id is linked to auth.users.id
 						.single();
 
 				if (profileError && profileError.code !== "PGRST116") {
@@ -50,15 +48,6 @@ export default function UserPage() {
 					setProfile(profileData);
 					setUsername(profileData.username || "");
 					setOriginalUsername(profileData.username || "");
-
-					// Fetch contact info
-					const { data: contactData } = await supabase
-						.from("resume_contact")
-						.select("*")
-						.eq("resume_id", profileData.id)
-						.single();
-
-					setContact(contactData);
 				}
 			} catch (error) {
 				console.error("Error fetching user data:", error);
@@ -86,7 +75,7 @@ export default function UserPage() {
 			setIsCheckingUsername(true);
 			try {
 				const { data, error } = await supabase
-					.from("resume_profiles")
+					.from("profiles")
 					.select("id")
 					.eq("username", username)
 					.single();
@@ -107,27 +96,6 @@ export default function UserPage() {
 		return () => clearTimeout(timer);
 	}, [username, originalUsername, supabase]);
 
-	const handleUpdateProfile = async (updates: Partial<ResumeProfile>) => {
-		if (!profile) return;
-
-		// Optimistic update
-		setProfile({ ...profile, ...updates });
-
-		try {
-			const { error } = await supabase
-				.from("resume_profiles")
-				.update(updates)
-				.eq("id", profile.id);
-
-			if (error) throw error;
-			toast.success("Profile updated");
-		} catch (error) {
-			console.error("Error updating profile:", error);
-			toast.error("Failed to update profile");
-			// Revert would be nice here, but simplicity for now
-		}
-	};
-
 	const handleUpdateUsername = async () => {
 		if (
 			!profile ||
@@ -140,13 +108,18 @@ export default function UserPage() {
 		setIsSavingUsername(true);
 		try {
 			const { error } = await supabase
-				.from("resume_profiles")
-				.update({ username })
+				.from("profiles")
+				.update({ username, updated_at: new Date().toISOString() })
 				.eq("id", profile.id);
 
 			if (error) throw error;
 
-			setProfile({ ...profile, username });
+			const updatedProfile = {
+				...profile,
+				username,
+				updated_at: new Date().toISOString(),
+			};
+			setProfile(updatedProfile);
 			setOriginalUsername(username);
 			toast.success("Username updated");
 		} catch (error) {
@@ -154,38 +127,6 @@ export default function UserPage() {
 			toast.error("Failed to update username");
 		} finally {
 			setIsSavingUsername(false);
-		}
-	};
-
-	const handleUpdateContact = async (updates: Partial<ContactInfo>) => {
-		if (!profile) return;
-
-		try {
-			if (contact) {
-				// Optimistic
-				setContact({ ...contact, ...updates });
-
-				const { error } = await supabase
-					.from("resume_contact")
-					.update(updates)
-					.eq("id", contact.id);
-
-				if (error) throw error;
-			} else {
-				// Create new contact row if doesn't exist
-				const { data, error } = await supabase
-					.from("resume_contact")
-					.insert({ resume_id: profile.id, ...updates })
-					.select()
-					.single();
-
-				if (error) throw error;
-				setContact(data);
-			}
-			toast.success("Contact info updated");
-		} catch (error) {
-			console.error("Error updating contact:", error);
-			toast.error("Failed to update contact");
 		}
 	};
 
@@ -289,37 +230,17 @@ export default function UserPage() {
 				</div>
 			</div>
 
-			{/* Reused Resume Components */}
-			<section>
-				<h2 className="text-lg font-semibold mb-4">Personal Details</h2>
-				<div className="border rounded-xl p-6 bg-card">
-					<ResumeHeader
-						profile={profile}
-						isEditing={true}
-						onUpdate={handleUpdateProfile}
-					/>
-					<ResumeAbout
-						about={profile.about}
-						isEditing={true}
-						onUpdate={(about) => handleUpdateProfile({ about })}
-					/>
+			<div className="border rounded-xl p-6 bg-card flex justify-between items-center">
+				<div>
+					<h2 className="text-lg font-semibold">Resume & Profile</h2>
+					<p className="text-sm text-muted-foreground">
+						Edit your resume content, experience, and education.
+					</p>
 				</div>
-			</section>
-
-			<section>
-				<h2 className="text-lg font-semibold mb-4">
-					Contact Information
-				</h2>
-				<div className="border rounded-xl p-6 bg-card">
-					<ResumeContact
-						contact={contact}
-						isVisible={true} // Always visible here
-						isEditing={true} // Always editing here
-						onToggleVisibility={() => {}} // No toggle needed
-						onUpdate={handleUpdateContact}
-					/>
-				</div>
-			</section>
+				<Button onClick={() => router.push(`/resume/${username}`)}>
+					Go to Resume Editor
+				</Button>
+			</div>
 		</div>
 	);
 }

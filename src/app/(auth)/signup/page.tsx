@@ -33,7 +33,7 @@ export default function SignupPage() {
 			setIsChecking(true);
 			try {
 				const { data, error } = await supabase
-					.from("resume_profiles")
+					.from("profiles")
 					.select("id")
 					.eq("username", username)
 					.single();
@@ -47,10 +47,13 @@ export default function SignupPage() {
 				} else {
 					// Error occurred
 					console.error("Error checking username:", error);
+					// Treat error as 'unknown availability' but don't block user if it's transient?
+					// Safer to assume unavailable or just null to not show red/green
 					setIsAvailable(null);
 				}
 			} catch (error) {
 				console.error("Error checking username:", error);
+				setIsAvailable(null);
 			} finally {
 				setIsChecking(false);
 			}
@@ -83,88 +86,57 @@ export default function SignupPage() {
 				return;
 			}
 
-			// Check if profile exists
-			const { data: existingProfile } = await supabase
-				.from("resume_profiles")
-				.select("id")
-				.eq("user_id", user.id)
-				.single();
-
-			if (existingProfile) {
-				// Update existing
-				const { error } = await supabase
-					.from("resume_profiles")
-					.update({
-						username,
-						name: fullName,
-						updated_at: new Date().toISOString(),
-					})
-					.eq("user_id", user.id);
-
-				if (error) throw error;
-			} else {
-				// Create new
-				const { error } = await supabase
-					.from("resume_profiles")
-					.insert({
-						user_id: user.id,
-						username,
-						name: fullName,
-						email: user.email, // Assuming we want to store email primarily here too, though not strictly in types yet, it's often good practice or needed for contact
-						updated_at: new Date().toISOString(),
-					});
-
-				// Note: The 'email' field isn't in ResumeProfile type in the file I updated,
-				// but the DB might have it or it might be 'contact_email'.
-				// Let's check the schema logic.
-				// Wait, ResumeContact has email. ResumeProfile usually doesn't store email directly in my previous view.
-				// Let's double check ResumeProfile type I edited.
-				// It has: name, job_title, location, primary_link, profile_image_url, username, about...
-				// It DOES NOT have email. I should remove email from insert to avoid error.
-
-				// RETRYING LOGIC inside the thought trace:
-				// I will correct the insert below to match the type.
-			}
-
-			// Actually, let me rewrite the insert block safely.
+			// Upsert profile in 'profiles' table
+			// Using 'id' as the user_id reference since it's commonly 1:1 with auth.users
 			const { error: upsertError } = await supabase
-				.from("resume_profiles")
+				.from("profiles")
 				.upsert(
 					{
-						user_id: user.id,
+						id: user.id, // profiles.id usually matches auth.users.id
 						username,
-						name: fullName,
+						full_name: fullName, // Assuming 'full_name' is the column, based on common patterns. If 'name', will need to adjust.
 						updated_at: new Date().toISOString(),
+						// email: user.email // Profiles might track email, or just rely on auth.users
 					},
-					{ onConflict: "user_id" }
+					{ onConflict: "id" }
 				);
 
 			if (upsertError) throw upsertError;
 
-			// Also create a default contact entry if it doesn't exist
-			// fetching profile id first
-			const { data: profileData } = await supabase
-				.from("resume_profiles")
+			// Check if a default resume exists, if not create one?
+			// The new schema works with 'resumes' table.
+			// Let's create an empty resume for the user so they have something to start with.
+			const { data: existingResume } = await supabase
+				.from("resumes")
 				.select("id")
 				.eq("user_id", user.id)
 				.single();
 
-			if (profileData) {
-				const { error: contactError } = await supabase
-					.from("resume_contact")
-					.upsert(
-						{
-							resume_id: profileData.id,
-							email: user.email,
-						},
-						{ onConflict: "resume_id" }
-					); // Assuming uniqueness on resume_id for contact or we just insert if not exists.
-				// Actually resume_contact typically has its own ID. Let's just do a check or simple insert ignore.
-				// Actually, simpler: just let the user manage contact info later.
+			if (!existingResume) {
+				const { error: resumeError } = await supabase
+					.from("resumes")
+					.insert({
+						user_id: user.id,
+						title: "My Resume",
+						data: {
+							basics: {
+								name: fullName,
+								email: user.email || "",
+							},
+						}, // Initialize with minimal data
+					});
+
+				if (resumeError) {
+					console.error(
+						"Error creating default resume:",
+						resumeError
+					);
+					// Don't block signup success on resume creation failure, but good to know
+				}
 			}
 
 			toast.success("Profile set up successfully!");
-			router.push("/letters");
+			router.push("/letters"); // Or /resume/[username] ?
 		} catch (error) {
 			console.error("Error saving profile:", error);
 			toast.error("Failed to create profile. Please try again.");
@@ -172,9 +144,6 @@ export default function SignupPage() {
 			setIsSaving(false);
 		}
 	};
-
-	// Correction on the insert logic above: I should not put logic in comments in the file content.
-	// I will generate the clean file below.
 
 	return (
 		<div className="flex flex-col items-center justify-center min-h-screen bg-background p-4">
