@@ -61,47 +61,58 @@ export function WorkForm({
 			onToggleVisibility={onToggleVisibility}
 			renderItem={(item, index) => (
 				<div className="grid grid-cols-3">
-					<div className="col-span-1 flex gap-4">
-						<ResumeField
-							label="Start Date"
-							value={item.startDate || ""}
-							onChange={(v) => {
-								if (v === "" || /^\d{0,4}$/.test(v)) {
-									handleUpdate(index, "startDate", v);
-								}
-							}}
-							isOwner={isOwner}
-							placeholder="YYYY"
-							InputClassName="w-24 text-center"
-						/>
-						<ResumeField
-							label="End Date"
-							value={item.endDate || ""}
-							onChange={(v) => {
-								// Allow digits up to 4, or starts of "Present" (case insensitive)
-								// or if it IS "Present"
-								if (
-									v === "" ||
-									/^\d{0,4}$/.test(v) ||
-									/^p(r(e(s(e(n(t)?)?)?)?)?)?$/i.test(v)
-								) {
-									// Normalize "Present" if fully typed? Maybe not needed while typing.
-									const lower = v.toLowerCase();
-									if (lower === "present") {
-										handleUpdate(
-											index,
-											"endDate",
-											"Present"
-										);
-									} else {
-										handleUpdate(index, "endDate", v);
-									}
-								}
-							}}
-							isOwner={isOwner}
-							placeholder="YYYY / Present"
-							InputClassName="w-32 text-center"
-						/>
+					<div className="col-span-1">
+						{isOwner ? (
+							<div className="flex gap-4">
+								<ResumeField
+									label="Start Date"
+									value={item.startDate || ""}
+									onChange={(v) => {
+										if (v === "" || /^\d{0,4}$/.test(v)) {
+											handleUpdate(index, "startDate", v);
+										}
+									}}
+									isOwner={isOwner}
+									placeholder="YYYY"
+									InputClassName="w-24 text-center"
+								/>
+								<ResumeField
+									label="End Date"
+									value={item.endDate || ""}
+									onChange={(v) => {
+										if (
+											v === "" ||
+											/^\d{0,4}$/.test(v) ||
+											/^p(r(e(s(e(n(t)?)?)?)?)?)?$/i.test(
+												v
+											)
+										) {
+											const lower = v.toLowerCase();
+											if (lower === "present") {
+												handleUpdate(
+													index,
+													"endDate",
+													"Present"
+												);
+											} else {
+												handleUpdate(
+													index,
+													"endDate",
+													v
+												);
+											}
+										}
+									}}
+									isOwner={isOwner}
+									placeholder="YYYY / Present"
+									InputClassName="w-32 text-center"
+								/>
+							</div>
+						) : (
+							<p className="text-muted-foreground text-sm">
+								{item.startDate} – {item.endDate}
+							</p>
+						)}
 					</div>
 
 					<div

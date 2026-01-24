@@ -14,6 +14,7 @@ interface ResumeFieldProps {
 	variant?: "primary" | "secondary" | "textarea";
 	className?: string;
 	InputClassName?: string;
+	onBlur?: () => void;
 }
 
 export function ResumeField({
@@ -25,6 +26,7 @@ export function ResumeField({
 	variant = "secondary",
 	className,
 	InputClassName,
+	onBlur,
 }: ResumeFieldProps) {
 	const isTextarea = variant === "textarea";
 	const isPrimary = variant === "primary";
@@ -49,6 +51,7 @@ export function ResumeField({
 				<Textarea
 					value={value || ""}
 					onChange={(e) => onChange(e.target.value)}
+					onBlur={onBlur}
 					className={cn(
 						"bg-transparent text-base border-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary resize-none min-h-[80px] px-0 shadow-none disabled:opacity-100 placeholder:text-muted-foreground/40",
 						"text-muted-foreground",
@@ -63,6 +66,7 @@ export function ResumeField({
 				<Input
 					value={value || ""}
 					onChange={(e) => onChange(e.target.value)}
+					onBlur={onBlur}
 					variant="ghost"
 					className={cn(
 						"px-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary transition-colors shadow-none h-auto py-1 disabled:opacity-100 placeholder:text-muted-foreground/40",

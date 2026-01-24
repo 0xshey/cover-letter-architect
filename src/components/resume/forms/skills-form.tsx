@@ -78,11 +78,20 @@ export function SkillsForm({
 						label="Keywords (comma separated)"
 						value={item.keywords?.join(", ") || ""}
 						onChange={(v) => {
-							const keywords = v
-								.split(",")
-								.map((k) => k.trim())
-								.filter((k) => k);
+							const keywords = v.split(",");
+							// Do not filter while typing to allow "HTML," state
 							handleUpdate(index, "keywords", keywords);
+						}}
+						onBlur={() => {
+							// Clean up on blur
+							const cleanKeywords = item.keywords
+								?.map((k) => k.trim())
+								.filter((k) => k !== "");
+							handleUpdate(
+								index,
+								"keywords",
+								cleanKeywords || []
+							);
 						}}
 						isOwner={isOwner}
 						variant="textarea"
