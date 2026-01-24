@@ -52,6 +52,8 @@ export function ResumeField({
 					className={cn(
 						"bg-transparent text-base border-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary resize-none min-h-[80px] px-0 shadow-none disabled:opacity-100 placeholder:text-muted-foreground/40",
 						"text-muted-foreground",
+						isOwner &&
+							"ring ring-ring/20 bg-muted/20 rounded-lg px-3 py-2 mt-2",
 						InputClassName
 					)}
 					placeholder={isOwner ? placeholder : undefined}
@@ -64,6 +66,8 @@ export function ResumeField({
 					variant="ghost"
 					className={cn(
 						"px-0 border-b rounded-none focus-visible:ring-0 focus-visible:border-primary transition-colors shadow-none h-auto py-1 disabled:opacity-100 placeholder:text-muted-foreground/40",
+						isOwner &&
+							"ring ring-ring/20 bg-muted/20 rounded-lg px-3 py-2 mt-2",
 						isPrimary
 							? "text-foreground font-medium"
 							: "text-muted-foreground",

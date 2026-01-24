@@ -153,15 +153,32 @@ export function ResumeForm({
 				!isModeEditing ? "space-y-24" : "space-y-8"
 			} animate-in fade-in duration-300 pb-20`}
 		>
-			{/* Edit Toggle - Top Right */}
+			{/* Edit Toggle and Status - Top Right */}
 			{isOwner && (
-				<div className="flex justify-end mb-4">
+				<div className="flex justify-end mb-4 items-center gap-8">
+					{/* Status Indicator */}
+					{isEditing && (
+						<div className="flex items-center gap-2">
+							{isSaving ? (
+								<div className="flex items-center gap-2 text-muted-foreground animate-in fade-in">
+									<Loader2 className="h-4 w-4 animate-spin" />
+									Saving...
+								</div>
+							) : lastSaved ? (
+								<div className="flex items-center gap-2 text-muted-foreground animate-in fade-in">
+									<Save className="h-4 w-4" />
+									Saved
+								</div>
+							) : null}
+						</div>
+					)}
+
 					<div className="flex items-center gap-2">
 						<Label
 							htmlFor="edit-mode"
 							className="cursor-pointer text-sm font-medium text-muted-foreground"
 						>
-							Edit Mode
+							{isEditing ? "Editing" : "Edit"}
 						</Label>
 						<Switch
 							id="edit-mode"
@@ -171,21 +188,6 @@ export function ResumeForm({
 					</div>
 				</div>
 			)}
-
-			{/* Status Indicator - Bottom Right */}
-			<div className="fixed bottom-4 right-4 z-50">
-				{isSaving ? (
-					<div className="bg-background/80 backdrop-blur border shadow-sm rounded-full px-4 py-2 flex items-center gap-2 text-xs text-muted-foreground">
-						<Loader2 className="h-3 w-3 animate-spin" />
-						Saving...
-					</div>
-				) : lastSaved ? (
-					<div className="bg-background/80 backdrop-blur border shadow-sm rounded-full px-4 py-2 flex items-center gap-2 text-xs text-muted-foreground transition-opacity opacity-50 hover:opacity-100">
-						<Save className="h-3 w-3" />
-						Saved
-					</div>
-				) : null}
-			</div>
 
 			<BasicsForm
 				basics={data.basics || {}}
