@@ -51,7 +51,7 @@ export function ArrayFormSection<T>({
 				{items?.map((item, index) => (
 					<div
 						key={index}
-						className="relative group space-y-4 border-b last:border-0 pb-8 last:pb-0"
+						className="relative group space-y-4 pb-8 last:pb-0"
 					>
 						{isOwner && (
 							<Button
