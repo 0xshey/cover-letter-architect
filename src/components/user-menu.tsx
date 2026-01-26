@@ -56,8 +56,8 @@ export function UserMenu({
 				<Button
 					variant="ghost"
 					className={cn(
-						"w-full h-auto py-3 justify-center text-muted-foreground hover:bg-muted group rounded-2xl",
-						className
+						"w-full h-auto p-2 justify-center text-muted-foreground hover:bg-muted group rounded-2xl",
+						className,
 					)}
 					title="Menu"
 				>

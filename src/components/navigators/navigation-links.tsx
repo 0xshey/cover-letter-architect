@@ -1,8 +1,8 @@
-import { Folder, Form, LayoutPanelTop, User } from "lucide-react";
+import { Folder, Form, FileText, User } from "lucide-react";
 
 export const NAVIGATION_ITEMS = [
 	{
-		icon: Folder,
+		icon: FileText,
 		label: "Home",
 		path: "/letters",
 		match: (pathname: string) => pathname === "/letters",

@@ -15,14 +15,14 @@ export default function PagesLayout({
 			<AuthListener />
 
 			{/* Desktop Sidebar (Left) */}
-			<aside className="hidden md:flex w-fit flex-col fixed left-0 top-0 h-full z-40 bg-background transition-all duration-300 border-r no-scrollbar overflow-y-auto">
+			<aside className="hidden md:flex w-fit flex-col items-center fixed left-0 top-0 h-full z-40 transition-all duration-300 no-scrollbar overflow-y-auto ml-2">
 				{/* Top: Logo */}
-				<div className="p-4 shrink-0 mt-4">
+				<div className="w-fit p-2 shrink-0 mt-4">
 					<Link
 						href="/letters"
 						className="flex items-center justify-center hover:opacity-80 transition-opacity"
 					>
-						<span className="text-2xl font-bold font-mono tracking-tighter">
+						<span className="text-xl font-bold font-mono tracking-tighter">
 							CLA
 						</span>
 					</Link>
@@ -34,7 +34,7 @@ export default function PagesLayout({
 				</div>
 
 				{/* Bottom: Logout / Menu */}
-				<div className="p-4 mb-4 shrink-0 mt-auto w-full">
+				<div className="w-fit p-2 mb-4 shrink-0 mt-auto w-full">
 					<UserMenu />
 				</div>
 			</aside>
