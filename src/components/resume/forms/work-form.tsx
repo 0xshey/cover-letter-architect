@@ -42,7 +42,7 @@ export function WorkForm({
 	const handleUpdate = (
 		index: number,
 		field: keyof ResumeWork,
-		value: any
+		value: any,
 	) => {
 		if (!items) return;
 		const newItems = [...items];
@@ -84,7 +84,7 @@ export function WorkForm({
 											v === "" ||
 											/^\d{0,4}$/.test(v) ||
 											/^p(r(e(s(e(n(t)?)?)?)?)?)?$/i.test(
-												v
+												v,
 											)
 										) {
 											const lower = v.toLowerCase();
@@ -92,13 +92,13 @@ export function WorkForm({
 												handleUpdate(
 													index,
 													"endDate",
-													"Present"
+													"Present",
 												);
 											} else {
 												handleUpdate(
 													index,
 													"endDate",
-													v
+													v,
 												);
 											}
 										}
@@ -118,7 +118,7 @@ export function WorkForm({
 					<div
 						className={cn(
 							"col-span-2 flex flex-col",
-							isOwner && "gap-6"
+							isOwner && "gap-6",
 						)}
 					>
 						<ResumeField
@@ -144,7 +144,7 @@ export function WorkForm({
 							value={item.summary || ""}
 							onChange={(v) => handleUpdate(index, "summary", v)}
 							isOwner={isOwner}
-							variant="textarea"
+							variant="richtext"
 							placeholder="Describe your responsibilities and achievements..."
 						/>
 						<ResumeField

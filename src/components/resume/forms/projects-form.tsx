@@ -40,7 +40,7 @@ export function ProjectsForm({
 	const handleUpdate = (
 		index: number,
 		field: keyof ResumeProject,
-		value: any
+		value: any,
 	) => {
 		if (!items) return;
 		const newItems = [...items];
@@ -82,7 +82,7 @@ export function ProjectsForm({
 											v === "" ||
 											/^\d{0,4}$/.test(v) ||
 											/^p(r(e(s(e(n(t)?)?)?)?)?)?$/i.test(
-												v
+												v,
 											)
 										) {
 											const lower = v.toLowerCase();
@@ -90,13 +90,13 @@ export function ProjectsForm({
 												handleUpdate(
 													index,
 													"endDate",
-													"Present"
+													"Present",
 												);
 											} else {
 												handleUpdate(
 													index,
 													"endDate",
-													v
+													v,
 												);
 											}
 										}
@@ -116,7 +116,7 @@ export function ProjectsForm({
 					<div
 						className={cn(
 							"col-span-2 flex flex-col",
-							isOwner && "gap-6"
+							isOwner && "gap-6",
 						)}
 					>
 						<ResumeField
@@ -142,7 +142,7 @@ export function ProjectsForm({
 								handleUpdate(index, "description", v)
 							}
 							isOwner={isOwner}
-							variant="textarea"
+							variant="richtext"
 							placeholder="Project description..."
 							InputClassName="min-h-[150px]"
 						/>
