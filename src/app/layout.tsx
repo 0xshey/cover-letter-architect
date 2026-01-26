@@ -1,14 +1,7 @@
 import type { Metadata } from "next";
-import { Inter, Merriweather } from "next/font/google"; // Import serif font
+import { instrumentSerif, outfit } from "./fonts";
 import "./globals.css";
 import { cn } from "@/lib/utils";
-
-const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
-const merriweather = Merriweather({
-	subsets: ["latin"],
-	weight: ["300", "400", "700", "900"],
-	variable: "--font-serif",
-});
 
 export const metadata: Metadata = {
 	title: "Cover Letter Architect",
@@ -29,8 +22,8 @@ export default function RootLayout({
 			<body
 				className={cn(
 					"min-h-screen bg-background font-sans antialiased",
-					inter.variable,
-					merriweather.variable
+					instrumentSerif.variable,
+					outfit.variable,
 				)}
 			>
 				<Providers>

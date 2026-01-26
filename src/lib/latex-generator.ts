@@ -18,9 +18,10 @@ export const generateLatexCode = (
 
 	// Construct Address Block
 	let addressBlock = "";
-	// Line 1: Recipient
-	const recipient = targetInfo.addressee || "Hiring Manager";
-	addressBlock += `${safe(recipient)} \\\\\n`;
+	// Line 1: Recipient (Only if provided)
+	if (targetInfo.addressee) {
+		addressBlock += `${safe(targetInfo.addressee)} \\\\\n`;
+	}
 
 	// Line 2: Company Name
 	if (targetInfo.companyName) {
@@ -45,28 +46,32 @@ export const generateLatexCode = (
 	}
 
 	// Construct Header Contact Info
-	const contactParts = [];
+	const linkParts = [];
 	if (targetInfo.isEmailEnabled !== false && targetInfo.email) {
-		contactParts.push(
+		linkParts.push(
 			`\\href{mailto:${safe(targetInfo.email)}}{${safe(
 				targetInfo.email
 			)}}`
 		);
 	}
 	if (targetInfo.isPhoneEnabled !== false && targetInfo.phone) {
-		contactParts.push(safe(targetInfo.phone));
-	}
-	if (targetInfo.isCityStateEnabled !== false && targetInfo.cityState) {
-		contactParts.push(safe(targetInfo.cityState));
+		linkParts.push(safe(targetInfo.phone));
 	}
 	if (targetInfo.isPortfolioUrlEnabled !== false && targetInfo.portfolioUrl) {
 		let url = targetInfo.portfolioUrl;
 		if (!url.startsWith("http")) url = "https://" + url;
-		contactParts.push(
-			`\\href{${safe(url)}}{${safe(targetInfo.portfolioUrl)}}`
-		);
+		// Strip protocol and www for display
+		const displayUrl = targetInfo.portfolioUrl
+			.replace(/^https?:\/\//, "")
+			.replace(/^www\./, "");
+		linkParts.push(`\\href{${safe(url)}}{${safe(displayUrl)}}`);
 	}
-	const headerContact = contactParts.join(" $\\cdot$ ");
+
+	const headerLinks = linkParts.join(" $\\cdot$ ");
+	const headerLocation =
+		targetInfo.isCityStateEnabled !== false && targetInfo.cityState
+			? safe(targetInfo.cityState)
+			: "";
 
 	// Format Body
 	// Convert newlines to double newlines for paragraph breaks if needed
@@ -74,6 +79,9 @@ export const generateLatexCode = (
 		.split("\n")
 		.map((line) => safe(line))
 		.join("\n");
+
+	// For Salutation, default to "Hiring Manager" if no addressee
+	const salutationRecipient = targetInfo.addressee || "Hiring Manager";
 
 	const dateStr = new Date().toLocaleDateString("en-US", {
 		year: "numeric",
@@ -106,7 +114,8 @@ export const generateLatexCode = (
 % --- Header ---
 \\begin{center}
     {\\huge \\bfseries ${safe(targetInfo.authorName || "")}} \\\\[0.4em]
-    {\\small ${headerContact}}
+    {\\small ${headerLinks}} \\\\[0.2em]
+    {\\small ${headerLocation}}
 \\end{center}
 
 \\vspace{0.5em}
@@ -126,7 +135,7 @@ ${subjectLine}
 
 % --- Greeting ---
 \\noindent
-Dear ${safe(recipient)},
+Dear ${safe(salutationRecipient)},
 
 \\vspace{1em}
 

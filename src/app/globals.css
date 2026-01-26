@@ -5,28 +5,28 @@
 @theme {
   --color-background: hsl(var(--background));
   --color-foreground: hsl(var(--foreground));
-  
+
   --color-card: hsl(var(--card));
   --color-card-foreground: hsl(var(--card-foreground));
-  
+
   --color-popover: hsl(var(--popover));
   --color-popover-foreground: hsl(var(--popover-foreground));
-  
+
   --color-primary: hsl(var(--primary));
   --color-primary-foreground: hsl(var(--primary-foreground));
-  
+
   --color-secondary: hsl(var(--secondary));
   --color-secondary-foreground: hsl(var(--secondary-foreground));
-  
+
   --color-muted: hsl(var(--muted));
   --color-muted-foreground: hsl(var(--muted-foreground));
-  
+
   --color-accent: hsl(var(--accent));
   --color-accent-foreground: hsl(var(--accent-foreground));
-  
+
   --color-destructive: hsl(var(--destructive));
   --color-destructive-foreground: hsl(var(--destructive-foreground));
-  
+
   --color-border: hsl(var(--border));
   --color-input: hsl(var(--input));
   --color-ring: hsl(var(--ring));
@@ -46,8 +46,11 @@
   --color-badge-expct-fg: var(--badge-expct-fg);
   --color-badge-pers-bg: var(--badge-pers-bg);
   --color-badge-pers-fg: var(--badge-pers-fg);
-  
+
   --radius: 0.5rem;
+
+  --font-serif: var(--font-serif);
+  --font-geometric: var(--font-geometric);
 }
 
 :root {
@@ -127,7 +130,9 @@
 }
 
 @layer base {
-  *, ::before, ::after {
+  *,
+  ::before,
+  ::after {
     border-color: hsl(var(--border));
   }
   body {
@@ -140,7 +145,8 @@
   body * {
     visibility: hidden;
   }
-  .latex-viewer, .latex-viewer * {
+  .latex-viewer,
+  .latex-viewer * {
     visibility: visible;
   }
   .latex-viewer {
@@ -154,11 +160,11 @@
     border: none !important;
     overflow: visible !important;
   }
-  
+
   /* Ensure text is black and background white */
   .latex-viewer {
-      color: black !important;
-      background: white !important;
+    color: black !important;
+    background: white !important;
   }
 
   @page {
