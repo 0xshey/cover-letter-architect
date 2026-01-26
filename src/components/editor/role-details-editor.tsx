@@ -21,6 +21,20 @@ export function RoleDetailsEditor({ className }: { className?: string }) {
 			</h3>
 			<div className="grid gap-4">
 				<div className="grid gap-1.5">
+					<Label htmlFor="role" className="text-xs">
+						Role Title
+					</Label>
+					<Input
+						id="role"
+						value={targetInfo.roleTitle}
+						onChange={(e) =>
+							setTargetInfo({ roleTitle: e.target.value })
+						}
+						className="h-8"
+						placeholder="e.g. Senior Product Designer"
+					/>
+				</div>
+				<div className="grid gap-1.5">
 					<Label htmlFor="company" className="text-xs">
 						Company Name
 					</Label>
@@ -50,23 +64,10 @@ export function RoleDetailsEditor({ className }: { className?: string }) {
 						placeholder="e.g. New York, NY"
 					/>
 				</div>
-				<div className="grid gap-1.5">
-					<Label htmlFor="role" className="text-xs">
-						Role Title
-					</Label>
-					<Input
-						id="role"
-						value={targetInfo.roleTitle}
-						onChange={(e) =>
-							setTargetInfo({ roleTitle: e.target.value })
-						}
-						className="h-8"
-						placeholder="e.g. Senior Product Designer"
-					/>
-				</div>
+
 				<div className="grid gap-1.5">
 					<Label htmlFor="jobId" className="text-xs">
-						Job ID (Optional)
+						Job ID
 					</Label>
 					<Input
 						id="jobId"
