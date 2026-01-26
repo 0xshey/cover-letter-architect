@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 	description: "Assemble personalized cover letters with AI",
 };
 
-import { Providers } from "@/components/providers/providers";
+import { Providers } from "@/components/providers/root-providers"; // Renamed file import
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
 

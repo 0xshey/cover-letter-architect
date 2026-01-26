@@ -81,7 +81,7 @@ export function ResumeField({
 							"prose prose-sm dark:prose-invert max-w-none text-muted-foreground mt-1",
 							"[&_ul]:list-disc [&_ul]:list-outside [&_ul]:ml-4",
 							"[&_ol]:list-decimal [&_ol]:list-outside [&_ol]:ml-4",
-							"[&_p]:leading-relaxed [&_p]:my-1",
+							"[&_p]:leading-relaxed [&_p]:my-2",
 							InputClassName,
 						)}
 						dangerouslySetInnerHTML={{ __html: value || "" }}
