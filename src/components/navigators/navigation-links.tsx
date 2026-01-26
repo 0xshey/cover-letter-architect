@@ -7,12 +7,7 @@ export const NAVIGATION_ITEMS = [
 		path: "/letters",
 		match: (pathname: string) => pathname === "/letters",
 	},
-	{
-		icon: LayoutPanelTop,
-		label: "Create",
-		path: "/editor",
-		match: (pathname: string) => pathname === "/editor",
-	},
+
 	{
 		icon: Form,
 		label: "Resume",

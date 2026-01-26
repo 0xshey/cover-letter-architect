@@ -27,12 +27,16 @@ export function NewLetterButton({
 		try {
 			setIsLoading(true);
 
-			// 1. Reset everything first
+			// 1. Reset client stores
 			resetTargetInfo();
 			resetBlocks();
 			resetEditor();
 
-			// 2. Fetch user and resume
+			// Prepare data for DB
+			let dbTargetInfo: Record<string, any> = {};
+			let dbBlocks: ContentBlock[] = [];
+
+			// 2. Fetch user and resume to populate initial data
 			const {
 				data: { user },
 			} = await supabase.auth.getUser();
@@ -48,9 +52,9 @@ export function NewLetterButton({
 					const r = resume.data;
 					const basics = r.basics;
 
-					// 3. Populate Target Info (Personal Data)
+					// 3. Populate Target Info
 					if (basics) {
-						setTargetInfo({
+						dbTargetInfo = {
 							authorName: basics.name || "",
 							email: basics.email || "",
 							phone: basics.phone || "",
@@ -59,12 +63,11 @@ export function NewLetterButton({
 								basics.location?.city && basics.location?.region
 									? `${basics.location.city}, ${basics.location.region}`
 									: basics.location?.city || "",
-						});
+						};
+						setTargetInfo(dbTargetInfo); // Update client store
 					}
 
 					// 4. Populate Blocks
-					const newBlocks: ContentBlock[] = [];
-
 					// Work Experience
 					if (r.work && r.work.length > 0) {
 						r.work.forEach((w) => {
@@ -78,14 +81,14 @@ export function NewLetterButton({
 								w.summary,
 								w.highlights && w.highlights.length > 0
 									? `Highlights:\n- ${w.highlights.join(
-											"\n- "
-									  )}`
+											"\n- ",
+										)}`
 									: null,
 							]
 								.filter(Boolean)
 								.join("\n");
 
-							newBlocks.push({
+							dbBlocks.push({
 								id: crypto.randomUUID(),
 								category: "Experience",
 								content: lines,
@@ -102,15 +105,15 @@ export function NewLetterButton({
 								p.description,
 								p.highlights && p.highlights.length > 0
 									? `Highlights:\n- ${p.highlights.join(
-											"\n- "
-									  )}`
+											"\n- ",
+										)}`
 									: null,
 								p.url ? `URL: ${p.url}` : null,
 							]
 								.filter(Boolean)
 								.join("\n");
 
-							newBlocks.push({
+							dbBlocks.push({
 								id: crypto.randomUUID(),
 								category: "Projects",
 								content: lines,
@@ -127,7 +130,7 @@ export function NewLetterButton({
 								edu.area
 									? `${edu.studyType || "Degree"} in ${
 											edu.area
-									  }`
+										}`
 									: edu.studyType,
 								edu.startDate && edu.endDate
 									? `${edu.startDate} - ${edu.endDate}`
@@ -136,7 +139,7 @@ export function NewLetterButton({
 								.filter(Boolean)
 								.join("\n");
 
-							newBlocks.push({
+							dbBlocks.push({
 								id: crypto.randomUUID(),
 								category: "Education",
 								content: lines,
@@ -151,9 +154,9 @@ export function NewLetterButton({
 							(s) =>
 								`${s.name}: ${
 									s.keywords ? s.keywords.join(", ") : ""
-								}`
+								}`,
 						);
-						newBlocks.push({
+						dbBlocks.push({
 							id: crypto.randomUUID(),
 							category: "Skills",
 							content: skillLines.join("\n"),
@@ -161,17 +164,32 @@ export function NewLetterButton({
 						});
 					}
 
-					if (newBlocks.length > 0) {
-						setBlocks(newBlocks);
+					if (dbBlocks.length > 0) {
+						setBlocks(dbBlocks); // Update client store
 					}
 				}
 			}
 
-			router.push("/editor");
+			// Insert new cover letter
+			const { data: newLetter, error } = await supabase
+				.from("cover_letters")
+				.insert({
+					user_id: user?.id,
+					blocks: dbBlocks,
+					target_info: dbTargetInfo,
+					markdown: "",
+					title: "Untitled Cover Letter",
+				})
+				.select()
+				.single();
+
+			if (error) throw error;
+
+			if (newLetter) {
+				router.push(`/letters/${newLetter.id}/editor`);
+			}
 		} catch (error) {
-			console.error("Error populating from resume:", error);
-			// Fallback to empty editor even if fetch fails
-			router.push("/editor");
+			console.error("Error creating new letter:", error);
 		} finally {
 			setIsLoading(false);
 		}
