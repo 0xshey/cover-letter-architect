@@ -12,7 +12,7 @@ export function RoleDetailsEditor({ className }: { className?: string }) {
 		<div
 			className={cn(
 				"space-y-4 p-4 border rounded-xl bg-background",
-				className
+				className,
 			)}
 		>
 			<h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
@@ -20,67 +20,63 @@ export function RoleDetailsEditor({ className }: { className?: string }) {
 				Target Role
 			</h3>
 			<div className="grid gap-4">
-				<div className="grid grid-cols-2 gap-3">
-					<div className="grid gap-1.5">
-						<Label htmlFor="company" className="text-xs">
-							Company Name
-						</Label>
-						<Input
-							id="company"
-							value={targetInfo.companyName}
-							onChange={(e) =>
-								setTargetInfo({ companyName: e.target.value })
-							}
-							className="h-8"
-							placeholder="e.g. Acme Corp"
-						/>
-					</div>
-					<div className="grid gap-1.5">
-						<Label htmlFor="companyAddress" className="text-xs">
-							Company Location
-						</Label>
-						<Input
-							id="companyAddress"
-							value={targetInfo.companyAddress || ""}
-							onChange={(e) =>
-								setTargetInfo({
-									companyAddress: e.target.value,
-								})
-							}
-							className="h-8"
-							placeholder="e.g. New York, NY"
-						/>
-					</div>
+				<div className="grid gap-1.5">
+					<Label htmlFor="company" className="text-xs">
+						Company Name
+					</Label>
+					<Input
+						id="company"
+						value={targetInfo.companyName}
+						onChange={(e) =>
+							setTargetInfo({ companyName: e.target.value })
+						}
+						className="h-8"
+						placeholder="e.g. Acme Corp"
+					/>
 				</div>
-				<div className="grid grid-cols-2 gap-3">
-					<div className="grid gap-1.5">
-						<Label htmlFor="role" className="text-xs">
-							Role Title
-						</Label>
-						<Input
-							id="role"
-							value={targetInfo.roleTitle}
-							onChange={(e) =>
-								setTargetInfo({ roleTitle: e.target.value })
-							}
-							className="h-8"
-							placeholder="e.g. Senior Product Designer"
-						/>
-					</div>
-					<div className="grid gap-1.5">
-						<Label htmlFor="jobId" className="text-xs">
-							Job ID (Optional)
-						</Label>
-						<Input
-							id="jobId"
-							value={targetInfo.jobId || ""}
-							onChange={(e) =>
-								setTargetInfo({ jobId: e.target.value })
-							}
-							className="h-8"
-							placeholder="e.g. #12345"
-						/>
-					</div>
+				<div className="grid gap-1.5">
+					<Label htmlFor="companyAddress" className="text-xs">
+						Company Location
+					</Label>
+					<Input
+						id="companyAddress"
+						value={targetInfo.companyAddress || ""}
+						onChange={(e) =>
+							setTargetInfo({
+								companyAddress: e.target.value,
+							})
+						}
+						className="h-8"
+						placeholder="e.g. New York, NY"
+					/>
+				</div>
+				<div className="grid gap-1.5">
+					<Label htmlFor="role" className="text-xs">
+						Role Title
+					</Label>
+					<Input
+						id="role"
+						value={targetInfo.roleTitle}
+						onChange={(e) =>
+							setTargetInfo({ roleTitle: e.target.value })
+						}
+						className="h-8"
+						placeholder="e.g. Senior Product Designer"
+					/>
+				</div>
+				<div className="grid gap-1.5">
+					<Label htmlFor="jobId" className="text-xs">
+						Job ID (Optional)
+					</Label>
+					<Input
+						id="jobId"
+						value={targetInfo.jobId || ""}
+						onChange={(e) =>
+							setTargetInfo({ jobId: e.target.value })
+						}
+						className="h-8"
+						placeholder="e.g. #12345"
+					/>
 				</div>
 				<div className="grid gap-1.5">
 					<Label htmlFor="addressee" className="text-xs">

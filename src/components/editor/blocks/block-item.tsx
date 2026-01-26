@@ -66,7 +66,7 @@ export function BlockItem({ block }: BlockItemProps) {
 			<div
 				className={cn(
 					"group relative flex flex-col gap-0 border border-transparent p-1 transition-all bg-muted rounded-xl",
-					!block.isEnabled && "opacity-60 bg-muted/20"
+					!block.isEnabled && "opacity-60 bg-muted/20",
 				)}
 			>
 				<div className="h-8 flex items-center justify-between gap-2 px-1">
@@ -74,7 +74,7 @@ export function BlockItem({ block }: BlockItemProps) {
 						<span
 							className={cn(
 								"text-xs px-2 py-0.5 rounded-md font-medium",
-								categoryColors[block.category]
+								categoryColors[block.category],
 							)}
 						>
 							{block.category}
@@ -105,8 +105,8 @@ export function BlockItem({ block }: BlockItemProps) {
 					</div>
 				</div>
 
-				<div>
-					<p className="text-xs leading-relaxed line-clamp-3 p-1">
+				<div className="p-2">
+					<p className="line-clamp-6 leading-normal text-sm">
 						{block.content}
 					</p>
 				</div>

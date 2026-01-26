@@ -6,15 +6,7 @@ import { cn } from "@/lib/utils";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { EditorPane } from "@/components/editor/editor-pane";
 import { Button } from "@/components/ui/button";
-import {
-	Wand2,
-	Download,
-	Loader2,
-	Trash2,
-	Code,
-	Save,
-	Check,
-} from "lucide-react";
+import { Wand2, Download, Loader2, Trash2, Code } from "lucide-react";
 import { ErrorDialog } from "@/components/ui/error-dialog";
 import { generateLatexCode } from "@/lib/latex-generator";
 import {
@@ -35,7 +27,7 @@ interface CanvasProps extends React.HTMLAttributes<HTMLDivElement> {}
 const PreviewPane = dynamic(
 	() =>
 		import("@/components/editor/preview-pane").then(
-			(mod) => mod.PreviewPane
+			(mod) => mod.PreviewPane,
 		),
 	{
 		ssr: false,
@@ -44,7 +36,7 @@ const PreviewPane = dynamic(
 				<Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
 			</div>
 		),
-	}
+	},
 );
 
 export function Canvas({ className, ...props }: CanvasProps) {
@@ -63,7 +55,6 @@ export function Canvas({ className, ...props }: CanvasProps) {
 		useGenerativeModel();
 	const [activeTab, setActiveTab] = useState("editor");
 	const [error, setError] = useState<string | null>(null);
-	const [isSaved, setIsSaved] = useState(false);
 
 	const handleGenerate = async () => {
 		if (blocks.filter((b) => b.isEnabled).length === 0) {
@@ -91,6 +82,7 @@ export function Canvas({ className, ...props }: CanvasProps) {
 			const data = await response.json();
 			setCurrentLetter(data.markdown);
 
+			// Auto-save generated letter
 			saveLetter({
 				id: crypto.randomUUID(),
 				markdown: data.markdown,
@@ -111,58 +103,11 @@ export function Canvas({ className, ...props }: CanvasProps) {
 		}
 	};
 
-	const handleSave = async () => {
-		if (!session) return;
-
-		const title = targetInfo.roleTitle
-			? `${targetInfo.roleTitle} at ${targetInfo.companyName}`
-			: targetInfo.companyName || "Untitled Cover Letter";
-
-		const payload = {
-			title,
-			target_info: targetInfo,
-			blocks,
-			markdown: currentLetter,
-			latex: currentLetter
-				? generateLatexCode(targetInfo, currentLetter)
-				: null,
-		};
-
-		try {
-			const url = currentCoverLetterId
-				? `/api/cover-letters/${currentCoverLetterId}`
-				: "/api/cover-letters";
-
-			const method = currentCoverLetterId ? "PUT" : "POST";
-
-			const res = await fetch(url, {
-				method,
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify(payload),
-			});
-
-			if (res.ok) {
-				const data = await res.json();
-				if (data.coverLetter) {
-					setCurrentCoverLetterId(data.coverLetter.id);
-					setIsSaved(true);
-					setTimeout(() => setIsSaved(false), 5000);
-				}
-			} else {
-				const err = await res.json();
-				setError(err.error || "Failed to save");
-			}
-		} catch (error) {
-			console.error("Save failed", error);
-			setError("Failed to save changes.");
-		}
-	};
-
 	return (
 		<div
 			className={cn(
 				"flex flex-col h-full min-h-200 border rounded-xl overflow-hidden bg-muted/50",
-				className
+				className,
 			)}
 			{...props}
 		>
@@ -204,27 +149,6 @@ export function Canvas({ className, ...props }: CanvasProps) {
 					<GenerateButton onGenerate={handleGenerate} />
 					<div className="h-4 w-[1px] bg-border" />
 					<div className="flex items-center gap-2">
-						{session && (
-							<Button
-								variant={isSaved ? "outline" : "outline"}
-								size="sm"
-								onClick={handleSave}
-								disabled={!session || isSaved}
-								className={cn(
-									"h-8 px-3 text-xs transition-colors",
-									isSaved &&
-										"text-green-600 border-green-200 bg-green-50"
-								)}
-							>
-								{isSaved ? (
-									<Check className="h-3.5 w-3.5 mr-2" />
-								) : (
-									<Save className="h-3.5 w-3.5 mr-2" />
-								)}
-								{isSaved ? "Saved" : "Save"}
-							</Button>
-						)}
-
 						{session && currentLetter && (
 							<div className="flex items-center gap-1 border-l pl-2 ml-2">
 								<Button
@@ -252,12 +176,12 @@ export function Canvas({ className, ...props }: CanvasProps) {
 										const company =
 											targetInfo.companyName.replace(
 												/[^a-z0-9]/gi,
-												"_"
+												"_",
 											);
 										const role =
 											targetInfo.roleTitle.replace(
 												/[^a-z0-9]/gi,
-												"_"
+												"_",
 											);
 										const filename = `${date}_${
 											company || "Company"
@@ -266,7 +190,7 @@ export function Canvas({ className, ...props }: CanvasProps) {
 										try {
 											const latexCode = generateLatexCode(
 												targetInfo,
-												currentLetter
+												currentLetter,
 											);
 											const response = await fetch(
 												"/api/render-pdf",
@@ -279,7 +203,7 @@ export function Canvas({ className, ...props }: CanvasProps) {
 													body: JSON.stringify({
 														latexCode,
 													}),
-												}
+												},
 											);
 											if (!response.ok)
 												throw new Error("Failed");
@@ -317,19 +241,19 @@ export function Canvas({ className, ...props }: CanvasProps) {
 										const company =
 											targetInfo.companyName.replace(
 												/[^a-z0-9]/gi,
-												"_"
+												"_",
 											);
 										const role =
 											targetInfo.roleTitle.replace(
 												/[^a-z0-9]/gi,
-												"_"
+												"_",
 											);
 										const filename = `${date}_${
 											company || "Company"
 										}_${role || "Role"}.tex`;
 										const latexCode = generateLatexCode(
 											targetInfo,
-											currentLetter
+											currentLetter,
 										);
 										const blob = new Blob([latexCode], {
 											type: "application/x-latex",
