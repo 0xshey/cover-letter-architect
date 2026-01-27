@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
 import { Lock, ArrowRight } from "lucide-react";
+import { getURL } from "@/lib/get-url";
 
 export default function LoginPage() {
 	const supabase = createClient();
@@ -12,7 +13,7 @@ export default function LoginPage() {
 		await supabase.auth.signInWithOAuth({
 			provider: "google",
 			options: {
-				redirectTo: `${window.location.origin}/auth/callback?next=/letters`,
+				redirectTo: `${getURL()}auth/callback?next=/letters`,
 				scopes: "openid profile email https://www.googleapis.com/auth/generative-language.retriever",
 				queryParams: {
 					access_type: "offline",

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import { getURL } from "@/lib/get-url";
 
 function GoogleIcon({ className }: { className?: string }) {
 	return (
@@ -27,7 +28,7 @@ const OAuthLogin: React.FC = ({}) => {
 			const { error } = await supabase.auth.signInWithOAuth({
 				provider: "google",
 				options: {
-					redirectTo: `${window.location.origin}/auth/callback`,
+					redirectTo: `${getURL()}auth/callback`,
 				},
 			});
 
