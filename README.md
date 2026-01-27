@@ -1,5 +1,7 @@
 # Cover Letter Architect
 
+**v1.0.0** | [Live Site](https://cover-letter-architect.vercel.app/)
+
 A modern tool to build perfectly personalized cover letters using modular content blocks and AI, while keeping your unique writing voice.
 
 ## 1. Goal Product
@@ -8,15 +10,18 @@ The ultimate goal of **Cover Letter Architect** is to eliminate the blank-page s
 
 ## 2. Current Product
 
-The current version is a fully functional web application featuring:
+The current version (v1.0.0) is a fully functional web application featuring:
 
 - **Block Library**: Save and manage modular snippets (Experience, Education, Projects, etc.).
+- **Rich Text Editor**: Use the new clean, auto-formatting editor for writing your Resume experiences and Project descriptions.
+- **Resume Management**: A dedicated section to manage your resume data (Education, Experience, Projects, Volunteer work).
 - **Target Context**: Quick fields for Company and Role details to ground the AI generation.
 - **AI Assembler**: Integration with Google Gemini (1.5 Flash, 2.0 Flash Exp, etc.) to draft letters.
 - **Live Preview**: Real-time Markdown rendering with specific highlighting for content derived from your personal blocks.
 - **Suggestions Mode**: Interactive highlighting of "weak phrases" in your draft with AI-driven improvement suggestions.
 - **Markdown Export**: One-click download of your letter with proper date/company naming conventions.
-- **Modern Polish**: Responsive UI with automated dark mode support and Radix UI primitives.
+- **Secure Authentication**: User accounts managed securely via Supabase Auth (Google OAuth).
+- **Modern Polish**: Responsive UI with automated dark mode support and a premium aesthetic using Radix UI & Tailwind CSS.
 
 ## 3. How to Clone & Run
 
@@ -24,6 +29,7 @@ The current version is a fully functional web application featuring:
 
 - Node.js 18+ installed.
 - A [Google Gemini API Key](https://aistudio.google.com/app/apikey) (optional if provided as environment variable).
+- Supabase Project (for Authentication).
 
 ### Setup
 
@@ -40,11 +46,13 @@ The current version is a fully functional web application featuring:
    npm install
    ```
 
-3. **Configure Environment (Optional)**:
-   Create a `.env.local` file to avoid entering your API key every session:
+3. **Configure Environment**:
+   Create a `.env.local` file with the following:
 
    ```bash
-   GOOGLE_GENERATIVE_AI_API_KEY=your_api_key_here
+   GOOGLE_GENERATIVE_AI_API_KEY=your_gemini_api_key
+   NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
    ```
 
 4. **Run the development server**:
@@ -58,4 +66,4 @@ The current version is a fully functional web application featuring:
 
 ---
 
-Built with Next.js, TypeScript, Tailwind CSS, Radix UI, and Google Gemini.
+Built with Next.js, TypeScript, Tailwind CSS, Radix UI, Supabase, and Google Gemini.
