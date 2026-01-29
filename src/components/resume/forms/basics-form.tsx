@@ -8,7 +8,7 @@ interface BasicsFormProps {
 	onChange: (field: keyof ResumeBasics, value: any) => void;
 	onLocationChange: (
 		field: keyof NonNullable<ResumeBasics["location"]>,
-		value: string
+		value: string,
 	) => void;
 	isOwner: boolean;
 	isVisible?: boolean;
@@ -49,7 +49,51 @@ export function BasicsForm({
 					variant="primary"
 					placeholder="Software Engineer"
 				/>
-
+				{isOwner ? (
+					<div className="space-y-2">
+						<div className="flex gap-2">
+							<ResumeField
+								label="City"
+								value={basics.location?.city || ""}
+								onChange={(v) => onLocationChange("city", v)}
+								isOwner={isOwner}
+								placeholder="City"
+								className="flex-1"
+							/>
+							<ResumeField
+								label="Region"
+								value={basics.location?.region || ""}
+								onChange={(v) => onLocationChange("region", v)}
+								isOwner={isOwner}
+								placeholder="Region"
+								className="flex-1"
+							/>
+							<ResumeField
+								label="Country"
+								value={basics.location?.countryCode || ""}
+								onChange={(v) =>
+									onLocationChange("countryCode", v)
+								}
+								isOwner={isOwner}
+								placeholder="US"
+								className="w-fit"
+							/>
+						</div>
+					</div>
+				) : (
+					<ResumeField
+						label="Location"
+						value={[
+							basics.location?.city,
+							basics.location?.region,
+							basics.location?.countryCode,
+						]
+							.filter(Boolean)
+							.join(", ")}
+						onChange={() => {}}
+						isOwner={isOwner}
+					/>
+				)}
 				<ResumeField
 					label="Email"
 					value={basics.email || ""}
@@ -73,39 +117,6 @@ export function BasicsForm({
 					isOwner={isOwner}
 					placeholder="https://yourwebsite.com"
 				/>
-
-				<div className="space-y-2">
-					{/* Location fields need to be handled carefully as they are a group. 
-                        We can use ResumeField for each, but maybe grouping them looks better?
-                        Actually, individual fields are fine. Labels only show in edit mode.
-                    */}
-					<div className="flex gap-2">
-						<ResumeField
-							label="City"
-							value={basics.location?.city || ""}
-							onChange={(v) => onLocationChange("city", v)}
-							isOwner={isOwner}
-							placeholder="City"
-							className="flex-1"
-						/>
-						<ResumeField
-							label="Region"
-							value={basics.location?.region || ""}
-							onChange={(v) => onLocationChange("region", v)}
-							isOwner={isOwner}
-							placeholder="Region"
-							className="flex-1"
-						/>
-						<ResumeField
-							label="Country"
-							value={basics.location?.countryCode || ""}
-							onChange={(v) => onLocationChange("countryCode", v)}
-							isOwner={isOwner}
-							placeholder="US"
-							className="w-20"
-						/>
-					</div>
-				</div>
 			</div>
 
 			<ResumeField

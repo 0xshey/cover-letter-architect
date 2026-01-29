@@ -9,6 +9,35 @@ interface GenerateRequest {
 	model?: string;
 }
 
+// Helper to refresh Google Access Token
+async function refreshGoogleToken(refreshToken: string) {
+	try {
+		console.log("Refreshing Google Access Token...");
+		const response = await fetch("https://oauth2.googleapis.com/token", {
+			method: "POST",
+			headers: { "Content-Type": "application/x-www-form-urlencoded" },
+			body: new URLSearchParams({
+				client_id: process.env.GOOGLE_CLIENT_ID!,
+				client_secret: process.env.GOOGLE_CLIENT_SECRET!,
+				refresh_token: refreshToken,
+				grant_type: "refresh_token",
+			}),
+		});
+
+		const data = await response.json();
+		if (!response.ok) {
+			throw new Error(
+				data.error_description || "Failed to refresh token",
+			);
+		}
+
+		return data.access_token as string;
+	} catch (error) {
+		console.error("Token refresh failed:", error);
+		return null;
+	}
+}
+
 export async function POST(req: NextRequest) {
 	try {
 		const supabase = await createClient();
@@ -19,7 +48,7 @@ export async function POST(req: NextRequest) {
 		if (!session || !session.provider_token) {
 			return NextResponse.json(
 				{ error: "Unauthorized. Please sign in with Google." },
-				{ status: 401 }
+				{ status: 401 },
 			);
 		}
 
@@ -32,7 +61,7 @@ export async function POST(req: NextRequest) {
 		if (!blocks || blocks.length === 0) {
 			return NextResponse.json(
 				{ error: "No content blocks provided" },
-				{ status: 400 }
+				{ status: 400 },
 			);
 		}
 
@@ -44,11 +73,12 @@ export async function POST(req: NextRequest) {
 		console.log("Calling Gemini API with model:", model);
 		const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
 
-		const geminiResponse = await fetch(url, {
+		let token = session.provider_token;
+		let geminiResponse = await fetch(url, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
-				Authorization: `Bearer ${session.provider_token}`,
+				Authorization: `Bearer ${token}`,
 			},
 			body: JSON.stringify({
 				contents: [
@@ -63,6 +93,52 @@ export async function POST(req: NextRequest) {
 			}),
 		});
 
+		if (geminiResponse.status === 401) {
+			console.log("Access token expired. Attempting to refresh...");
+
+			if (session.provider_refresh_token) {
+				const newToken = await refreshGoogleToken(
+					session.provider_refresh_token,
+				);
+				if (newToken) {
+					console.log(
+						"Token refreshed successfully. Retrying request...",
+					);
+					token = newToken;
+					// Retry the request with new token
+					geminiResponse = await fetch(url, {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+							Authorization: `Bearer ${token}`,
+						},
+						body: JSON.stringify({
+							contents: [
+								{
+									role: "user",
+									parts: [
+										{
+											text:
+												SYSTEM_PROMPT +
+												"\n\n" +
+												userContent,
+										},
+									],
+								},
+							],
+							generationConfig: {
+								responseMimeType: "application/json",
+							},
+						}),
+					});
+				} else {
+					console.error("Failed to obtain new access token.");
+				}
+			} else {
+				console.warn("No refresh token available in session.");
+			}
+		}
+
 		if (!geminiResponse.ok) {
 			const errorData = await geminiResponse.json();
 			console.error("Gemini API Error:", errorData);
@@ -76,7 +152,7 @@ export async function POST(req: NextRequest) {
 				errorMessage.includes("invalid authentication credentials")
 			) {
 				throw new Error(
-					"Your Google session has expired. Please Sign Out and Sign In again in Settings."
+					"Your Google session has expired. Please Sign Out and Sign In again in Settings to enable persistent sessions.",
 				);
 			}
 
