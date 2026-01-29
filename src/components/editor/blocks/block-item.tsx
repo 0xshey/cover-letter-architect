@@ -7,6 +7,7 @@ import { BlockCategory, ContentBlock } from "@/types";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
+import RichTextEditor from "@/components/ui/rich-text-editor";
 import { Textarea } from "@/components/ui/textarea";
 import {
 	Dialog,
@@ -106,14 +107,22 @@ export function BlockItem({ block }: BlockItemProps) {
 				</div>
 
 				<div className="p-2">
-					<p className="line-clamp-6 leading-normal text-sm">
-						{block.content}
-					</p>
+					<div
+						className={cn(
+							"typography-base text-sm line-clamp-6 leading-normal",
+							"[&_ul]:list-disc [&_ul]:list-outside [&_ul]:ml-4",
+							"[&_ol]:list-decimal [&_ol]:list-outside [&_ol]:ml-4",
+							"[&_p]:leading-relaxed [&_p]:my-1",
+						)}
+						dangerouslySetInnerHTML={{
+							__html: block.content || "",
+						}}
+					/>
 				</div>
 			</div>
 
 			<Dialog open={isEditing} onOpenChange={setIsEditing}>
-				<DialogContent>
+				<DialogContent className="max-w-2xl">
 					<DialogHeader>
 						<DialogTitle>Edit {block.category} Block</DialogTitle>
 					</DialogHeader>
@@ -149,12 +158,10 @@ export function BlockItem({ block }: BlockItemProps) {
 								</div>
 							)}
 
-							<Textarea
-								id="content"
-								value={content}
-								onChange={(e) => setContent(e.target.value)}
-								className="min-h-[150px]"
-								placeholder={CATEGORY_PROMPTS[block.category]}
+							<RichTextEditor
+								content={content}
+								onChange={setContent}
+								className="min-h-[200px]"
 							/>
 						</div>
 					</div>
